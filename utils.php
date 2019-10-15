@@ -1,19 +1,25 @@
 <?php
 function beniPostgres2JS ($PostgresDict) {
 	return array(
-		'id' => $PostgresDict['id'],
-		'identificazione' => $PostgresDict['ident'],
-		'identificazione' => $PostgresDict['ident'],
-		'descrizione' => $PostgresDict['descr'],
-		'macroEpocaOrig' => $PostgresDict['meo'],
-		'macroEpocaCar' => $PostgresDict['mec'],
-		'toponimo' => $PostgresDict['topon'],
-		'esistenza' => $PostgresDict['esist'],
-		'comune' => $PostgresDict['comun'],
-		'bibliografia' => $PostgresDict['bibli'],
-		'schedatore' => $PostgresDict['sched'],
-		'note' => $PostgresDict['note']
+		'id' => getOrSet($PostgresDict,'id',null),
+		'identificazione' => getOrSet($PostgresDict,'ident',null),
+		'identificazione' => getOrSet($PostgresDict,'ident',null),
+		'descrizione' => getOrSet($PostgresDict,'descr',null),
+		'macroEpocaOrig' => getOrSet($PostgresDict,'meo',null),
+		'macroEpocaCar' => getOrSet($PostgresDict,'mec',null),
+		'toponimo' => getOrSet($PostgresDict,'topon',null),
+		'esistenza' => getOrSet($PostgresDict,'esist',null),
+		'comune' => getOrSet($PostgresDict,'comun',null),
+		'bibliografia' => getOrSet($PostgresDict,'bibli',null),
+		'schedatore' => getOrSet($PostgresDict,'sched',null),
+		'note' => getOrSet($PostgresDict,'note',null),
+		'geojson' => json_decode(getOrSet($PostgresDict,'geojson',null)),
+		'centroid' => json_decode(getOrSet($PostgresDict,'centroid_geojson',null))
 	);
+}
+function getOrSet($dict, $key, $defaultVal) {
+	if(isset($dict[$key])) return $dict[$key];
+	else return $defaultVal;
 }
 
 function logInsert($txt) {return logTitleTxt('Insert', $txt);}

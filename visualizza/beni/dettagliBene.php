@@ -9,7 +9,8 @@ http_response_code(500);
 if (isset($_GET['id']) ) {
 	
 	$id = $_GET['id'];
-	$query = "SELECT * FROM benigeo WHERE id=$1";
+	$query = "SELECT *, ST_AsGeoJSON(geom) as geojson, ST_AsGeoJSON(ST_Centroid(geom)) " .
+	"as centroid_geojson FROM benigeo WHERE id=$1";
 	$result = pg_prepare($conn,'', $query);
 	if($result){
 		$result = pg_execute($conn,'', array($id));
