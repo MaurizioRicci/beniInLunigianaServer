@@ -20,7 +20,7 @@ if (!isset($sched) && !$error) {
 
 if (isset($My_POST['id']) && !$error) {
 
-    pg_query('BEGIN') or die('Cant start transaction');
+    pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
     $resp1 = $resp2 = null;
     //in base al ruolo utente scelgo in quale tabella mettere il bene
     if ($sched['role'] == 'master') {//senza revisione
