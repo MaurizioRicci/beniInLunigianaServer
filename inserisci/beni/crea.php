@@ -36,9 +36,21 @@ if (isset($My_POST['id']) && !$error) {
         //manipolabene serve se è validato il bene
         $resp2 = insertIntoManipolaBene($conn, $c++, $sched['id'], $My_POST['id']);
     } else if ($sched['role'] == 'basic') {
-        $resp1 = insertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
-                $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $sched['id']);
+        //può esserci un solo bene distinto in revisione
+        // se gli id assegnati agli utenti non si sovrappongono, non dovrebbe mai
+        //succedere che due utenti possano creare un bene con lo stesso id, non si sa mai..
+        $queryID = runPreparedQuery($conn, $c++,
+                'SELECT id from tmp_db.benigeo where id=$1', array($My_POST['id']));
+        if (pg_num_rows($queryID['data']) > 0) {
+            //richiesta sintatticamente corretta ma semanticamente errata
+            http_response_code(422);
+            $res['msg'] = 'Un utente ha già in attesa di revisione questo bene';
+            $error = true;
+        } else {
+            $resp1 = insertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
+                    $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
+                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $sched['id']);
+        }
     }
 
     if (!$error && checkAllPreparedQuery(array($resp1, $resp2))) {
