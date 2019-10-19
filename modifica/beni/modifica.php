@@ -29,7 +29,7 @@ if (isset($My_POST['id']) && !$error) {
                 $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom']);
         //manipolabene serve se è validato il bene
         $resp2 = insertIntoManipolaBene($conn, $c++, $sched['id'], $My_POST['id']);
-    } else {
+    } if ($sched['role'] == 'basic') {
         //può esserci un solo bene distinto in revisione
         $queryID = runPreparedQuery($conn, $c++,
                 'SELECT id from tmp_db.benigeo where id=$1', array($My_POST['id']));

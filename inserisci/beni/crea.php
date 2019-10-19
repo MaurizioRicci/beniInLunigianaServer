@@ -35,10 +35,11 @@ if (isset($My_POST['id']) && !$error) {
                 $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom']);
         //manipolabene serve se è validato il bene
         $resp2 = insertIntoManipolaBene($conn, $c++, $sched['id'], $My_POST['id']);
-    } else
+    } else if ($sched['role'] == 'basic') {
         $resp1 = insertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                 $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                 $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $sched['id']);
+    }
 
     if (!$error && checkAllPreparedQuery(array($resp1, $resp2))) {
         pg_query('COMMIT');
