@@ -16,7 +16,7 @@ if (isset($_GET['id']) ) {
 		$result = pg_execute($conn,'', array($id));
 		if ($result) {		
 			while ($row = pg_fetch_assoc($result)) {
-			  array_push($res, beniPostgres2JS($row));
+			  $res = beniPostgres2JS($row);
 			}
 			http_response_code(200);
 		}
