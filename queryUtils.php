@@ -33,7 +33,7 @@ function risolviUtente($conn, $stmtID, $username, $password) {
     if (isset($username) && isset($password)) {
         $query = "SELECT gid, role FROM utenti WHERE username=$1 and password=$2";
         $resp = runPreparedQuery($conn, $stmtID, $query, array($username, $password));
-        if ($resp['ok']) {
+        if ($resp['ok'] && pg_num_rows($resp['data']) > 0) {
             $row = pg_fetch_assoc($resp['data']);
             return array(
                 'id' => $row['gid'],
