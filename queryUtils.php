@@ -80,6 +80,15 @@ function insertIntoManipolaBene($conn, $stmtID, $userID, $beneID) {
     return runPreparedQuery($conn, $stmtID, $query, array($userID, $beneID));
 }
 
+/*/
+ * Sposta un bene temporaneo nell'archivio definitivo
+ */
+function moveBeneTmpToBeniGeo($conn, $stmtID, $id) {
+    $query = "INSERT INTO public.benigeo(id, ident, descr, mec, meo, bibli, note, topon, comun, geom, user_id) " .
+            "SELECT * from tmp_db.benigeo WHERE id=$1";
+    return runPreparedQuery($conn, $stmtID, $query, array($id));
+}
+
 /* /
  * Prepara e esegue una query. Restituisce un dizionario con chiavi:
  * ok: vero se è andata a buon fine, falso altrimenti
