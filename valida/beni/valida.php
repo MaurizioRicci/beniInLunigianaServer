@@ -13,7 +13,7 @@ http_response_code(500);
 $My_POST = postEmptyStr2NULL();
 
 $sched = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
-if (isset($sched) && !$error) {
+if (!isset($sched) && !$error) {
     http_response_code(401);
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
