@@ -1,14 +1,16 @@
 <?php
-/*/
+
+/* /
  * Tutte le query usate con parametri sono preparate. 
  * Internamente viene usato pg_prepare e pg_send_execute; essi necessitano di uno statementID. Questo
  * viene passatao come parametro alle varie funzioni
  */
 
-/*/
+/* /
  * Controlla il range di ID che un utente può usare. Vero se l'id è valido, Falso se fuori dal range permesso.
  * Occorre prima controllare l'esistenza dell'utente con risolviUtente(...)
  */
+
 function checkID($conn, $stmtID, $username, $password, $id_to_check) {
     if (isset($username) && isset($password)) {
         $query = "SELECT id_min, id_max FROM public.utenti WHERE username=$1 and password=$2";
@@ -22,10 +24,11 @@ function checkID($conn, $stmtID, $username, $password, $id_to_check) {
     return false;
 }
 
-/*/
+/* /
  * valida un utente e ne estrae il ruolo. Restituisce null se non è stato trovato.
  * Altrimenti un dizionario con id&role (ruolo)
  */
+
 function risolviUtente($conn, $stmtID, $username, $password) {
     if (isset($username) && isset($password)) {
         $query = "SELECT gid, role FROM utenti WHERE username=$1 and password=$2";
@@ -41,7 +44,7 @@ function risolviUtente($conn, $stmtID, $username, $password) {
     return null;
 }
 
-function replaceIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $sched, $bibl, $note,
+function replaceIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bibl, $note,
         $topon, $comun, $geom) {
     $tablename = 'public.benigeo';
     $query = "update $tablename SET ident=$1, descr=$2, mec=$3, meo=$4, bibli=$5," .
@@ -51,7 +54,7 @@ function replaceIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $sc
     ));
 }
 
-function insertIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $sched, $bibl, $note,
+function insertIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bibl, $note,
         $topon, $comun, $geom) {
     $tablename = 'public.benigeo';
     $query = "INSERT INTO $tablename(id, ident, descr, mec, meo, bibli, note, topon, comun, geom) " .
@@ -77,11 +80,12 @@ function insertIntoManipolaBene($conn, $stmtID, $userID, $beneID) {
     return runPreparedQuery($conn, $stmtID, $query, array($userID, $beneID));
 }
 
-/*/
+/* /
  * Prepara e esegue una query. Restituisce un dizionario con chiavi:
  * ok: vero se è andata a buon fine, falso altrimenti
  * data: contiene il risultato della query preparata (è il risultato di pg_get_result(...))
  */
+
 function runPreparedQuery($conn, $stmtID, $query, $paramsArr) {
     $res = array('ok' => false, 'data' => array());
     $result = pg_prepare($conn, $stmtID, $query);
