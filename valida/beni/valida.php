@@ -73,6 +73,8 @@ if (isset($My_POST['id']) && !$error) {
             }
         }
     } else {
+        $error = true;
+        http_response_code(401);
         $res['msg'] = 'Operazione non permessa. Non sei un revisore';
     }
 
