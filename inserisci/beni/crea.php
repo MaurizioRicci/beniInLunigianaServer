@@ -28,6 +28,8 @@ if (!$error && !checkID($conn, $c++, $My_POST['username'], $My_POST['password'],
 if (isset($My_POST['id']) && !$error) {
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
     $resp1 = $resp2 = $queryID = null;
+    $queryArr = array($resp1, $queryID, $resp2);
+    
     //in base al ruolo utente scelgo in quale tabella mettere il bene
     if ($sched['role'] == 'master') {//senza revisione
         $resp1 = insertIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
@@ -47,19 +49,21 @@ if (isset($My_POST['id']) && !$error) {
             $res['msg'] = 'Un utente ha già in attesa di revisione questo bene';
             $error = true;
         } else {
+            //non possono esserci più crea bene concorrenti poichè violerebbero
+            // la pk (id) di tmp_db.benigeo. Quindi la query sotto fallirebbe facendo fallire la transazione.
             $resp1 = insertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $sched['id']);
         }
     }
 
-    if (!$error && checkAllPreparedQuery(array($resp1, $resp2, $queryID))) {
+    if (!$error && checkAllPreparedQuery($queryArr)) {
         pg_query('COMMIT');
         http_response_code(200);
     } else {
         pg_query('ROLLBACK');
-        $failed_query = getFirstFailedQuery(array($resp1, $resp2));
-        if (!isset($res['msg'])) //magari ho già scritto io un messaggio d'errore
+        $failed_query = getFirstFailedQuery($queryArr);
+        if (!isset($res['msg']) && isset($failed_query)) //magari ho già scritto io un messaggio d'errore
             $res['msg'] = pg_result_error($failed_query['data']);
     }
 }
