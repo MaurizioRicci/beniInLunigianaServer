@@ -29,7 +29,7 @@ if (isset($My_POST['id']) && !$error) {
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
     $resp1 = $resp2 = $queryID = null;
     $queryArr = array($resp1, $queryID, $resp2);
-    
+
     //in base al ruolo utente scelgo in quale tabella mettere il bene
     if ($sched['role'] == 'master') {//senza revisione
         $resp1 = insertIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
@@ -58,8 +58,11 @@ if (isset($My_POST['id']) && !$error) {
     }
 
     if (!$error && checkAllPreparedQuery($queryArr)) {
-        pg_query('COMMIT');
-        http_response_code(200);
+        if (pg_query('COMMIT')) {
+            http_response_code(200);
+        } else {
+            $res['msg'] = $transazione_fallita_msg;
+        }
     } else {
         pg_query('ROLLBACK');
         $failed_query = getFirstFailedQuery($queryArr);

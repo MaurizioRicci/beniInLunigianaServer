@@ -52,8 +52,11 @@ if (isset($My_POST['id']) && !$error) {
     }
 
     if (!$error && checkAllPreparedQuery($queryArr)) {
-        pg_query('COMMIT');
-        http_response_code(200);
+        if (pg_query('COMMIT')) {
+            http_response_code(200);
+        } else {
+            $res['msg'] = $transazione_fallita_msg;
+        }
     } else {
         pg_query('ROLLBACK');
         $failed_query = getFirstFailedQuery($queryArr);

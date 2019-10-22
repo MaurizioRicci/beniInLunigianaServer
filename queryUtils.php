@@ -6,6 +6,7 @@
  * viene passatao come parametro alle varie funzioni
  */
 
+$transazione_fallita_msg = 'Impossibile completare la transazione';
 /* /
  * Controlla il range di ID che un utente può usare. Vero se l'id è valido, Falso se fuori dal range permesso.
  * Occorre prima controllare l'esistenza dell'utente con risolviUtente(...)
@@ -80,9 +81,10 @@ function insertIntoManipolaBene($conn, $stmtID, $userID, $beneID) {
     return runPreparedQuery($conn, $stmtID, $query, array($userID, $beneID));
 }
 
-/*/
+/* /
  * Sposta un bene temporaneo nell'archivio definitivo
  */
+
 function moveBeneTmpToBeniGeo($conn, $stmtID, $id) {
     $query = "INSERT INTO public.benigeo(id, ident, descr, mec, meo, bibli, note, topon, comun, geom, user_id) " .
             "SELECT * from tmp_db.benigeo WHERE id=$1";
