@@ -64,7 +64,7 @@ if (isset($My_POST['id']) && !$error) {
             // errore se: c'era già un errore o se la query è fallita o se la query non ha dato risultati
             $error = $error || !$respAuthor['ok'] || (pg_num_rows($respAuthor['data']) <= 0);
             // PASSO 5. segno l'autore della modifica (non il revisore)
-            if ($error) {
+            if (!$error) {
                 $row = pg_fetch_row($respAuthor['data']);
                 $respIns = insertIntoManipolaBene($conn, $c++, $row[0], $My_POST['id']);
                 // PASSO 6
