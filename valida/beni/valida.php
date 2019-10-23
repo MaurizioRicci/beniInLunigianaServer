@@ -80,6 +80,7 @@ if (isset($My_POST['id']) && !$error) {
 
     // per sicurezza controllo tutte le query
     if (!$error && checkAllPreparedQuery($queryArr)) {
+        // se COMMIT è andato a buon fine
         if (pg_query('COMMIT')) {
             http_response_code(200);
         } else {
