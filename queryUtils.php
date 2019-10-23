@@ -68,7 +68,7 @@ function insertIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bib
 function insertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bibl, $note,
         $topon, $comun, $geom, $user_id) {
     $tablename = 'tmp_db.benigeo';
-    $query = "INSERT INTO $tablename(id, ident, descr, mec, meo, bibli, note, topon, comun, geom, user_id) " .
+    $query = "INSERT INTO $tablename(id, ident, descr, mec, meo, bibli, note, topon, comun, geom, id_utente) " .
             "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,ST_GeomFromText($10, 4326),$11)";
     return runPreparedQuery($conn, $stmtID, $query, array(
         $id, $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $geom, $user_id
