@@ -60,7 +60,7 @@ if (isset($My_POST['id']) && !$error) {
             $respMove = moveBeneTmpToBeniGeo($conn, $c++, $My_POST['id']);
             // ottengo l'autore della modifica
             $respAuthor = runPreparedQuery($conn, $c++,
-                    'SELECT user_id FROM tmp_db.benigeo WHERE id=$1', array($My_POST['id']));
+                    'SELECT id_utente FROM tmp_db.benigeo WHERE id=$1', array($My_POST['id']));
             // errore se: c'era già un errore o se la query è fallita o se la query non ha dato risultati
             $error = $error || !$respAuthor['ok'] || (pg_num_rows($respAuthor['data']) <= 0);
             // PASSO 5. segno l'autore della modifica (non il revisore)
