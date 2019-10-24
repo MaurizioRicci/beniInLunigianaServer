@@ -18,7 +18,7 @@ if (!isset($utente) && !$error) {
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
 }
-
+// Ottengo in beni inseriti da un certo utente oppure i suoi beni in revisione
 $query_beni_aggiunti = 'SELECT 
         b.id,
         b.ident,
@@ -52,7 +52,8 @@ $query_beni_revisione = 'SELECT
         b.timestamp_utc,
         b.status,
         b.msg_validatore
-    FROM tmp_db.benigeo as b WHERE b.id_utente=$1';
+    FROM tmp_db.benigeo as b WHERE b.id_utente=$1 AND (b.status BETWEEN 0 AND 1)';
+                                                 // status = 0/1 per bene in attesa revisione/da rivedere
 
 $query = isset($My_POST['switch_bene']) &&
         $My_POST['switch_bene'] == 'aggiunti' ? $query_beni_aggiunti : $query_beni_revisione;

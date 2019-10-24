@@ -40,9 +40,9 @@ if (isset($My_POST['id']) && !$error) {
         //PASSO 2
         $respBeneTmp = runPreparedQuery($conn, $c++,
                 'SELECT id from tmp_db.benigeo where id=$1', array($My_POST['id']));
-        $error = $error || !$respBeneTmp['ok'];
         if (!$respBeneTmp['ok'] || pg_num_rows($respBeneTmp['data'] < 0)) {
-            $res['msg'] = 'ID del bene in revisione non trovato';
+            $res['msg'] = 'ID del bene in revisione non trovato. Forse altri revisori hanno approvato il bene.';
+            $error = true;
         }
 
         $respBene = runPreparedQuery($conn, $c++,
