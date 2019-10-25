@@ -10,6 +10,16 @@ function postEmptyStr2NULL() {
     return $copy;
 }
 
+// analizza $_GET e converte le stringhe vuote in null
+function getEmptyStr2NULL() {
+    $copy = array();
+    foreach ($_GET as $key => $val) {
+        $val = filter_input(INPUT_GET, $key, FILTER_CALLBACK, array('options' => 'emptyStr2NULL'));
+        $copy[$key] = $val ? $val : null;
+    }
+    return $copy;
+}
+
 function dictEmptyStr2NULL($dict) {
     foreach ($dict as $key => $val) {
         $dict[$key] = emptyStr2NULL($val);
