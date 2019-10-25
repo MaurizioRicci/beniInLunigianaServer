@@ -82,12 +82,22 @@ function insertIntoManipolaBene($conn, $stmtID, $userID, $beneID) {
 }
 
 /* /
- * Sposta un bene temporaneo nell'archivio definitivo
+ * Copia un bene temporaneo nell'archivio definitivo. Notare che se il bene nell'archivio
+ * definitivo esiste già, questo verrà rimpiazzato dal bene nell'archivio temporaneo.
  */
 
-function moveBeneTmpToBeniGeo($conn, $stmtID, $id) {
-    $query = "INSERT INTO public.benigeo(id, ident, descr, mec, meo, bibli, note, topon, comun, geom, user_id) " .
-            "SELECT * from tmp_db.benigeo WHERE id=$1";
+function upsertBeneTmpToBeniGeo($conn, $stmtID, $id) {
+    $query = "WITH tmp_bene AS (
+                SELECT * from tmp_db.benigeo WHERE id=$1
+            )
+            INSERT INTO public.benigeo(id, ident, descr, mec, meo, bibli, note, topon, comun, geom) 
+            SELECT id, ident, descr, mec, meo, bibli, note, topon, comun, geom FROM tmp_bene
+            ON CONFLICT (id) DO UPDATE SET id = SELECT id FROM tmp_bene,
+            ident = SELECT ident FROM tmp_bene, descr = SELECT descr FROM tmp_bene,
+            mec = SELECT mec FROM tmp_bene, meo = SELECT meo FROM tmp_bene,
+            bibli = SELECT bibli FROM tmp_bene, note = SELECT note FROM tmp_bene,
+            topon = SELECT topon FROM tmp_bene, comun = SELECT comun FROM tmp_bene,
+            geom = SELECT geom FROM tmp_bene";
     return runPreparedQuery($conn, $stmtID, $query, array($id));
 }
 
