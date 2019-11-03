@@ -75,6 +75,16 @@ function insertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $
     ));
 }
 
+function replaceIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bibl, $note,
+        $topon, $comun, $geom, $sched) {
+    $tablename = 'tmp_db.benigeo';
+    $query = "update $tablename SET ident=$1, descr=$2, mec=$3, meo=$4, bibli=$5," .
+            " note=$6, topon=$7, comun=$8, geom=ST_GeomFromText($9, 4326)), sched=$10 WHERE id=$11";
+    return runPreparedQuery($conn, $stmtID, $query, array(
+        $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $geom, $sched, $id
+    ));
+}
+
 function insertIntoManipolaBene($conn, $stmtID, $userID, $beneID) {
     $query = "INSERT INTO public.manipola_bene(id_utente, id_bene) " .
             "VALUES($1,$2)";
