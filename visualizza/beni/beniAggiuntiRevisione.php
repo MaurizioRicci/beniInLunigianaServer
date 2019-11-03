@@ -53,10 +53,7 @@ $query_beni_revisione = 'SELECT
         b.status,
         b.msg_validatore
     FROM tmp_db.benigeo as b WHERE b.id_utente=$1 AND (b.status BETWEEN 0 AND 1)';
-                                                 // status = 0/1 per bene in attesa revisione/da rivedere
-
-$query = isset($My_POST['switch_bene']) &&
-        $My_POST['switch_bene'] == 'aggiunti' ? $query_beni_aggiunti : $query_beni_revisione;
+// status = 0/1 per bene in attesa revisione/da rivedere
 
 if (!$error) {
     $params = array($utente['id']);
@@ -70,11 +67,16 @@ if (!$error) {
         $query_beni_revisione = substr($query_beni_revisione, 0, $index - 1);
     }
 
+    $query = isset($My_POST['switch_bene']) &&
+            $My_POST['switch_bene'] == 'aggiunti' ? $query_beni_aggiunti : $query_beni_revisione;
     $resp = runPreparedQuery($conn, $c++, $query, $params);
 
     if ($resp['ok']) {
+        // $res['echo'] = intval($My_POST['echo']);
+        $res['filtered'] = pg_num_rows($resp['data']);
+        $res['data'] = [];
         while ($row = pg_fetch_assoc($resp['data'])) {
-            array_push($res, beniPostgres2JS($row));
+            array_push($res['data'], beniPostgres2JS($row));
         }
         http_response_code(200);
     }

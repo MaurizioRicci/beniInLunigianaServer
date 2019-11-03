@@ -48,7 +48,9 @@ function beniPostgres2JS($PostgresDict) {
         'schedatori_iniziali' => getOrSet($PostgresDict, 'schedatori_iniziali', ''),
         'note' => getOrSet($PostgresDict, 'note', ''),
         'geojson' => json_decode(getOrSet($PostgresDict, 'geojson', '')),
-        'centroid' => json_decode(getOrSet($PostgresDict, 'centroid_geojson', ''))
+        'centroid' => json_decode(getOrSet($PostgresDict, 'centroid_geojson', '')),
+        'status' => getOrSet($PostgresDict, 'status', ''),
+        'msg_validatore' => getOrSet($PostgresDict, 'msg_validatore', '')
     );
 }
 
