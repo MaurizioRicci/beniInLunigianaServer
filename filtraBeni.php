@@ -23,8 +23,8 @@ if (isset($My_GET['identificazione'])) {
                 'value' => $row['ident']);
             array_push($res, $temp);
         }
-        http_response_code(500);
     } else {
+        http_response_code(500);
         $error = true;
         $res['msg'] = 'An error occured';
     }
