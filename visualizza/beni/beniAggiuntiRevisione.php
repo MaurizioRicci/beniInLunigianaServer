@@ -102,10 +102,10 @@ if (!$error) {
 
         if ($resp['ok']) {
             // $res['echo'] = intval($My_POST['echo']);
-            $res['filtered'] = pg_num_rows($resp['data']);
-            $res['data'] = [];
+            //$res['filtered'] = pg_num_rows($resp['data']);
+            //$res['data'] = [];
             while ($row = pg_fetch_assoc($resp['data'])) {
-                array_push($res['data'], beniPostgres2JS($row));
+                array_push($res, beniPostgres2JS($row));
             }
             http_response_code(200);
         }
