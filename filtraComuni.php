@@ -7,7 +7,7 @@ http_response_code(500);
 if (isset($_GET['comune']) ) {
 	
 	$comune = $_GET['comune'];
-	$query = "SELECT DISTINCT comun FROM benigeo WHERE comun ILIKE '$comune%' LIMIT 100";
+	$query = "SELECT DISTINCT comun FROM benigeo WHERE comun ILIKE '$comune%' ORDER BY comun ASC LIMIT 100";
 	$result = pg_prepare($conn,'', $query);
 	if($result){
 		$result = pg_execute($conn,'', array());

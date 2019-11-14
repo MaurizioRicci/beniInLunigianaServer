@@ -8,7 +8,7 @@ if (isset($_GET['dict_name']) ) {
 	
 	$param = $_GET['dict_name'];
 	
-	$result = pg_prepare($conn,'', "SELECT * FROM vocabolari.\"$param\" ORDER BY nome ASC");
+	$result = pg_prepare($conn,'', "SELECT DISTINCT nome FROM vocabolari.\"$param\" ORDER BY nome ASC");
 	if($result){
 		$result = pg_execute($conn,'', array());
 		if (!$result) {
