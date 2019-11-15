@@ -1,5 +1,6 @@
 <?php
-/*/
+
+/* /
  * Questa funzione serve ai revisori per correggere un bene in revisione
  * che necessita modifiche.
  */
@@ -25,7 +26,6 @@ if (isset($My_POST['id']) && !$error) {
 
     pg_query('BEGIN') or die('Cant start transaction');
     $resp1 = $queryID = null;
-    $queryArr = array($resp1, $queryID);
 
     if ($sched['role'] == 'basic') {
         //può esserci un solo bene distinto in revisione
@@ -41,7 +41,8 @@ if (isset($My_POST['id']) && !$error) {
             }
         }
     }
-
+    // controllo tutte le query
+    $queryArr = array($resp1, $queryID);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
             http_response_code(200);

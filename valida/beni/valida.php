@@ -34,7 +34,6 @@ if (isset($My_POST['id']) && !$error) {
     // dalla modifica/creazione concorrente dello stesso bene da validare.
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE') or die('Cant start transaction');
     $respBeneTmp = $respBene = $respMove = $respIns = $respUpdt = $respAuthor = $respDel2 = null;
-    $queryArr = array($respBeneTmp, $respBene, $respMove, $respUpdt, $respAuthor, $respIns, $respDel2);
 
     // PASSO 1. controllo il ruolo.
     if ($sched['role'] == 'master') {
@@ -74,6 +73,7 @@ if (isset($My_POST['id']) && !$error) {
     }
 
     // per sicurezza controllo tutte le query
+    $queryArr = array($respBeneTmp, $respBene, $respMove, $respUpdt, $respAuthor, $respIns, $respDel2);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         // se COMMIT è andato a buon fine
         if (pg_query('COMMIT')) {

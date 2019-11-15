@@ -22,7 +22,6 @@ if (isset($My_POST['id']) && !$error) {
 
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
     $resp1 = $resp2 = $queryID = null;
-    $queryArr = array($resp1, $queryID, $resp2);
 
     //in base al ruolo utente scelgo in quale tabella mettere il bene
     if ($sched['role'] == 'master') {//senza revisione
@@ -50,7 +49,7 @@ if (isset($My_POST['id']) && !$error) {
             }
         }
     }
-
+    $queryArr = array($resp1, $queryID, $resp2);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
             http_response_code(200);

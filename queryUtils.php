@@ -118,7 +118,7 @@ function upsertBeneTmpToBeniGeo($conn, $stmtID, $id) {
  */
 
 function runPreparedQuery($conn, $stmtID, $query, $paramsArr) {
-    $res = array('ok' => false, 'data' => array());
+    $res = ['ok' => false, 'data' => array()];
     $result = pg_prepare($conn, $stmtID, $query);
     if ($result) {
         pg_send_execute($conn, $stmtID, $paramsArr);
@@ -144,10 +144,12 @@ function checkAllPreparedQuery($pQueryArr) {
 //da una lista di query preparate eseguite ottiene la prima con un errore
 function getFirstFailedQuery($pQueryArr) {
     $query = null;
-    foreach ($pQueryArr as $value)
-        if (isset($value) && !$value['ok'])
+    foreach ($pQueryArr as $value) {
+        if (isset($value) && !$value['ok']) {
             $query = $value;
-    return $query;
+            return $query;
+        }
+    }
 }
 
 ?>

@@ -24,7 +24,6 @@ if (isset($My_POST['id']) && !$error) {
     // dalla modifica/creazione concorrente dello stesso bene da validare.
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
     $respDel = null;
-    $queryArr = array($respDel);
 
     // PASSO 1. controllo il ruolo.
     if ($sched['role'] == 'master') {
@@ -47,6 +46,7 @@ if (isset($My_POST['id']) && !$error) {
     }
 
     // per sicurezza controllo tutte le query
+    $queryArr = array($respDel);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         //se COMMIT è andato a buon fine
         if (pg_query('COMMIT')) {
