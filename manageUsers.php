@@ -49,6 +49,9 @@ if (!$error) {
         // PASSO 2. aggiungo nuovi utenti
         if (isset($My_POST['ins'])) {
             foreach ($My_POST['ins'] as $userIns) {
+                // ignoro direttamente gli utenti senza password e username
+                if (!isset($userMod['username']) && !isset($userMod['password']))
+                    continue;
                 if (!$error) {
                     // agiungo utente corrente
                     $respIns = runPreparedQuery($conn, $c++,
@@ -59,8 +62,7 @@ if (!$error) {
                     ));
                     // controllo sia andata a buon fine la query senza sovrascrivere $error
                     $error = $error || !$respIns['ok'];
-                }
-                else {
+                } else {
                     break;
                 }
             }
@@ -68,6 +70,9 @@ if (!$error) {
         // PASSO 3. aggiorno utenti
         if (isset($My_POST['mod'])) {
             foreach ($My_POST['mod'] as $userMod) {
+                // ignoro direttamente gli utenti senza password e username
+                if (!isset($userMod['username']) && !isset($userMod['password']))
+                    continue;
                 if (!$error) {
                     // aggiorno utente corrente
                     $respMod = runPreparedQuery($conn, $c++,

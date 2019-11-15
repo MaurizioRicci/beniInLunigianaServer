@@ -8,7 +8,7 @@
 
 $transazione_fallita_msg = 'Impossibile completare la transazione';
 /* /
- * Controlla il range di ID che un utente può usare. Vero se l'id è valido, Falso se fuori dal range permesso.
+ * Controlla il range di ID (estremi inclusi) che un utente può usare. Vero se l'id è valido, Falso se fuori dal range permesso.
  * Occorre prima controllare l'esistenza dell'utente con risolviUtente(...)
  */
 
