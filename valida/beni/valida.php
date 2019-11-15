@@ -36,7 +36,7 @@ if (isset($My_POST['id']) && !$error) {
     $respBeneTmp = $respBene = $respMove = $respIns = $respUpdt = $respAuthor = $respDel2 = null;
 
     // PASSO 1. controllo il ruolo.
-    if ($sched['role'] == 'master') {
+    if ($sched['role'] == 'revisore') {
         //PASSO 2
         $respBeneTmp = runPreparedQuery($conn, $c++,
                 'SELECT id from tmp_db.benigeo where id=$1 FOR UPDATE', array($My_POST['id']));

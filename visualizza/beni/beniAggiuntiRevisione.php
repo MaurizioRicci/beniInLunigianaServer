@@ -76,7 +76,7 @@ $query_beni_revisione_miei = 'SELECT
 if (!$error) {
     $params = array($utente['id']);
 
-    if ($utente['role'] == 'master') {
+    if ($utente['role'] == 'revisore') {
         // i revisori nel caso vogliano i beni in revisione devono averli tutti
         $params = array();
         // vado quindi a rimuovere la parte finale della query '...AND id_utente=x'

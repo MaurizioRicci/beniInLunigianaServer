@@ -27,7 +27,7 @@ if (isset($My_POST['id']) && !$error) {
     $queryArr = array($respDel);
 
     // PASSO 1. controllo il ruolo.
-    if ($sched['role'] == 'master') {
+    if ($sched['role'] == 'revisore') {
 
         $respBene = runPreparedQuery($conn, $c++,
                 'DELETE from tmp_db.benigeo where id=$1 and status=0', array($My_POST['id']));

@@ -27,7 +27,7 @@ if (isset($My_POST['id']) && !$error) {
     pg_query('BEGIN') or die('Cant start transaction');
     $resp1 = $queryID = null;
 
-    if ($sched['role'] == 'basic') {
+    if ($sched['role'] == 'schedatore') {
         //può esserci un solo bene distinto in revisione
         $queryID = runPreparedQuery($conn, $c++,
                 'SELECT id from tmp_db.benigeo where id=$1 and status=1 FOR UPDATE', array($My_POST['id']));

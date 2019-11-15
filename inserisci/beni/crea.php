@@ -30,13 +30,13 @@ if (isset($My_POST['id']) && !$error) {
     $resp1 = $resp2 = $queryID = null;
 
     //in base al ruolo utente scelgo in quale tabella mettere il bene
-    if ($sched['role'] == 'master') {//senza revisione
+    if ($sched['role'] == 'revisore') {//senza revisione
         $resp1 = insertIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
                 $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                 $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom']);
         //manipolabene serve se è validato il bene
         $resp2 = insertIntoManipolaBene($conn, $c++, $sched['id'], $My_POST['id']);
-    } else if ($sched['role'] == 'basic') {
+    } else if ($sched['role'] == 'schedatore') {
         //può esserci un solo bene distinto in revisione
         // se gli id assegnati agli utenti non si sovrappongono, non dovrebbe mai
         //succedere che due utenti possano creare un bene con lo stesso id, non si sa mai..

@@ -26,7 +26,7 @@ if (isset($My_POST['id']) && !$error) {
     $respDel = null;
 
     // PASSO 1. controllo il ruolo.
-    if ($sched['role'] == 'master') {
+    if ($sched['role'] == 'revisore') {
 
         $respBene = runPreparedQuery($conn, $c++,
                 // status: 0 se revisione, 1 se necessita correzioni
