@@ -36,6 +36,7 @@ function emptyStr2NULL($var) {
 function beniPostgres2JS($PostgresDict) {
     return array(
         'id' => getOrSet($PostgresDict, 'id', ''),
+        'id_utente' => getOrSet($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
         'identificazione' => getOrSet($PostgresDict, 'ident', ''),
         'identificazione' => getOrSet($PostgresDict, 'ident', ''),
         'descrizione' => getOrSet($PostgresDict, 'descr', ''),
