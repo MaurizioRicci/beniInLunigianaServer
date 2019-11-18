@@ -17,6 +17,7 @@ $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
 $offset = $limit * ($page - 1);
 
 // imposto i filtri sui campi
+// true serve a creare un array come in php
 $query = json_decode($_GET['query'], true);
 $id = trim($query['id']);
 $ident = trim($query['identificazione']);
@@ -34,6 +35,7 @@ $query_beni_aggiunti_tutti_select = "SELECT *, count(*) over() as total_rows
      FROM benigeo_e_schedatori ";
 $query_beni_aggiunti_tutti_where = "";
 
+// costruisco la clausola WHERE della query
 if (is_numeric($id)) {
     $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
             . "id='$id' AND ";
