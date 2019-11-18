@@ -14,35 +14,75 @@ http_response_code(200);
 // contenere troppi dati per caricarli tutti in memoria in un browser
 $limit = filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT);
 $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
-$offset = $limit * $page;
+$offset = $limit * ($page - 1);
 
 // imposto i filtri sui campi
 $query = json_decode($_GET['query'], true);
-$id = $query['id'];
-$ident = $query['identificazione'];
-$descr = $query['descrizione'];
-$comun = $query['comune'];
-$mec = $query['macroEpocaCar'];
-$meo = $query['macroEpocaOrig'];
-$bibli = $query['bibliografia'];
-$note = $query['note'];
-$topon = $query['toponimo'];
-$schedatori_iniziali = $query['schedatori_iniziali'];
+$id = trim($query['id']);
+$ident = trim($query['identificazione']);
+$descr = trim($query['descrizione']);
+$comun = trim($query['comune']);
+$mec = trim($query['macroEpocaCar']);
+$meo = trim($query['macroEpocaOrig']);
+$bibli = trim($query['bibliografia']);
+$note = trim($query['note']);
+$topon = trim($query['toponimo']);
+$schedatori_iniziali = trim($query['schedatori_iniziali']);
 
 // Ottengo tutti i beni inseriti
-$query_beni_aggiunti_tutti = "SELECT *, count(*) over() as total_rows
-     FROM benigeo_e_schedatori 
-     WHERE ";
+$query_beni_aggiunti_tutti_select = "SELECT *, count(*) over() as total_rows
+     FROM benigeo_e_schedatori ";
+$query_beni_aggiunti_tutti_where = "";
+
 if (is_numeric($id)) {
-    $query_beni_aggiunti_tutti = $query_beni_aggiunti_tutti . "id='$id' AND ";
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "id='$id' AND ";
 }
-$query_beni_aggiunti_tutti = $query_beni_aggiunti_tutti .
-        "(ident ilike '%$ident' OR ident IS NULL) AND (descr ilike '%$descr%' OR descr IS NULL)"
-        . " AND (comun ilike '%$comun%' OR comun IS NULL)"
-        . " AND (mec ilike '%$mec%' OR mec IS NULL) AND (meo ilike '%$meo%' OR meo IS NULL)"
-        . " AND (bibli ilike '%$bibli%' OR bibli IS NULL) AND (note ilike '%$note%' OR note IS NULL)"
-        . " AND (topon ilike '%$topon%' OR descr IS NULL)"
-        . " AND (schedatori_iniziali ilike '%$schedatori_iniziali%' OR schedatori_iniziali IS NULL)"
+if ($ident !== '') {
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "ident ilike'%$ident%' AND ";
+}
+if ($descr !== '') {
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "descr ilike'%$descr%' AND ";
+}
+if ($comun !== '') {
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "comun ilike'%$comun%' AND ";
+}
+if ($meo !== '') {
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "meo ilike'%$meo%' AND ";
+}
+if ($mec !== '') {
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "mec ilike'%$mec%' AND ";
+}
+if ($bibli !== '') {
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "bibli ilike'%$bibli%' AND ";
+}
+if ($note !== '') {
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "note ilike'%$note%' AND ";
+}
+if ($topon !== '') {
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "topon ilike'%$topon%' AND ";
+}
+if ($schedatori_iniziali !== '') {
+    $query_beni_aggiunti_tutti_where = $query_beni_aggiunti_tutti_where
+            . "schedatori_iniziali ilike'%$schedatori_iniziali%' AND ";
+}
+
+if ($query_beni_aggiunti_tutti_where !== '') {
+    // sarà qualcosa del tipo:
+    // WHERE campo1 ilike 'xx' and campo2 ilike 'yyy' and true
+    // true è un escamotage per far quadrare l'ultimo AND aggiunto
+    $query_beni_aggiunti_tutti_where = ' WHERE ' . $query_beni_aggiunti_tutti_where . 'TRUE ';
+}
+$query_beni_aggiunti_tutti = $query_beni_aggiunti_tutti_select
+        . $query_beni_aggiunti_tutti_where
         . " LIMIT $1"
         . " OFFSET $2";
 

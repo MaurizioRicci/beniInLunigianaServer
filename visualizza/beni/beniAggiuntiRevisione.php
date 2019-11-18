@@ -36,23 +36,6 @@ $query_beni_aggiunti_miei = 'SELECT
     FROM benigeo as b inner join manipola_bene as m ON(b.id=m.id_bene)
     WHERE m.id_utente=$1';
 
-// Ottengo tutti i beni inseriti
-$query_beni_aggiunti_tutti = 'SELECT 
-        b.id,
-        b.ident,
-        b.descr,
-        b.meo,
-        b.mec,
-        b.topon,
-        b.esist,
-        b.comun,
-        b.bibli,
-        b.note,
-        b.geom,
-        m.id_utente,
-        m.timestamp_utc
-    FROM benigeo_e_schedatori';
-
 // Ottengo in beni in revisione di un certo utente
 $query_beni_revisione_miei = 'SELECT 
         b.id,
@@ -92,9 +75,6 @@ if (!$error) {
                 break;
             case 'miei_revisione':
                 $query = $query_beni_revisione_miei;
-                break;
-            case 'tutti_aggiunti':
-                $query = $query_beni_aggiunti_tutti;
                 break;
         }
         //$query = $My_POST['switch_bene'] == 'aggiunti' ? $query_beni_aggiunti : $query_beni_revisione;
