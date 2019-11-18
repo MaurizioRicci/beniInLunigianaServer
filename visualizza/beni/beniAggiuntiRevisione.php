@@ -76,13 +76,13 @@ $query_beni_revisione_miei = 'SELECT
 if (!$error) {
     $params = array($utente['id']);
 
-    if ($utente['role'] == 'revisore') {
+    if ($utente['role'] == 'revisore' && $My_POST['switch_bene'] == 'miei_revisione') {
         // i revisori nel caso vogliano i beni in revisione devono averli tutti
         $params = array();
         // vado quindi a rimuovere la parte finale della query '...AND id_utente=x'
         // senza più il filtro i revisori vedono tutti i beni in revisione
         $index = strripos($query_beni_revisione_miei, 'AND');
-        $query_beni_revisione = substr($query_beni_revisione, 0, $index - 1);
+        $query_beni_revisione_miei = substr($query_beni_revisione_miei, 0, $index - 1);
     }
 
     if (isset($My_POST['switch_bene'])) {
@@ -108,7 +108,8 @@ if (!$error) {
                 array_push($res, beniPostgres2JS($row));
             }
             http_response_code(200);
-        }
+        } else
+            echo pg_result_error($resp['data']);
     }
 }
 
