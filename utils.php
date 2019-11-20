@@ -55,6 +55,8 @@ function beniPostgres2JS($PostgresDict) {
     );
 }
 
+// praticamente rimpiazza i valori inesistenti (manca la chiave) o i valori NULL
+// con il valore di default. Comodo per evitare null exeption in Javascript.
 function getOrSet($dict, $key, $defaultVal) {
     if (isset($dict[$key]))
         return $dict[$key];
