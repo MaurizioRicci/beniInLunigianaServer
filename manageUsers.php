@@ -1,6 +1,6 @@
 <?php
 
-include('connection.php');
+include('connectionMaintenance.php');
 include('utils.php');
 include('queryUtils.php');
 
