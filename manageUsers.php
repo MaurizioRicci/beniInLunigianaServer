@@ -50,7 +50,7 @@ if (!$error) {
         if (isset($My_POST['ins'])) {
             foreach ($My_POST['ins'] as $userIns) {
                 // ignoro direttamente gli utenti senza password e username
-                if (!isset($userMod['username']) && !isset($userMod['password']))
+                if (!isset($userIns['username']) && !isset($userIns['password']))
                     continue;
                 if (!$error) {
                     // agiungo utente corrente

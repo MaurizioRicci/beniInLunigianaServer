@@ -10,6 +10,7 @@ $conn_str = sprintf("host=%s dbname=%s user=%s password=%s", $host, $db_name, $u
 $conn = pg_connect($conn_str);
 
 if (!$conn) {
-    http_response_code(500);
+    // 503 Service Unavailable
+    http_response_code(503);
     die("Connection invalid");
 }
