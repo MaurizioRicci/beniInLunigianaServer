@@ -30,22 +30,35 @@ if (isset($My_POST['id']) && !$error) {
     $resp1 = $resp2 = $queryID = null;
 
     //in base al ruolo utente scelgo in quale tabella mettere il bene
-    if ($sched['role'] == 'revisore') {//senza revisione
-        $resp1 = insertIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
-                $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom']);
-        //manipolabene serve se è validato il bene
-        $resp2 = insertIntoManipolaBene($conn, $c++, $sched['id'], $My_POST['id']);
-    } else if ($sched['role'] == 'schedatore') {
-        //può esserci un solo bene distinto in revisione
-        // se gli id assegnati agli utenti non si sovrappongono, non dovrebbe mai
-        //succedere che due utenti possano creare un bene con lo stesso id, non si sa mai..
+    if ($sched['role'] == 'revisore') {
+
+        //senza revisione
+        // controllo che il bene non esista già
         $queryID = runPreparedQuery($conn, $c++,
-                'SELECT id from tmp_db.benigeo where id=$1', array($My_POST['id']));
+                'SELECT id from benigeo where id=$1', [$My_POST['id']]);
         if (pg_num_rows($queryID['data']) > 0) {
             //richiesta sintatticamente corretta ma semanticamente errata
             http_response_code(422);
-            $res['msg'] = 'Un utente ha già in attesa di revisione questo bene';
+            $res['msg'] = "Il bene con id ${My_POST['id']} esiste già";
+            $error = true;
+        } else {
+            $resp1 = insertIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
+                    $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
+                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom']);
+            //manipolabene serve se è validato il bene
+            $resp2 = insertIntoManipolaBene($conn, $c++, $sched['id'], $My_POST['id']);
+            $error = $error || !$resp1['ok'] || !$resp2['ok'];
+        }
+    } else if ($sched['role'] == 'schedatore') {
+
+        // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
+        // questo poichè altri utenti potrebbero volero modificare (si serve per la modifica) lo stesso bene
+        $queryID = runPreparedQuery($conn, $c++,
+                'SELECT id from tmp_db.benigeo where id=$1 and id_utente=$2', [$My_POST['id'], $sched['id']]);
+        if (pg_num_rows($queryID['data']) > 0) {
+            //richiesta sintatticamente corretta ma semanticamente errata
+            http_response_code(422);
+            $res['msg'] = "Hai già in attesa di revisione il bene ${My_POST['id']}";
             $error = true;
         } else {
             //non possono esserci più crea bene concorrenti poichè violerebbero
