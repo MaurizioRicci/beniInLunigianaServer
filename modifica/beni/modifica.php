@@ -11,8 +11,8 @@ $error = false;
 http_response_code(500);
 $My_POST = postEmptyStr2NULL();
 
-$sched = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
-if (!isset($sched) && !$error) {
+$user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
+if (!isset($user) && !$error) {
     http_response_code(401);
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
@@ -24,7 +24,7 @@ if (isset($My_POST['id']) && !$error) {
     $resp1 = $resp2 = $queryID = null;
 
     //in base al ruolo utente scelgo in quale tabella mettere il bene
-    if ($sched['role'] == 'revisore') {
+    if ($user['role'] == 'revisore') {
         // senza revisione
         // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
         // questo poichè altri utenti potrebbero volero modificare (si serve per la modifica) lo stesso bene
@@ -41,15 +41,15 @@ if (isset($My_POST['id']) && !$error) {
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom']);
             //manipolabene serve se è validato il bene
-            $resp2 = insertIntoManipolaBene($conn, $c++, $sched['id'], $My_POST['id']);
+            $resp2 = insertIntoManipolaBene($conn, $c++, $user['id'], $My_POST['id']);
             $error = $error || !$resp1['ok'] || !$resp2['ok'];
         }
-    } if ($sched['role'] == 'schedatore') {
+    } if ($user['role'] == 'schedatore') {
 
         // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
         // questo poichè altri utenti potrebbero volero modificare (si serve per la modifica) lo stesso bene
         $queryID = runPreparedQuery($conn, $c++,
-                'SELECT id from tmp_db.benigeo where id=$1 and id_utente=$2', [$My_POST['id'], $sched['id']]);
+                'SELECT id from tmp_db.benigeo where id=$1 and id_utente=$2', [$My_POST['id'], $user['id']]);
 
         if (pg_num_rows($queryID['data']) > 0) {
             //richiesta sintatticamente corretta ma semanticamente errata
@@ -59,7 +59,7 @@ if (isset($My_POST['id']) && !$error) {
         } else {
             $resp1 = insertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $sched['id']);
+                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $user['id']);
         }
     }
     $queryArr = array($resp1, $queryID, $resp2);

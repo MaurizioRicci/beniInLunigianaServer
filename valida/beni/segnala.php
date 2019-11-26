@@ -12,8 +12,8 @@ http_response_code(500);
 // analizza $_POST e converte le stringhe vuote in null
 $My_POST = postEmptyStr2NULL();
 
-$sched = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
-if (!isset($sched) && !$error) {
+$user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
+if (!isset($user) && !$error) {
     http_response_code(401);
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
@@ -26,12 +26,12 @@ if (isset($My_POST['id']) && !$error) {
     $respDel = null;
 
     // PASSO 1. controllo il ruolo.
-    if ($sched['role'] == 'revisore') {
+    if ($user['role'] == 'revisore') {
 
         $respBene = runPreparedQuery($conn, $c++,
                 // status: 0 se revisione, 1 se necessita correzioni
-                'UPDATE tmp_db.benigeo SET status=1, msg_validatore=$1 where id=$2 and status=0',
-                array($My_POST['msg_validatore'], $My_POST['id']));
+                'UPDATE tmp_db.benigeo SET status=1, msg_validatore=$1 where id=$2 and id_utente=$3 and status=0',
+                array($My_POST['msg_validatore'], $My_POST['id'], $user['id']));
         // vediamo se ha cancellato qualcosa
         if (pg_num_rows($respBene['data']) < 0) {
             $res['msg'] = 'ID del bene in revisione non trovato';

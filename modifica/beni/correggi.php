@@ -15,8 +15,8 @@ $error = false;
 http_response_code(500);
 $My_POST = postEmptyStr2NULL();
 
-$sched = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
-if (!isset($sched) && !$error) {
+$user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
+if (!isset($user) && !$error) {
     http_response_code(401);
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
@@ -27,7 +27,7 @@ if (isset($My_POST['id']) && !$error) {
     pg_query('BEGIN') or die('Cant start transaction');
     $resp1 = $queryID = null;
 
-    if ($sched['role'] == 'schedatore') {
+    if ($user['role'] == 'schedatore') {
         //può esserci un solo bene distinto in revisione
         $queryID = runPreparedQuery($conn, $c++,
                 'SELECT id from tmp_db.benigeo where id=$1 and status=1 FOR UPDATE', array($My_POST['id']));
@@ -37,7 +37,7 @@ if (isset($My_POST['id']) && !$error) {
             if (pg_num_rows($queryID['data']) > 0) {
                 $resp1 = replaceIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                         $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                        $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $sched['id']);
+                        $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $user['id']);
             }
         }
     }

@@ -12,8 +12,8 @@ http_response_code(500);
 // analizza $_POST e converte le stringhe vuote in null
 $My_POST = postEmptyStr2NULL();
 
-$sched = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
-if (!isset($sched) && !$error) {
+$user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
+if (!isset($user) && !$error) {
     http_response_code(401);
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
@@ -21,7 +21,7 @@ if (!isset($sched) && !$error) {
 
 // Controllo se è richiesta la lista utenti
 if (isset($My_POST['usersList'])) {
-    if ($sched['role'] == 'revisore') {
+    if ($user['role'] == 'revisore') {
         $query = runPreparedQuery($conn, $c++, "SELECT * FROM utenti", []);
         if ($query['ok']) {
             while ($row = pg_fetch_assoc($query['data'])) {
@@ -45,7 +45,7 @@ if (!$error) {
     $respMod = $respIns = null;
 
     // PASSO 1. controllo il ruolo.
-    if ($sched['role'] == 'revisore') {
+    if ($user['role'] == 'revisore') {
         // PASSO 2. aggiungo nuovi utenti
         if (isset($My_POST['ins'])) {
             foreach ($My_POST['ins'] as $userIns) {

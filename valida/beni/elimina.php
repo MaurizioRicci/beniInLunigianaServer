@@ -12,8 +12,8 @@ http_response_code(500);
 // analizza $_POST e converte le stringhe vuote in null
 $My_POST = postEmptyStr2NULL();
 
-$sched = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
-if (!isset($sched) && !$error) {
+$user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
+if (!isset($user) && !$error) {
     http_response_code(401);
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
@@ -27,7 +27,7 @@ if (isset($My_POST['id']) && !$error) {
     $queryArr = array($respDel);
 
     // PASSO 1. controllo il ruolo.
-    if ($sched['role'] == 'revisore') {
+    if ($user['role'] == 'revisore') {
 
         $respBene = runPreparedQuery($conn, $c++,
                 'DELETE from tmp_db.benigeo where id=$1 and status=0', array($My_POST['id']));
