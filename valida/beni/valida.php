@@ -51,7 +51,7 @@ if (isset($My_POST['id']) && !$error) {
         $error = $error || !$respBene['ok'];
         if (!$error) {
             // PASSO 3. aggiungo/rimpiazzo il bene nell'archivio definitivo. Se non esiste in tmp non fa niente
-            $respMove = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id']);
+            $respMove = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $user['id']);
             // ottengo l'autore della modifica
             $respAuthor = runPreparedQuery($conn, $c++,
                     'SELECT id_utente FROM tmp_db.benigeo WHERE id=$1', array($My_POST['id']));

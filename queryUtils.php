@@ -96,19 +96,19 @@ function insertIntoManipolaBene($conn, $stmtID, $userID, $beneID) {
  * definitivo esiste già, questo verrà rimpiazzato dal bene nell'archivio temporaneo.
  */
 
-function upsertBeneTmpToBeniGeo($conn, $stmtID, $id) {
+function upsertBeneTmpToBeniGeo($conn, $stmtID, $id, $id_utente) {
     $query = "WITH tmp_bene AS (
-                SELECT * from tmp_db.benigeo WHERE id=$1
+                SELECT * from tmp_db.benigeo WHERE id=$1 and id_utente=$2
             )
-            INSERT INTO public.benigeo(id, ident, descr, mec, meo, bibli, note, topon, comun, geom) 
-            SELECT id, ident, descr, mec, meo, bibli, note, topon, comun, geom FROM tmp_bene
+            INSERT INTO public.benigeo(id, ident, descr, mec, meo, bibli, note, topon, esist, comun, geom) 
+            SELECT id, ident, descr, mec, meo, bibli, note, topon, esist, comun, geom FROM tmp_bene
             ON CONFLICT (id) DO UPDATE SET id = SELECT id FROM tmp_bene,
             ident = SELECT ident FROM tmp_bene, descr = SELECT descr FROM tmp_bene,
             mec = SELECT mec FROM tmp_bene, meo = SELECT meo FROM tmp_bene,
             bibli = SELECT bibli FROM tmp_bene, note = SELECT note FROM tmp_bene,
-            topon = SELECT topon FROM tmp_bene, comun = SELECT comun FROM tmp_bene,
-            geom = SELECT geom FROM tmp_bene";
-    return runPreparedQuery($conn, $stmtID, $query, array($id));
+            topon = SELECT topon FROM tmp_bene, esist = SELECT esist FROM tmp_bene
+            comun = SELECT comun FROM tmp_bene, geom = SELECT geom FROM tmp_bene";
+    return runPreparedQuery($conn, $stmtID, $query, [$id, $id_utente]);
 }
 
 /* /
