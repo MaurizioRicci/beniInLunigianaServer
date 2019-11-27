@@ -9,7 +9,7 @@ $res = array();
 $c = 0; // do un id progressivo alle query
 $error = false;
 http_response_code(500);
-$My_POST = postEmptyStr2NULL();
+$My_POST = dictEmptyStr2NULL(beniJS2Postgres($_POST));
 
 $user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
 if (!isset($user) && !$error) {

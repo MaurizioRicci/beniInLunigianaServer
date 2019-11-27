@@ -9,7 +9,7 @@ $res = array();
 $c = 0; // do un id progressivo alle query
 $error = false;
 http_response_code(500);
-$My_POST = postEmptyStr2NULL();
+$My_POST = dictEmptyStr2NULL(beniJS2Postgres($_POST));
 
 $user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
 if (!isset($user) && !$error) {
@@ -29,7 +29,7 @@ if (isset($My_POST['id']) && !$error) {
         // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
         // questo poichè altri utenti potrebbero volero modificare (si serve per la modifica) lo stesso bene
         $queryID = runPreparedQuery($conn, $c++,
-                'SELECT id from benigeo where id=$1', [$My_POST['id']]);
+                'SELECT id from benigeo where id=$1 AND id_utente=$2', [$My_POST['id'], $My_POST['id_utente']]);
 
         if (pg_num_rows($queryID['data']) <= 0) {
             //richiesta sintatticamente corretta ma semanticamente errata
@@ -47,9 +47,9 @@ if (isset($My_POST['id']) && !$error) {
     } if ($user['role'] == 'schedatore') {
 
         // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
-        // questo poichè altri utenti potrebbero volero modificare (si serve per la modifica) lo stesso bene
+        // questo poichè altri utenti potrebbero voler modificare (si serve per la modifica) lo stesso bene
         $queryID = runPreparedQuery($conn, $c++,
-                'SELECT id from tmp_db.benigeo where id=$1 and id_utente=$2', [$My_POST['id'], $user['id']]);
+                'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2', [$My_POST['id'], $user['id']]);
 
         if (pg_num_rows($queryID['data']) > 0) {
             //richiesta sintatticamente corretta ma semanticamente errata

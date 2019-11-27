@@ -35,11 +35,11 @@ if (isset($My_POST['id'])) {
                     return;
                 }
             }
+            // se cerco nel db temporaneo serve anche l'id utente
+            $query = "SELECT *, ST_AsGeoJSON(geom) as geojson, ST_AsGeoJSON(ST_Centroid(geom)) " .
+                    "as centroid_geojson FROM tmp_db.benigeo WHERE id=$1 AND id_utente=$2";
+            $params = [$id, $id_utente];
         }
-        // se cerco nel db temporaneo serve anche l'id utente
-        $query = "SELECT *, ST_AsGeoJSON(geom) as geojson, ST_AsGeoJSON(ST_Centroid(geom)) " .
-                "as centroid_geojson FROM tmp_db.benigeo WHERE id=$1 AND id_utente=$2";
-        $params = [$id, $id_utente];
     }
 
     $result = runPreparedQuery($conn, $c++, $query, $params);
