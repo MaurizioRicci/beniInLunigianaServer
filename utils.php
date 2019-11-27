@@ -74,10 +74,10 @@ function beniJS2Postgres($JSDict) {
         'topon' => getOrSet($JSDict, 'toponimo', ''),
         'esist' => getOrSet($JSDict, 'esistenza', ''),
         'comun' => getOrSet($JSDict, 'comune', ''),
-        'bibli' => getOrSet($JSDict, 'bibliografia', ''),
+        'bibl' => getOrSet($JSDict, 'bibliografia', ''),
         'schedatori_iniziali' => getOrSet($JSDict, 'schedatori_iniziali', ''),
         'note' => getOrSet($JSDict, 'note', ''),
-        'geojson' => json_decode(getOrSet($JSDict, 'geojson', '')),
+        'geom' => json_decode(getOrSet($JSDict, 'polygon', '')),
         'status' => getOrSet($JSDict, 'status', ''),
         'msg_validatore' => getOrSet($JSDict, 'msg_validatore', '')
     );

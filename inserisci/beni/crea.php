@@ -65,7 +65,8 @@ if (isset($My_POST['id']) && !$error) {
             // la pk (id) di tmp_db.benigeo. Quindi la query sotto fallirebbe facendo fallire la transazione.
             $resp1 = insertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $user['id']);
+                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
+                    $user['id'], $My_POST['status']);
         }
     }
 

@@ -19,62 +19,31 @@ if (!isset($utente) && !$error) {
     $error = true;
 }
 // Ottengo in beni inseriti da un certo utente
-$query_beni_aggiunti_miei = 'SELECT 
-        b.id,
-        b.ident,
-        b.descr,
-        b.meo,
-        b.mec,
-        b.topon,
-        b.esist,
-        b.comun,
-        b.bibli,
-        b.note,
-        b.geom,
-        m.id_utente,
-        m.timestamp_utc
-    FROM benigeo as b inner join manipola_bene as m ON(b.id=m.id_bene)
+$query_beni_aggiunti = 'SELECT * '
+        . 'FROM benigeo as b inner join manipola_bene as m ON(b.id=m.id_bene)
     WHERE m.id_utente=$1';
 
-// Ottengo in beni in revisione di un certo utente
-$query_beni_revisione_miei = 'SELECT 
-        b.id,
-        b.ident,
-        b.descr,
-        b.meo,
-        b.mec,
-        b.topon,
-        b.esist,
-        b.comun,
-        b.bibli,
-        b.note,
-        b.geom,
-        b.id_utente,
-        b.timestamp_utc,
-        b.status,
-        b.msg_validatore
-    FROM tmp_db.benigeo as b WHERE (b.status BETWEEN 0 AND 1) AND b.id_utente=$1';
-// status = 0/1 per bene in attesa revisione/da rivedere
+// Ottengo in beni di un certo utente
+$query_beni_temp = 'SELECT * '
+        . 'FROM tmp_db.benigeo WHERE id_utente=$1';
+
 
 if (!$error) {
     $params = array($utente['id']);
 
     if ($utente['role'] == 'revisore' && $My_POST['switch_bene'] == 'miei_revisione') {
-        // i revisori nel caso vogliano i beni in revisione devono averli tutti
-        $params = array();
-        // vado quindi a rimuovere la parte finale della query '...AND id_utente=x'
-        // senza più il filtro i revisori vedono tutti i beni in revisione
-        $index = strripos($query_beni_revisione_miei, 'AND');
-        $query_beni_revisione_miei = substr($query_beni_revisione_miei, 0, $index - 1);
+        // ottengo i beni da revisionare di tutti
+        $query_beni_temp = 'SELECT * '
+                . 'FROM tmp_db.benigeo WHERE status=0';
     }
 
     if (isset($My_POST['switch_bene'])) {
         switch ($My_POST['switch_bene']) {
             case 'miei_aggiunti':
-                $query = $query_beni_aggiunti_miei;
+                $query = $query_beni_aggiunti;
                 break;
             case 'miei_temp':
-                $query = $query_beni_revisione_miei;
+                $query = $query_beni_temp;
                 break;
         }
         //$query = $My_POST['switch_bene'] == 'aggiunti' ? $query_beni_aggiunti : $query_beni_revisione;
