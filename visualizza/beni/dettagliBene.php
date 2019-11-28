@@ -52,4 +52,4 @@ if (isset($My_POST['id'])) {
         $res['msg'] = pg_result_error($conn);
     }
 }
-echo json_encode($res);
+exit(json_encode($res));
