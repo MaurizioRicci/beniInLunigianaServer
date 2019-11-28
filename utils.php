@@ -30,6 +30,7 @@ function dictEmptyStr2NULL($dict) {
 
 // converte le stringhe vuote (dopo trim()) in valori null
 function emptyStr2NULL($var) {
+    if(!is_string($var)) return $var;
     $trimmed = trim($var);
     return $trimmed == '' ? null : $trimmed;
 }
@@ -77,7 +78,7 @@ function beniJS2Postgres($JSDict) {
         'bibl' => getOrSet($JSDict, 'bibliografia', ''),
         'schedatori_iniziali' => getOrSet($JSDict, 'schedatori_iniziali', ''),
         'note' => getOrSet($JSDict, 'note', ''),
-        'geom' => json_decode(getOrSet($JSDict, 'polygon', '')),
+        'geom' => getOrSet(getOrSet($JSDict, 'polygon', []), 'latlngArr', ''),
         'status' => getOrSet($JSDict, 'status', ''),
         'msg_validatore' => getOrSet($JSDict, 'msg_validatore', '')
     );
