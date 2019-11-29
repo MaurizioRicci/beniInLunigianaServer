@@ -44,7 +44,7 @@ if (isset($My_POST['id']) && !$error) {
         } else {
             $resp1 = insertIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom']);
+                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $My_POST['esist']);
             //manipolabene serve se è validato il bene
             $resp2 = insertIntoManipolaBene($conn, $c++, $user['id'], $My_POST['id']);
             $error = $error || !$resp1['ok'] || !$resp2['ok'];
@@ -66,7 +66,7 @@ if (isset($My_POST['id']) && !$error) {
             $resp1 = insertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
-                    $user['id'], $My_POST['status']);
+                    $user['id'], $My_POST['status'], $My_POST['esist']);
         }
     }
 

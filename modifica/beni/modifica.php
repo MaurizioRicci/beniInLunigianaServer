@@ -21,7 +21,7 @@ if (!isset($user) && !$error) {
 if (isset($My_POST['id']) && !$error) {
 
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
-    $resp0 = $resp1 = $resp2 = $queryID = null;
+    $resp0 = $resp1 = $resp2 = $resp3 = $queryID = null;
 
     //in base al ruolo utente scelgo in quale tabella mettere il bene
     if ($user['role'] == 'revisore') {
@@ -51,16 +51,19 @@ if (isset($My_POST['id']) && !$error) {
                 $resp0 = replaceIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                         $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                         $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
-                        $My_POST['id_utente'], $My_POST['status']);
+                        $My_POST['id_utente'], $My_POST['status'], $My_POST['esist']);
                 $resp1 = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
-                $error = $error || $resp0['ok'] || $resp1['ok'];
                 $resp2 = runPreparedQuery($conn, $c++,
+                        "UPDATE tmp_db.benigeo SET msg_validatore=${null} WHERE id=$1 AND id_utente=$2"
+                        , [$My_POST['id'], $My_POST['id_utente']]);
+                $error = $error || $resp0['ok'] || $resp1['ok'] || $resp2['ok'];
+                $resp3 = runPreparedQuery($conn, $c++,
                         'DELETE FROM tmp_db.benigeo WHERE id=$1 AND id_utente=$2',
                         [$My_POST['id'], $My_POST['id_utente']]);
             } else {
                 $resp1 = replaceIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
                         $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                        $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom']);
+                        $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $My_POST['esist']);
                 //manipolabene serve se è validato il bene
                 $resp2 = insertIntoManipolaBene($conn, $c++, $user['id'], $My_POST['id']);
             }
@@ -70,7 +73,7 @@ if (isset($My_POST['id']) && !$error) {
         // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
         // questo poichè altri utenti potrebbero voler modificare (si serve per la modifica) lo stesso bene
         $queryID = runPreparedQuery($conn, $c++,
-                'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2', [$My_POST['id'], $user['id']]);
+                'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2 and status=0', [$My_POST['id'], $user['id']]);
 
         if (pg_num_rows($queryID['data']) > 0) {
             //richiesta sintatticamente corretta ma semanticamente errata
@@ -78,13 +81,16 @@ if (isset($My_POST['id']) && !$error) {
             $res['msg'] = "Hai già una modifica al bene con id ${My_POST['id']} in sospeso";
             $error = true;
         } else {
-            $resp1 = insertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
+            $resp1 = upsertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
-                    $user['id'], $My_POST['status']);
+                    $user['id'], $My_POST['status'], $My_POST['esist']);
+            $resp2 = runPreparedQuery($conn, $c++,
+                    "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2"
+                    , [$My_POST['id'], $My_POST['id_utente']]);
         }
     }
-    $queryArr = array($resp1, $queryID, $resp2);
+    $queryArr = array($resp1, $queryID, $resp2, $resp3);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
             http_response_code(200);
