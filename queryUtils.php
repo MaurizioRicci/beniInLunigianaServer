@@ -56,7 +56,7 @@ function latLngArrToGeomTxt($latLngArr) {
     // l'ultimo elemento deve essere uguale al primo per chiudere il poligono
     array_push($strArr, $initialPairTxt);
     $txt = "MULTIPOLYGON(((" . join(',', $strArr) . ")))";
-    $ST_GeomFromText = "ST_GeomFromText($txt, 4326))";
+    $ST_GeomFromText = "ST_GeomFromText('$txt'::text, 4326)";
     return $ST_GeomFromText;
 }
 
@@ -65,9 +65,9 @@ function replaceIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bi
     $geomTxt = latLngArrToGeomTxt($geom);
     $tablename = 'public.benigeo';
     $query = "update $tablename SET ident=$1, descr=$2, mec=$3, meo=$4, bibli=$5," .
-            " note=$6, topon=$7, comun=$8, geom=$9, esist=$10 WHERE id=$11";
+            " note=$6, topon=$7, comun=$8, geom=$geomTxt, esist=$9 WHERE id=$10";
     return runPreparedQuery($conn, $stmtID, $query, array(
-        $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $geomTxt, $esist, $id
+        $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $esist, $id
     ));
 }
 
@@ -76,9 +76,9 @@ function insertIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bib
     $geomTxt = latLngArrToGeomTxt($geom);
     $tablename = 'public.benigeo';
     $query = "INSERT INTO $tablename(id, ident, descr, mec, meo, bibli, note, topon, comun, geom, esist) " .
-            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11";
+            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$geomTxt,$10";
     return runPreparedQuery($conn, $stmtID, $query, array(
-        $id, $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $geomTxt, $esist
+        $id, $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $esist
     ));
 }
 
@@ -87,9 +87,9 @@ function insertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $
     $geomTxt = latLngArrToGeomTxt($geom);
     $tablename = 'tmp_db.benigeo';
     $query = "INSERT INTO $tablename(id, ident, descr, mec, meo, bibli, note, topon, comun, geom, id_utente, status, esist) " .
-            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12, $13)";
+            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$geomTxt,$10,$11, $12)";
     return runPreparedQuery($conn, $stmtID, $query,
-            [$id, $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $geomTxt, $user_id, $status, $esist]);
+            [$id, $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $user_id, $status, $esist]);
 }
 
 function replaceIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bibl, $note,
@@ -97,9 +97,9 @@ function replaceIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, 
     $geomTxt = latLngArrToGeomTxt($geom);
     $tablename = 'tmp_db.benigeo';
     $query = "update $tablename SET ident=$1, descr=$2, mec=$3, meo=$4, bibli=$5," .
-            " note=$6, topon=$7, comun=$8, geom=$9, sched=$10, status=$11, esist=$12 WHERE id=$13 and id_utente=$10";
+            " note=$6, topon=$7, comun=$8, geom=$geomTxt, sched=$9, status=$10, esist=$11 WHERE id=$12 and id_utente=$10";
     return runPreparedQuery($conn, $stmtID, $query, array(
-        $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $geomTxt, $user, $status, $esist, $id
+        $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $user, $status, $esist, $id
     ));
 }
 
@@ -107,16 +107,16 @@ function upsertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $
         $topon, $comun, $geom, $user, $status, $esist) {
     $geomTxt = latLngArrToGeomTxt($geom);
     $query = "INSERT INTO tmp_db.benigeo(id, id_utente, ident, descr, mec, meo, bibli, note, topon, esist, comun, geom, status) 
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $geomTxt, $12)
             ON CONFLICT (id, id_utente) DO UPDATE SET id = $1,
             id_utente = $2,
             ident = $3, descr = $4,
             mec = $5, meo = $6,
             bibli = $7, note = $8,
             topon = $9, esist = $10,
-            comun = $11, geom = $12, status = $13";
+            comun = $11, geom = $geomTxt, status = $12";
     return runPreparedQuery($conn, $stmtID, $query, [$id, $user, $ident,
-        $descr, $mec, $meo, $bibl, $note, $topon, $esist, $comun, $geomTxt, $status]);
+        $descr, $mec, $meo, $bibl, $note, $topon, $esist, $comun, $status]);
 }
 
 function insertIntoManipolaBene($conn, $stmtID, $userID, $beneID) {
