@@ -31,12 +31,6 @@ $query_beni_temp = 'SELECT * '
 if (!$error) {
     $params = array($utente['id']);
 
-    if ($utente['role'] == 'revisore' && $My_POST['switch_bene'] == 'miei_revisione') {
-        // ottengo i beni da revisionare di tutti
-        $query_beni_temp = 'SELECT * '
-                . 'FROM tmp_db.benigeo WHERE status=0';
-    }
-
     if (isset($My_POST['switch_bene'])) {
         switch ($My_POST['switch_bene']) {
             case 'miei_aggiunti':
@@ -44,6 +38,10 @@ if (!$error) {
                 break;
             case 'miei_temp':
                 $query = $query_beni_temp;
+                if ($utente['role'] == 'revisore') {
+                    $params = [];
+                    $query = 'SELECT * FROM tmp_db.benigeo WHERE status=0';
+                }
                 break;
         }
         //$query = $My_POST['switch_bene'] == 'aggiunti' ? $query_beni_aggiunti : $query_beni_revisione;
