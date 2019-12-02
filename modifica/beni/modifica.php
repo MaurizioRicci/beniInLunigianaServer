@@ -54,9 +54,9 @@ if (isset($My_POST['id']) && !$error) {
                         $My_POST['id_utente'], $My_POST['status'], $My_POST['esist']);
                 $resp1 = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
                 $resp2 = runPreparedQuery($conn, $c++,
-                        "UPDATE tmp_db.benigeo SET msg_validatore=${null} WHERE id=$1 AND id_utente=$2"
+                        "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2"
                         , [$My_POST['id'], $My_POST['id_utente']]);
-                $error = $error || $resp0['ok'] || $resp1['ok'] || $resp2['ok'];
+                $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'];
                 $resp3 = runPreparedQuery($conn, $c++,
                         'DELETE FROM tmp_db.benigeo WHERE id=$1 AND id_utente=$2',
                         [$My_POST['id'], $My_POST['id_utente']]);

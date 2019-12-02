@@ -21,7 +21,9 @@ if (!isset($user)) {
         from (
           select id_bene from public.manipola_bene where id_utente=$1
           union
-          select id from tmp_db.benigeo where id_utente=$1
+          select id as id_bene from tmp_db.benigeo where id_utente=$1
+          union
+          select id_min as id_bene from id_min_max
         ) as _
       ),
       n_beni_rev as (

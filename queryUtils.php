@@ -46,8 +46,8 @@ function risolviUtente($conn, $stmtID, $username, $password) {
 }
 
 function latLngArrToGeomTxt($latLngArr) {
-    if (count($latLngArr) <= 0)
-        return null;
+    if (is_null($latLngArr) || count($latLngArr) <= 0)
+        return 'NULL';
     $strArr = [];
     $initialPairTxt = join(' ', $latLngArr[0]);
     foreach ($latLngArr as $latLngPair) {
@@ -97,7 +97,7 @@ function replaceIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, 
     $geomTxt = latLngArrToGeomTxt($geom);
     $tablename = 'tmp_db.benigeo';
     $query = "update $tablename SET ident=$1, descr=$2, mec=$3, meo=$4, bibli=$5," .
-            " note=$6, topon=$7, comun=$8, geom=$geomTxt, sched=$9, status=$10, esist=$11 WHERE id=$12 and id_utente=$10";
+            " note=$6, topon=$7, comun=$8, geom=$geomTxt, id_utente=$9, status=$10, esist=$11 WHERE id=$12 and id_utente=$9";
     return runPreparedQuery($conn, $stmtID, $query, array(
         $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $user, $status, $esist, $id
     ));
@@ -136,12 +136,12 @@ function upsertBeneTmpToBeniGeo($conn, $stmtID, $id, $id_utente) {
             )
             INSERT INTO public.benigeo(id, ident, descr, mec, meo, bibli, note, topon, esist, comun, geom) 
             SELECT id, ident, descr, mec, meo, bibli, note, topon, esist, comun, geom FROM tmp_bene
-            ON CONFLICT (id) DO UPDATE SET id = SELECT id FROM tmp_bene,
-            ident = SELECT ident FROM tmp_bene, descr = SELECT descr FROM tmp_bene,
-            mec = SELECT mec FROM tmp_bene, meo = SELECT meo FROM tmp_bene,
-            bibli = SELECT bibli FROM tmp_bene, note = SELECT note FROM tmp_bene,
-            topon = SELECT topon FROM tmp_bene, esist = SELECT esist FROM tmp_bene,
-            comun = SELECT comun FROM tmp_bene, geom = SELECT geom FROM tmp_bene";
+            ON CONFLICT (id) DO UPDATE SET id = (SELECT id FROM tmp_bene),
+            ident = (SELECT ident FROM tmp_bene), descr = (SELECT descr FROM tmp_bene),
+            mec = (SELECT mec FROM tmp_bene), meo = (SELECT meo FROM tmp_bene),
+            bibli = (SELECT bibli FROM tmp_bene), note = (SELECT note FROM tmp_bene),
+            topon = (SELECT topon FROM tmp_bene), esist = (SELECT esist FROM tmp_bene),
+            comun = (SELECT comun FROM tmp_bene), geom = (SELECT geom FROM tmp_bene)";
     return runPreparedQuery($conn, $stmtID, $query, [$id, $id_utente]);
 }
 
@@ -169,9 +169,10 @@ function runPreparedQuery($conn, $stmtID, $query, $paramsArr) {
 //controlla che le query preparate eseguite siano andate a buon fine. I null sono ignorati
 function checkAllPreparedQuery($pQueryArr) {
     $ok = true;
-    foreach ($pQueryArr as $value)
+    foreach ($pQueryArr as $value) {
         if (isset($value))
             $ok = $ok && $value['ok'];
+    }
     return $ok;
 }
 

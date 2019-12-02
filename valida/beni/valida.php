@@ -39,22 +39,22 @@ if (isset($My_POST['id']) && !$error) {
     if ($user['role'] == 'revisore') {
         //PASSO 2
         $respBeneTmp = runPreparedQuery($conn, $c++,
-                'SELECT id from tmp_db.benigeo where id=$1 FOR UPDATE', array($My_POST['id']));
-        if (!$respBeneTmp['ok'] || pg_num_rows($respBeneTmp['data'] < 0)) {
+                'SELECT id from tmp_db.benigeo where id=$1 and id_utente=$2 FOR UPDATE', [$My_POST['id'], $My_POST['id_utente']]);
+        if (!$respBeneTmp['ok'] || pg_num_rows($respBeneTmp['data']) <= 0) {
             $res['msg'] = 'ID del bene in revisione non trovato. Forse altri revisori hanno approvato il bene.';
             $error = true;
         }
 
         $respBene = runPreparedQuery($conn, $c++,
-                'SELECT id from public.benigeo where id=$1 FOR UPDATE', array($My_POST['id']));
+                'SELECT id from public.benigeo where id=$1 FOR UPDATE', [$My_POST['id']]);
         // controllo sia andata a buon fine la query senza sovrascrivere $error
         $error = $error || !$respBene['ok'];
         if (!$error) {
             // PASSO 3. aggiungo/rimpiazzo il bene nell'archivio definitivo. Se non esiste in tmp non fa niente
-            $respMove = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $user['id']);
+            $respMove = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
             // ottengo l'autore della modifica
             $respAuthor = runPreparedQuery($conn, $c++,
-                    'SELECT id_utente FROM tmp_db.benigeo WHERE id=$1', array($My_POST['id']));
+                    'SELECT id_utente FROM tmp_db.benigeo WHERE id=$1', [$My_POST['id']]);
             // errore se: c'era già un errore o se la query è fallita o se la query non ha dato risultati
             $error = $error || !$respAuthor['ok'] || (pg_num_rows($respAuthor['data']) <= 0);
             // PASSO 4. segno l'autore della modifica (non il revisore)
@@ -63,7 +63,7 @@ if (isset($My_POST['id']) && !$error) {
                 $respIns = insertIntoManipolaBene($conn, $c++, $row[0], $My_POST['id']);
                 // PASSO 5
                 $respDel2 = runPreparedQuery($conn, $c++,
-                        'DELETE FROM tmp_db.benigeo WHERE id=$1', array($My_POST['id']));
+                        'DELETE FROM tmp_db.benigeo WHERE id=$1', [$My_POST['id']]);
             }
         }
     } else {
