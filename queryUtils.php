@@ -12,6 +12,14 @@ $transazione_fallita_msg = 'Impossibile completare la transazione';
  * Occorre prima controllare l'esistenza dell'utente con risolviUtente(...)
  */
 
+/* /
+ * Rende la funzione Postgres che si occupa di creare un timestamp UTC
+ */
+
+function timestamp_utc_txt() {
+    return "timezone('UTC'::text, CURRENT_TIMESTAMP)";
+}
+
 function checkID($conn, $stmtID, $username, $password, $id_to_check) {
     if (isset($username) && isset($password)) {
         $query = "SELECT id_min, id_max FROM public.utenti WHERE username=$1 and password=$2";
@@ -95,9 +103,11 @@ function insertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $
 function replaceIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bibl, $note,
         $topon, $comun, $geom, $user, $status, $esist) {
     $geomTxt = latLngArrToGeomTxt($geom);
+    $timestamp_utc_txt = timestamp_utc_txt();
     $tablename = 'tmp_db.benigeo';
     $query = "update $tablename SET ident=$1, descr=$2, mec=$3, meo=$4, bibli=$5," .
-            " note=$6, topon=$7, comun=$8, geom=$geomTxt, id_utente=$9, status=$10, esist=$11 WHERE id=$12 and id_utente=$9";
+            " note=$6, topon=$7, comun=$8, geom=$geomTxt, id_utente=$9, status=$10,"
+            . "timestamp_utc_txt = $timestamp_utc_txt, esist=$11 WHERE id=$12 and id_utente=$9";
     return runPreparedQuery($conn, $stmtID, $query, array(
         $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $user, $status, $esist, $id
     ));
@@ -106,6 +116,7 @@ function replaceIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, 
 function upsertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bibl, $note,
         $topon, $comun, $geom, $user, $status, $esist) {
     $geomTxt = latLngArrToGeomTxt($geom);
+    $timestamp_utc_txt = timestamp_utc_txt();
     $query = "INSERT INTO tmp_db.benigeo(id, id_utente, ident, descr, mec, meo, bibli, note, topon, esist, comun, geom, status) 
             VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $geomTxt, $12)
             ON CONFLICT (id, id_utente) DO UPDATE SET id = $1,
@@ -113,7 +124,7 @@ function upsertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $
             ident = $3, descr = $4,
             mec = $5, meo = $6,
             bibli = $7, note = $8,
-            topon = $9, esist = $10,
+            topon = $9, esist = $10, timestamp_utc = $timestamp_utc_txt,
             comun = $11, geom = $geomTxt, status = $12";
     return runPreparedQuery($conn, $stmtID, $query, [$id, $user, $ident,
         $descr, $mec, $meo, $bibl, $note, $topon, $esist, $comun, $status]);
