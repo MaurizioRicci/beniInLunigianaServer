@@ -6,7 +6,7 @@ include('../../utils.php');
 
 header('Content-type: application/json');
 // analizza $_POST e converte le stringhe vuote in null
-$My_POST = postEmptyStr2NULL();
+$My_POST = dictEmptyStr2NULL(beniJS2Postgres($_POST));
 $res = array();
 $c = 0;
 http_response_code(500);
