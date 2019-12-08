@@ -84,6 +84,59 @@ function beniJS2Postgres($JSDict) {
     );
 }
 
+// in pratica rinomino le chiavi dei beni. Questo poichè nel caso cambi nome una attributo nel
+// db non occorrerebbe cambiare i riferimenti anche nel client. Basta solo applicare la modifica alle funzioni
+// beniPostgres2JS e beniJS2Postgres
+// tutto ciò che può servire al client per processare un bene
+function funzioniPostgres2JS($PostgresDict) {
+    return array(
+        'id' => getOrSet($PostgresDict, 'id', ''),
+        'id_utente' => getOrSet($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
+        'id_bene' => getOrSet($PostgresDict, 'id_bene', ''),
+        'denominazione' => getOrSet($PostgresDict, 'denominazione', ''),
+        'data' => getOrSet($PostgresDict, 'data', ''),
+        'tipodata' => getOrSet($PostgresDict, 'tipodata', ''),
+        'ruolo' => getOrSet($PostgresDict, 'ruolo', []),
+        'id_bener' => getOrSet($PostgresDict, 'id_utente_bene', ''),
+        'id_utente_bene' => getOrSet($PostgresDict, 'id_bener', ''),
+        'id_utente_bener' => getOrSet($PostgresDict, 'id_utente_bener', ''),
+        'denominazioner' => getOrSet($PostgresDict, 'denominazioner', ''),
+        'ruolor' => getOrSet($PostgresDict, 'ruolor', []),
+        'funzione' => getOrSet($PostgresDict, 'funzione', ''),
+        'bibliografia' => getOrSet($PostgresDict, 'bibliografia', ''),
+        'note' => getOrSet($PostgresDict, 'note', ''),
+        'status' => getOrSet($PostgresDict, 'status', ''),
+        'msg_validatore' => getOrSet($PostgresDict, 'msg_validatore', ''),
+        'schedatori_iniziali' => getOrSet($PostgresDict, 'schedatori_iniziali', ''),
+    );
+}
+
+// stessa cosa per beniPostgres2JS
+// tutto ciò che può servire al server per processare un bene
+function funzioniJS2Postgres($JSDict) {
+    return array(
+        'username' => getOrSet($JSDict, 'username', ''),
+        'password' => getOrSet($JSDict, 'password', ''),
+        'id' => getOrSet($JSDict, 'id', ''),
+        'id_utente' => getOrSet($JSDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
+        'id_bene' => getOrSet($JSDict, 'id_bene', ''),
+        'denominazione' => getOrSet($JSDict, 'denominazione', ''),
+        'id_utente_bene' => getOrSet($JSDict, 'id_utente_bene', ''),
+        'id_utente_bener' => getOrSet($JSDict, 'id_utente_bener', ''),
+        'data' => getOrSet($JSDict, 'data', ''),
+        'tipodata' => getOrSet($JSDict, 'tipodata', ''),
+        'ruolo' => getOrSet($JSDict, 'ruolo', []),
+        'id_bener' => getOrSet($JSDict, 'id_bener', ''),
+        'denominazioner' => getOrSet($JSDict, 'denominazioner', ''),
+        'ruolor' => getOrSet($JSDict, 'ruolor', []),
+        'funzione' => getOrSet($JSDict, 'funzione', ''),
+        'bibliografia' => getOrSet($JSDict, 'bibliografia', ''),
+        'note' => getOrSet($JSDict, 'note', ''),
+        'status' => getOrSet($JSDict, 'status', ''),
+        'msg_validatore' => getOrSet($JSDict, 'msg_validatore', '')
+    );
+}
+
 // praticamente rimpiazza i valori inesistenti (manca la chiave) o i valori NULL
 // con il valore di default. Comodo per evitare null exeption in Javascript.
 function getOrSet($dict, $key, $defaultVal) {
