@@ -79,7 +79,8 @@ function beniJS2Postgres($JSDict) {
         'note' => getOrSet($JSDict, 'note', ''),
         'geom' => getOrSet(getOrSet($JSDict, 'polygon', []), 'latlngArr', ''),
         'status' => getOrSet($JSDict, 'status', ''),
-        'msg_validatore' => getOrSet($JSDict, 'msg_validatore', '')
+        'msg_validatore' => getOrSet($JSDict, 'msg_validatore', ''),
+        'switch_bene' => getOrSet($JSDict, 'switch_bene', '')
         ];
 }
 
@@ -130,7 +131,8 @@ function funzioniJS2Postgres($JSDict) {
         'bibliografia' => getOrSet($JSDict, 'bibliografia', ''),
         'note' => getOrSet($JSDict, 'note', ''),
         'status' => getOrSet($JSDict, 'status', ''),
-        'msg_validatore' => getOrSet($JSDict, 'msg_validatore', '')
+        'msg_validatore' => getOrSet($JSDict, 'msg_validatore', ''),
+        'switch_funzione' => getOrSet($JSDict, 'switch_funzione', '')
         ];
 }
 
