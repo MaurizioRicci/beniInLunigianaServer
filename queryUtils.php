@@ -259,7 +259,7 @@ function upsertBeneTmpToBeniGeo($conn, $stmtID, $id, $id_utente) {
  * Copia una funzione temporanea nell'archivio definitivo.
  */
 
-function upsertFunzioneTmpToBeniGeo($conn, $stmtID, $id, $id_utente) {
+function upsertFunzioneTmpToFunzioniGeo($conn, $stmtID, $id, $id_utente) {
     $query = "WITH tmp_funzione AS (
                 SELECT * from tmp_db.funzionigeo WHERE id=$1 and id_utente=$2
             )

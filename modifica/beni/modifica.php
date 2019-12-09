@@ -54,13 +54,14 @@ if (isset($My_POST['id']) && !$error) {
                         $My_POST['id_utente'], $My_POST['status'], $My_POST['esist']);
                 $resp1 = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
                 $resp2 = runPreparedQuery($conn, $c++,
-                        "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2"
-                        , [$My_POST['id'], $My_POST['id_utente']]);
+                        "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
+                        [$My_POST['id'], $My_POST['id_utente']]);
                 $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'];
                 $resp3 = runPreparedQuery($conn, $c++,
                         'DELETE FROM tmp_db.benigeo WHERE id=$1 AND id_utente=$2',
                         [$My_POST['id'], $My_POST['id_utente']]);
             } else {
+                // sto modifcando un bene già consolidato
                 $resp1 = replaceIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
                         $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                         $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $My_POST['esist']);
@@ -86,8 +87,8 @@ if (isset($My_POST['id']) && !$error) {
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
                     $user['id'], $My_POST['status'], $My_POST['esist']);
             $resp2 = runPreparedQuery($conn, $c++,
-                    "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2"
-                    , [$My_POST['id'], $My_POST['id_utente']]);
+                    "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
+                    [$My_POST['id'], $My_POST['id_utente']]);
         }
     }
     $queryArr = array($resp1, $queryID, $resp2, $resp3);
