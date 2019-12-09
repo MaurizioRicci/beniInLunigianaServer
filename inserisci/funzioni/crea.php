@@ -68,7 +68,7 @@ if (!$error) {
                         $My_POST['id_utente_bener'], $My_POST['status']);
                 $id_funzione = getIdFunzione($resp1);
                 if (isset($id_funzione)) {
-                    $resp2 = insertFunzioniGeoRuoli($conn, $c++, $id_funzione, $My_POST['ruolo'],
+                    $resp2 = insertFunzioniGeoRuoli($conn, $c++, $id_funzione, $user['id'], $My_POST['ruolo'],
                             $My_POST['ruolor'], true);
                 }
             }

@@ -104,15 +104,18 @@ if (isset($My_POST['id']) && !$error) {
                 $resp1 = upsertIntoFunzioniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
                         $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
                         $My_POST['data'], $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
-                        $My_POST['note'], $My_POST['id_utente'], $My_POST['id_utente_bene'],
+                        $My_POST['note'], $user['id'], $My_POST['id_utente_bene'],
                         $My_POST['id_utente_bener'], $My_POST['status']);
                 $resp2 = runPreparedQuery($conn, $c++,
                         "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
-                        [$My_POST['id'], $My_POST['id_utente']]);
+                        [$My_POST['id'], $user['id']]);
+                // inserisco i ruoli dei vari beni associati alla funzione in archivio temporaneo
+                $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $user['id'],
+                        $My_POST['ruolo'], $My_POST['ruolor'], true);
             }
         }
     }
-    
+
     $queryArr = array($resp1, $queryID, $resp2, $resp3, $resp4);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {

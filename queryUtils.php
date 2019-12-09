@@ -147,16 +147,24 @@ function insertIntoFunzioniGeoTmp($conn, $stmtID, $idbene, $idbener, $denom, $de
                 $id_utente, $id_utente_bene, $id_utente_bener, $status]);
 }
 
-function insertFunzioniGeoRuoli($conn, $stmtID, $id_funzione, $ruoloArr, $ruolorArr, $tmp_db) {
+function insertFunzioniGeoRuoli($conn, $stmtID, $id_funzione, $id_utente, $ruoloArr,
+        $ruolorArr, $tmp_db) {
     $lastQuery = null;
     $maxLength = max(count($ruoloArr), count($ruolorArr));
-    $tablespace = $tmp_db ? 'tmp_db' : 'public';
     $tablename = 'funzionigeo_ruoli';
+    if($tmp_db){
+        $query = "INSERT INTO tmp_db.$tablename(id_funzione, id_utente, ruolo, ruolor) VALUES($1,$2,$3,$4)";
+        $params = [$id_funzione, $id_utente];
+    } else {
+        $query = "INSERT INTO tmp_db.$tablename(id_funzione, ruolo, ruolor) VALUES($1,$2,$3)";
+        $params = [$id_funzione, $curr_ruolo, $curr_ruolor];
+    }
     for ($c = 0; $c < $maxLength; $c++) {
         $curr_ruolo = isset($ruoloArr[$c]) ? $ruoloArr[$c] : null;
         $curr_ruolor = isset($ruolorArr[$c]) ? $ruolorArr[$c] : null;
-        $query = "INSERT INTO $tablespace.$tablename(id_funzione, ruolo, ruolor) VALUES($1, $2, $3)";
-        $lastQuery = runPreparedQuery($conn, $stmtID, $query, [$id_funzione, $curr_ruolo, $curr_ruolor]);
+        // aggiungo i rimanenti parametri
+        $params = array_merge($params, [$curr_ruolo, $curr_ruolor]);
+        $lastQuery = runPreparedQuery($conn, $stmtID, $query, $params);
         if (!$lastQuery['ok']) {
             break;
         }
@@ -211,7 +219,7 @@ function upsertIntoFunzioniGeoTmp($conn, $stmtID, $id, $idbene, $idbener, $denom
         $data, $tipodata, $funzione, $bibl, $note, $id_utente, $id_utente_bene, $id_utente_bener, $status) {
     $tablename = 'tmp_db.funzionigeo';
     $query = "INSERT INTO $tablename(id_bene, denominazione, data, tipodata, funzione, id_bener, denominazioner,
-            bibliografia, note, id, id_utente, id_utente_bener, id_utente_bener, status)
+            bibliografia, note, id, id_utente, id_utente_bene, id_utente_bener, status)
             VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
             ON CONFLICT (id,id_utente) DO UPDATE SET id_bene=$1,
             denominazione=$2, data=$3, tipodata=$4, funzione=$5,
