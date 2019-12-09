@@ -35,15 +35,13 @@ if (!$error) {
             $res['msg'] = "La funzione con id ${My_POST['id']} esiste già";
             $error = true;
         } else {
-            if (!esisteBene($conn, $c++, $My_POST['id_bene'], null)) {
+            $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], null);
+            $b2 = esisteBene($conn, $c++, $My_POST['id_bener'], null);
+            if (!$b1 || !$b2) {
+                $b_inesistente = $b1 ? $b2 : $b1;
                 http_response_code(422);
                 $error = true;
-                $res['msg'] = "Il bene ${My_POST['id_bene']} non esiste";
-            }
-            if (!esisteBene($conn, $c++, $My_POST['id_bener'], null)) {
-                http_response_code(422);
-                $error = true;
-                $res['msg'] = "Il bene ${My_POST['id_bener']} non esiste";
+                $res['msg'] = "Il bene $b_inesistente non esiste.";
             }
             if (!$error) {
                 $resp1 = insertIntoFunzioniGeo($conn, $c++, $My_POST['id_bene'], $My_POST['id_bener'],
@@ -61,15 +59,13 @@ if (!$error) {
             }
         }
     } else if ($user['role'] == 'schedatore') {
-        if (!esisteBene($conn, $c++, $My_POST['id_bene'], $My_POST['id_utente_bene'])) {
+        $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], $My_POST['id_utente_bene']);
+        $b2 = esisteBene($conn, $c++, $My_POST['id_bener'], $My_POST['id_utente_bener']);
+        if (!$b1 || !$b2) {
+            $b_inesistente = $b1 ? $b2 : $b1;
             http_response_code(422);
             $error = true;
-            $res['msg'] = "Il bene ${My_POST['id_bene']} non esiste";
-        }
-        if (!esisteBene($conn, $c++, $My_POST['id_bener'], $My_POST['id_utente_bener'])) {
-            http_response_code(422);
-            $error = true;
-            $res['msg'] = "Il bene ${My_POST['id_bener']} non esiste";
+            $res['msg'] = "Il bene $b_inesistente non esiste.";
         }
         if (!$error) {
             $resp1 = insertIntoFunzioniGeoTmp($conn, $c++, $My_POST['id_bene'], $My_POST['id_bener'],

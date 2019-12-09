@@ -54,8 +54,9 @@ function risolviUtente($conn, $stmtID, $username, $password) {
 }
 
 function latLngArrToGeomTxt($latLngArr) {
-    if (is_null($latLngArr) || count($latLngArr) <= 0)
+    if (is_null($latLngArr) || count($latLngArr) <= 0) {
         return 'NULL';
+    }
     $strArr = [];
     $initialPairTxt = join(' ', $latLngArr[0]);
     foreach ($latLngArr as $latLngPair) {
@@ -68,6 +69,9 @@ function latLngArrToGeomTxt($latLngArr) {
     return $ST_GeomFromText;
 }
 
+/*/
+ * Dice se esiste un certo bene con un certo id con un certo proprietario (opzionale)
+ */
 function esisteBene($conn, $stmtID, $idBene, $idUtenteBene) {
     $resp = null;
     if (!isset($idUtenteBene)) {

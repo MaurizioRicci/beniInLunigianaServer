@@ -39,6 +39,7 @@ function emptyStr2NULL($var) {
 // db non occorrerebbe cambiare i riferimenti anche nel client. Basta solo applicare la modifica alle funzioni
 // beniPostgres2JS e beniJS2Postgres
 // tutto ciò che può servire al client per processare un bene
+// Inoltre questa cosa mi assicura l'esistenza delle variabili dentro i miei script, basta testare non siano NULL
 function beniPostgres2JS($PostgresDict) {
     return ['id' => getOrSet($PostgresDict, 'id', ''),
         'id_utente' => getOrSet($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
