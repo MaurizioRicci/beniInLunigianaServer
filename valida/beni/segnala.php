@@ -23,7 +23,7 @@ if (isset($My_POST['id']) && !$error) {
     // occorre proteggersi dalle possibili write skew risultanti 
     // dalla modifica/creazione concorrente dello stesso bene da validare.
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
-    $respDel = null;
+    $respBene = null;
 
     // PASSO 1. controllo il ruolo.
     if ($user['role'] == 'revisore') {
@@ -46,7 +46,7 @@ if (isset($My_POST['id']) && !$error) {
     }
 
     // per sicurezza controllo tutte le query
-    $queryArr = array($respDel);
+    $queryArr = array($respBene);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         //se COMMIT è andato a buon fine
         if (pg_query('COMMIT')) {
@@ -57,8 +57,9 @@ if (isset($My_POST['id']) && !$error) {
     } else {
         pg_query('ROLLBACK');
         $failed_query = getFirstFailedQuery($queryArr);
-        if (!isset($res['msg']) && isset($failed_query)) //magari ho già scritto io un messaggio d'errore
+        if (!isset($res['msg']) && isset($failed_query)) { //magari ho già scritto io un messaggio d'errore
             $res['msg'] = pg_result_error($failed_query['data']);
+        }
     }
 }
 
