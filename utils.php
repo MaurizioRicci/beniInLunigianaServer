@@ -40,8 +40,7 @@ function emptyStr2NULL($var) {
 // beniPostgres2JS e beniJS2Postgres
 // tutto ciò che può servire al client per processare un bene
 function beniPostgres2JS($PostgresDict) {
-    return array(
-        'id' => getOrSet($PostgresDict, 'id', ''),
+    return ['id' => getOrSet($PostgresDict, 'id', ''),
         'id_utente' => getOrSet($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
         'identificazione' => getOrSet($PostgresDict, 'ident', ''),
         'descrizione' => getOrSet($PostgresDict, 'descr', ''),
@@ -57,14 +56,13 @@ function beniPostgres2JS($PostgresDict) {
         'centroid' => json_decode(getOrSet($PostgresDict, 'centroid_geojson', '')),
         'status' => getOrSet($PostgresDict, 'status', ''),
         'msg_validatore' => getOrSet($PostgresDict, 'msg_validatore', '')
-    );
+        ];
 }
 
 // stessa cosa per beniPostgres2JS
 // tutto ciò che può servire al server per processare un bene
 function beniJS2Postgres($JSDict) {
-    return array(
-        'username' => getOrSet($JSDict, 'username', ''),
+    return ['username' => getOrSet($JSDict, 'username', ''),
         'password' => getOrSet($JSDict, 'password', ''),
         'id' => getOrSet($JSDict, 'id', ''),
         'id_utente' => getOrSet($JSDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
@@ -81,7 +79,7 @@ function beniJS2Postgres($JSDict) {
         'geom' => getOrSet(getOrSet($JSDict, 'polygon', []), 'latlngArr', ''),
         'status' => getOrSet($JSDict, 'status', ''),
         'msg_validatore' => getOrSet($JSDict, 'msg_validatore', '')
-    );
+        ];
 }
 
 // in pratica rinomino le chiavi dei beni. Questo poichè nel caso cambi nome una attributo nel
@@ -89,8 +87,7 @@ function beniJS2Postgres($JSDict) {
 // beniPostgres2JS e beniJS2Postgres
 // tutto ciò che può servire al client per processare un bene
 function funzioniPostgres2JS($PostgresDict) {
-    return array(
-        'id' => getOrSet($PostgresDict, 'id', ''),
+    return ['id' => getOrSet($PostgresDict, 'id', ''),
         'id_utente' => getOrSet($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
         'id_bene' => getOrSet($PostgresDict, 'id_bene', ''),
         'denominazione' => getOrSet($PostgresDict, 'denominazione', ''),
@@ -108,14 +105,13 @@ function funzioniPostgres2JS($PostgresDict) {
         'status' => getOrSet($PostgresDict, 'status', ''),
         'msg_validatore' => getOrSet($PostgresDict, 'msg_validatore', ''),
         'schedatori_iniziali' => getOrSet($PostgresDict, 'schedatori_iniziali', ''),
-    );
+        ];
 }
 
 // stessa cosa per beniPostgres2JS
 // tutto ciò che può servire al server per processare un bene
 function funzioniJS2Postgres($JSDict) {
-    return array(
-        'username' => getOrSet($JSDict, 'username', ''),
+    return ['username' => getOrSet($JSDict, 'username', ''),
         'password' => getOrSet($JSDict, 'password', ''),
         'id' => getOrSet($JSDict, 'id', ''),
         'id_utente' => getOrSet($JSDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
@@ -134,7 +130,7 @@ function funzioniJS2Postgres($JSDict) {
         'note' => getOrSet($JSDict, 'note', ''),
         'status' => getOrSet($JSDict, 'status', ''),
         'msg_validatore' => getOrSet($JSDict, 'msg_validatore', '')
-    );
+        ];
 }
 
 // praticamente rimpiazza i valori inesistenti (manca la chiave) o i valori NULL
