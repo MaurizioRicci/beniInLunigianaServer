@@ -20,77 +20,89 @@ switch ($columnToOrder) {
     case "id":
         $columnToOrder = "id";
         break;
-    case "identificazione":
-        $columnToOrder = "ident";
+    case "denominazione":
+        $columnToOrder = "denominazione";
         break;
-    case "descrizione":
-        $columnToOrder = "descr";
+    case "denominazioner":
+        $columnToOrder = "denominazioner";
         break;
-    case "comune":
-        $columnToOrder = "comun";
+    case "data":
+        $columnToOrder = "data";
         break;
-    case "macroEpocaCar":
-        $columnToOrder = "mec";
+    case "tipodata":
+        $columnToOrder = "tipodata";
         break;
-    case "macroEpocaOrig":
-        $columnToOrder = "meo";
+    case "funzione":
+        $columnToOrder = "funzione";
         break;
-    case "toponimo":
-        $columnToOrder = "topon";
+    case "bibliografia":
+        $columnToOrder = "bibliografia";
+        break;
+    case "note":
+        $columnToOrder = "note";
+        break;
+    case "ruolo":
+        $columnToOrder = "ruolo";
+        break;
+    case "ruolor":
+        $columnToOrder = "ruolor";
         break;
     default:
         $columnToOrder = "";
         break;
-};
+}
 $offset = $limit * ($page - 1);
 
 // imposto i filtri sui campi
 // true serve a creare un array come in php
 $query = json_decode($_GET['query'], true);
 $id = trim($query['id']);
-$ident = trim($query['identificazione']);
-$descr = trim($query['descrizione']);
-$comun = trim($query['comune']);
-$mec = trim($query['macroEpocaCar']);
-$meo = trim($query['macroEpocaOrig']);
+$denom = trim($query['denominazione']);
+$denomr = trim($query['denominazioner']);
 $bibli = trim($query['bibliografia']);
+$data = trim($query['data']);
+$tipodata = trim($query['tipodata']);
+$funzione = trim($query['funzione']);
 $note = trim($query['note']);
-$topon = trim($query['toponimo']);
+$ruolo = trim($query['ruolo']);
+$ruolor = trim($query['ruolor']);
 $schedatori_iniziali = trim($query['schedatori_iniziali']);
 
 // Ottengo tutti i beni inseriti
 $query_beni_aggiunti_tutti_select = "SELECT *, count(*) over() as total_rows
-     FROM benigeo_e_schedatori ";
+     FROM benigeo_ruoli_schedatori ";
 $query_beni_aggiunti_tutti_where = "";
 
 // costruisco la clausola WHERE della query
 if (is_numeric($id)) {
     $query_beni_aggiunti_tutti_where .= "id='$id' AND ";
 }
-if ($ident !== '') {
-    $query_beni_aggiunti_tutti_where .= "ident ilike'%$ident%' AND ";
+if ($denom !== '') {
+    $query_beni_aggiunti_tutti_where .= "denominazione ilike'%$denom%' AND ";
 }
-if ($descr !== '') {
-    $query_beni_aggiunti_tutti_where .= "descr ilike'%$descr%' AND ";
-}
-if ($comun !== '') {
-    $query_beni_aggiunti_tutti_where .= $query_beni_aggiunti_tutti_where
-            . "comun ilike'%$comun%' AND ";
-}
-if ($meo !== '') {
-    $query_beni_aggiunti_tutti_where .= "meo ilike'%$meo%' AND ";
-}
-if ($mec !== '') {
-    $query_beni_aggiunti_tutti_where .= "mec ilike'%$mec%' AND ";
+if ($denomr !== '') {
+    $query_beni_aggiunti_tutti_where .= "denominazioner ilike'%$denomr%' AND ";
 }
 if ($bibli !== '') {
     $query_beni_aggiunti_tutti_where .= "bibli ilike'%$bibli%' AND ";
 }
+if ($data !== '') {
+    $query_beni_aggiunti_tutti_where .= "data ilike'%$data%' AND ";
+}
+if ($tipodata !== '') {
+    $query_beni_aggiunti_tutti_where .= "tipodata ilike'%$tipodata%' AND ";
+}
+if ($funzione !== '') {
+    $query_beni_aggiunti_tutti_where .= "funzione ilike'%$funzione%' AND ";
+}
+if ($ruolo !== '') {
+    $query_beni_aggiunti_tutti_where .= "ruolo ilike'%$ruolo%' AND ";
+}
+if ($ruolor !== '') {
+    $query_beni_aggiunti_tutti_where .= "ruolor ilike'%$ruolor%' AND ";
+}
 if ($note !== '') {
     $query_beni_aggiunti_tutti_where .= "note ilike'%$note%' AND ";
-}
-if ($topon !== '') {
-    $query_beni_aggiunti_tutti_where .= "topon ilike'%$topon%' AND ";
 }
 if ($schedatori_iniziali !== '') {
     $query_beni_aggiunti_tutti_where .= "schedatori_iniziali ilike'%$schedatori_iniziali%' AND ";
