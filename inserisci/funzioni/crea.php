@@ -49,12 +49,12 @@ if (!$error) {
                             $My_POST['denominazione'], $My_POST['denominazioner'], $My_POST['data'],
                             $My_POST['tipodata'], $My_POST['funzione'],
                             $My_POST['bibliografia'], $My_POST['note'], $user['id'], $My_POST['status']);
-                    //manipolabene serve se è validato il bene
+                    //manipolafunzione serve se è validata la funzione
                     $id_funzione = getIdFunzione($resp1);
                     if (isset($id_funzione)) {
-                        $resp2 = insertIntoManipolaFunzione($conn, $c++, $user['id'], $id_funzione);
-                        $resp3 = insertFunzioniGeoRuoli($conn, $c++, $id_funzione, $My_POST['ruolo'],
-                                $My_POST['ruolor'], false);
+                        $resp2 = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $id_funzione);
+                        $resp3 = insertFunzioniGeoRuoli($conn, $c++, $id_funzione, $My_POST['id_utente'],
+                                $My_POST['ruolo'], $My_POST['ruolor'], false);
                         $error = $error || !$resp1['ok'] || !$resp2['ok'] || !$resp3['ok'];
                     }
                 }

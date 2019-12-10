@@ -80,7 +80,8 @@ function beniJS2Postgres($JSDict) {
         'geom' => getOrSet(getOrSet($JSDict, 'polygon', []), 'latlngArr', ''),
         'status' => getOrSet($JSDict, 'status', ''),
         'msg_validatore' => getOrSet($JSDict, 'msg_validatore', ''),
-        'switch_bene' => getOrSet($JSDict, 'switch_bene', '')
+        'switch_bene' => getOrSet($JSDict, 'switch_bene', ''),
+        'tmp_db' => getOrSet($JSDict, 'tmp_db', false)
         ];
 }
 
@@ -96,8 +97,8 @@ function funzioniPostgres2JS($PostgresDict) {
         'data' => getOrSet($PostgresDict, 'data', ''),
         'tipodata' => getOrSet($PostgresDict, 'tipodata', ''),
         'ruolo' => getOrSet($PostgresDict, 'ruolo', []),
-        'id_bener' => getOrSet($PostgresDict, 'id_utente_bene', ''),
-        'id_utente_bene' => getOrSet($PostgresDict, 'id_bener', ''),
+        'id_bener' => getOrSet($PostgresDict, 'id_bener', ''),
+        'id_utente_bene' => getOrSet($PostgresDict, 'id_utente_bene', ''),
         'id_utente_bener' => getOrSet($PostgresDict, 'id_utente_bener', ''),
         'denominazioner' => getOrSet($PostgresDict, 'denominazioner', ''),
         'ruolor' => getOrSet($PostgresDict, 'ruolor', []),
@@ -132,7 +133,8 @@ function funzioniJS2Postgres($JSDict) {
         'note' => getOrSet($JSDict, 'note', ''),
         'status' => getOrSet($JSDict, 'status', ''),
         'msg_validatore' => getOrSet($JSDict, 'msg_validatore', ''),
-        'switch_funzione' => getOrSet($JSDict, 'switch_funzione', '')
+        'switch_funzione' => getOrSet($JSDict, 'switch_funzione', ''),
+        'tmp_db' => getOrSet($JSDict, 'tmp_db', false)
         ];
 }
 

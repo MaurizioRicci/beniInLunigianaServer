@@ -29,13 +29,13 @@ if (isset($My_POST['id'])) {
                 if (($utente['id'] != $My_POST['id_utente']) &&
                         ($utente['role'] !== 'revisore')) {
                     http_response_code(422);
-                    $res['msg'] = 'Sei uno scedatore, non puoi vedere i beni in revisione altrui';
+                    $res['msg'] = 'Sei uno scedatore, non puoi vedere le funzioni in revisione altrui';
                     echo json_encode($res);
                     return;
                 }
             }
             // se cerco nel db temporaneo serve anche l'id utente
-            $query = "SELECT * tmp_db.FROM funzionigeo_e_ruoli WHERE id=$1 AND id_utente=$2";
+            $query = "SELECT * FROM tmp_db.funzionigeo_e_ruoli WHERE id=$1 AND id_utente=$2";
             $params = [$id, $id_utente];
         }
     }
@@ -47,7 +47,7 @@ if (isset($My_POST['id'])) {
         }
         http_response_code(200);
     } else {
-        $res['msg'] = pg_result_error($conn);
+        $res['msg'] = pg_result_error($result['data']);
     }
 }
 exit(json_encode($res));

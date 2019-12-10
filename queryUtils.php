@@ -156,8 +156,8 @@ function insertFunzioniGeoRuoli($conn, $stmtID, $id_funzione, $id_utente, $ruolo
         $query = "INSERT INTO tmp_db.$tablename(id_funzione, id_utente, ruolo, ruolor) VALUES($1,$2,$3,$4)";
         $params = [$id_funzione, $id_utente];
     } else {
-        $query = "INSERT INTO tmp_db.$tablename(id_funzione, ruolo, ruolor) VALUES($1,$2,$3)";
-        $params = [$id_funzione, $curr_ruolo, $curr_ruolor];
+        $query = "INSERT INTO $tablename(id_funzione, ruolo, ruolor) VALUES($1,$2,$3)";
+        $params = [$id_funzione];
     }
     for ($c = 0; $c < $maxLength; $c++) {
         $curr_ruolo = isset($ruoloArr[$c]) ? $ruoloArr[$c] : null;
@@ -272,15 +272,15 @@ function upsertFunzioneTmpToFunzioniGeo($conn, $stmtID, $id, $id_utente) {
                 SELECT * from tmp_db.funzionigeo WHERE id=$1 and id_utente=$2
             )
             INSERT INTO public.funzionigeo(id_bene, lotto, denominazione, data, tipodata, funzione, id_bener, denominazioner,
-            bibliografia, note, id, id_utente, status)
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
-            ON CONFLICT (id,id_utente) DO UPDATE SET id_bene=(SELECT id_bene FROM tmp_funzione),
+            bibliografia, note, id)
+            SELECT id_bene, lotto, denominazione, data, tipodata, funzione, id_bener, denominazioner,
+            bibliografia, note, id FROM tmp_funzione
+            ON CONFLICT (id) DO UPDATE SET id_bene=(SELECT id_bene FROM tmp_funzione),
             lotto=(SELECT lotto FROM tmp_funzione), denominazione=(SELECT denominazione FROM tmp_funzione),
-            data=(SELECT data FROM tmp_funzione), tipodata=(SELECT tipo_data FROM tmp_funzione),
+            data=(SELECT data FROM tmp_funzione), tipodata=(SELECT tipodata FROM tmp_funzione),
             funzione=(SELECT funzione FROM tmp_funzione), id_bener=(SELECT id_bener FROM tmp_funzione),
             denominazioner=(SELECT id_bene FROM tmp_funzione), bibliografia=(SELECT id_bene FROM tmp_funzione),
-            note=(SELECT denominazioner FROM tmp_funzione), id=(SELECT id FROM tmp_funzione),
-            id_utente=(SELECT id_utente FROM tmp_funzione), status=(SELECT status FROM tmp_funzione)";
+            note=(SELECT denominazioner FROM tmp_funzione), id=(SELECT id FROM tmp_funzione)";
     return runPreparedQuery($conn, $stmtID, $query, [$id, $id_utente]);
 }
 

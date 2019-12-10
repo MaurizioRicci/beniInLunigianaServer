@@ -49,7 +49,7 @@ if (isset($My_POST['id'])) {
         }
         http_response_code(200);
     } else {
-        $res['msg'] = pg_result_error($conn);
+        $res['msg'] = pg_result_error($result['data']);
     }
 }
 exit(json_encode($res));
