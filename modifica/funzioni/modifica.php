@@ -21,7 +21,7 @@ if (!isset($user) && !$error) {
 if (isset($My_POST['id']) && !$error) {
 
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
-    $resp0 = $resp1 = $resp2 = $resp3 = $resp4 = $queryID = null;
+    $resp0 = $resp1 = $resp2 = $resp3 = $resp4 = $resp5 = $queryID = null;
 
     // controllo benireferenziati
     $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], $My_POST['id_utente_bene']);
@@ -40,12 +40,12 @@ if (isset($My_POST['id']) && !$error) {
             // questo poichè altri utenti potrebbero volero modificare (si serve per la modifica) la stessa funzione
             if (isset($My_POST['id_utente'])) {
                 // se viene fornito anche id_utente allora è parte della chiave per un bene in archivio temporaneo
-                $queryFunzioneTmp = 'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2';
+                $queryFunzioneTmp = 'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2 FOR UPDATE';
                 $paramsFunzioneTmp = [$My_POST['id'], $My_POST['id_utente']];
                 $queryID = runPreparedQuery($conn, $c++, $queryFunzioneTmp, $paramsFunzioneTmp);
             } else {
                 // se c'è solo id del bene allora si sta cercando un bene in archivio definitivo
-                $queryFunzione = 'SELECT id from benigeo where id=$1';
+                $queryFunzione = 'SELECT id from benigeo where id=$1 FOR UPDATE';
                 $paramsFunzione = [$My_POST['id']];
                 $queryID = runPreparedQuery($conn, $c++, $queryFunzione, $paramsFunzione);
             }
@@ -68,11 +68,15 @@ if (isset($My_POST['id']) && !$error) {
                     $resp2 = runPreparedQuery($conn, $c++,
                             "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                             [$My_POST['id'], $My_POST['id_utente']]);
-                    // inserisco i ruoli dei vari beni associati alla funzione in archivio temporaneo
+                    // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
                     $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['ruolo'],
-                            $My_POST['ruolor'], true);
+                            $My_POST['ruolor'], false);
                     $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'] || !$resp3['ok'];
+                    // cancello ruoli e funzione dal db temporaneo
                     $resp4 = runPreparedQuery($conn, $c++,
+                            'DELETE FROM tmp_db.funzionigeo_ruoli WHERE id_funzione=$1 AND id_utente=$2',
+                            [$My_POST['id'], $My_POST['id_utente']]);
+                    $resp5 = runPreparedQuery($conn, $c++,
                             'DELETE FROM tmp_db.funzionigeo WHERE id=$1 AND id_utente=$2',
                             [$My_POST['id'], $My_POST['id_utente']]);
                 } else {
@@ -93,7 +97,8 @@ if (isset($My_POST['id']) && !$error) {
             // la PK delle funzioni temporane è id_funzione e id_utente (ovvero il proprietario)
             // questo poichè altri utenti potrebbero voler modificare (si serve per la modifica) la stessa funzione
             $queryID = runPreparedQuery($conn, $c++,
-                    'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2 and status=0', [$My_POST['id'], $user['id']]);
+                    'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2 and status=0
+                        FOR UPDATE', [$My_POST['id'], $user['id']]);
 
             if (pg_num_rows($queryID['data']) > 0) {
                 //richiesta sintatticamente corretta ma semanticamente errata
@@ -110,13 +115,16 @@ if (isset($My_POST['id']) && !$error) {
                         "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                         [$My_POST['id'], $user['id']]);
                 // inserisco i ruoli dei vari beni associati alla funzione in archivio temporaneo
-                $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $user['id'],
+                $resp3 = runPreparedQuery($conn, $c++,
+                        'DELETE FROM tmp_db.funzionigeo_ruoli WHERE id_funzione=$1 AND id_utente=$2',
+                        [$My_POST['id'], $user['id']]);
+                $resp4 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $user['id'],
                         $My_POST['ruolo'], $My_POST['ruolor'], true);
             }
         }
     }
 
-    $queryArr = array($resp1, $queryID, $resp2, $resp3, $resp4);
+    $queryArr = array($resp1, $queryID, $resp2, $resp3, $resp4, $resp5);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
             http_response_code(200);

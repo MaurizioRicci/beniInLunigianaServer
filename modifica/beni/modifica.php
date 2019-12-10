@@ -29,12 +29,12 @@ if (isset($My_POST['id']) && !$error) {
         // questo poichè altri utenti potrebbero volero modificare (si serve per la modifica) lo stesso bene
         if (isset($My_POST['id_utente'])) {
             // se viene fornito anche id_utente allora è parte della chiave per un bene in archivio temporaneo
-            $queryBeneTmp = 'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2';
+            $queryBeneTmp = 'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2 FOR UPDATE';
             $paramsBeneTmp = [$My_POST['id'], $My_POST['id_utente']];
             $queryID = runPreparedQuery($conn, $c++, $queryBeneTmp, $paramsBeneTmp);
         } else {
             // se c'è solo id del bene allora si sta cercando un bene in archivio definitivo
-            $queryBene = 'SELECT id from benigeo where id=$1';
+            $queryBene = 'SELECT id from benigeo where id=$1 FOR UPDATE';
             $paramsBene = [$My_POST['id']];
             $queryID = runPreparedQuery($conn, $c++, $queryBene, $paramsBene);
         }
@@ -74,7 +74,8 @@ if (isset($My_POST['id']) && !$error) {
         // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
         // questo poichè altri utenti potrebbero voler modificare (si serve per la modifica) lo stesso bene
         $queryID = runPreparedQuery($conn, $c++,
-                'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2 and status=0', [$My_POST['id'], $user['id']]);
+                'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2 and status=0
+                    FOR UPDATE', [$My_POST['id'], $user['id']]);
 
         if (pg_num_rows($queryID['data']) > 0) {
             //richiesta sintatticamente corretta ma semanticamente errata
