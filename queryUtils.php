@@ -13,13 +13,18 @@ $transazione_fallita_msg = 'Impossibile completare la transazione';
  */
 
 /* /
- * Rende la funzione Postgres che si occupa di creare un timestamp UTC
+ * Rende la funzione Postgres che si occupa di creare un timestamp UTC.
+ * Essa è una stringa che rappresenta una funzione per Postgres, pertando non deve finire
+ * tra gli argomenti di una query preparata (sennò non esegue la funzione). Essa è sicura però.
  */
 
 function timestamp_utc_txt() {
     return "timezone('UTC'::text, CURRENT_TIMESTAMP)";
 }
 
+/*/
+ * Vero l'id specificato appartiene all'utente specificato da username & password
+ */
 function checkID($conn, $stmtID, $username, $password, $id_to_check) {
     if (isset($username) && isset($password)) {
         $query = "SELECT id_min, id_max FROM public.utenti WHERE username=$1 and password=$2";
@@ -34,7 +39,7 @@ function checkID($conn, $stmtID, $username, $password, $id_to_check) {
 }
 
 /* /
- * valida un utente e ne estrae il ruolo. Restituisce null se non è stato trovato.
+ * Valida un utente e ne estrae il ruolo. Restituisce null se non è stato trovato.
  * Altrimenti un dizionario con id&role (ruolo)
  */
 
@@ -53,6 +58,12 @@ function risolviUtente($conn, $stmtID, $username, $password) {
     return null;
 }
 
+/*/
+ * Prende un array di array con il seguente formato: [ [lat1,lon1], .... [latN,lonN]]
+ * ogni array dentro l'array è una coppia di vertici di un poligono. La funzione prende tutti i vertici
+ * e li converte in una stringa binaria di geometria per PostGIS. Anche questa funzione rende una funzione
+ * da far eseguire a Postgres, pertando non deve essere un parametro di una query preparata.
+ */
 function latLngArrToGeomTxt($latLngArr) {
     if (is_null($latLngArr) || count($latLngArr) <= 0) {
         return 'NULL';
@@ -83,6 +94,21 @@ function esisteBene($conn, $stmtID, $idBene, $idUtenteBene) {
     }
     return $resp['ok'] && pg_num_rows($resp['data']) > 0;
 }
+
+/*/
+Da qui in poi ci sono un po' di funzioni di utilità per manipolare le tabelle dei beni,
+delle funzioni, dei beni temporanei e delle funzioni temporanee.
+Le funzioni all'incirca seguono la sintassi {insert|replace|upsert}Into<tabella>[Tmp]
+
+Per esempio: replaceIntoBeniGeoTmp -> replace nella tabella benigeo di archivio temporaneo.
+Rimpiazza quindi un bene nell'archivio temporaneo; pertanto prenderà come parametri
+id_bene, id_utente, descrizione etc...
+
+NB: nell'archivio temporaneo id_bene e id_utente sono una chiave per un bene (stessa cosa per le funzioni)
+PS: upsert è la combinazione di update+insert; se l'elemento non esiste si crea, se esiste si aggiorna. Per
+    ulteriori approfondimenti si veda la clausola ON CONFLICT del comando INSERT.
+ */
+
 
 function replaceIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bibl, $note,
         $topon, $comun, $geom, $esist) {
@@ -305,7 +331,9 @@ function runPreparedQuery($conn, $stmtID, $query, $paramsArr) {
     return $res;
 }
 
-//controlla che le query preparate eseguite siano andate a buon fine. I null sono ignorati
+/*/
+ * controlla che le query preparate eseguite siano andate a buon fine. I null sono ignorati
+ */
 function checkAllPreparedQuery($pQueryArr) {
     $ok = true;
     foreach ($pQueryArr as $value) {
@@ -315,7 +343,9 @@ function checkAllPreparedQuery($pQueryArr) {
     return $ok;
 }
 
-//da una lista di query preparate eseguite ottiene la prima con un errore
+/*/
+ * da una lista di query preparate eseguite ottiene la prima con un errore
+ */
 function getFirstFailedQuery($pQueryArr) {
     $query = null;
     foreach ($pQueryArr as $value) {
@@ -326,11 +356,14 @@ function getFirstFailedQuery($pQueryArr) {
     }
 }
 
+/*/
+ * Restituisce l'id di una funzione (se presente nella query)
+ */
 function getIdFunzione($query) {
     $idFunzione = null;
     if ($query['ok']) {
-        $row = pg_fetch_row($query['data']);
-        $idFunzione = $row ? $row[0] : null;
+        $row = pg_fetch_assoc($query['data']);
+        $idFunzione = $row ? $row['id'] : null;
     }
     return $idFunzione;
 }
