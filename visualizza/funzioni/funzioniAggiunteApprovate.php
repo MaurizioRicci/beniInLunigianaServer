@@ -57,6 +57,8 @@ $offset = $limit * ($page - 1);
 // true serve a creare un array come in php
 $query = json_decode($_GET['query'], true);
 $id = trim($query['id']);
+$id_bene = trim($query['id_bene']);
+$id_bener = trim($query['id_bener']);
 $denom = trim($query['denominazione']);
 $denomr = trim($query['denominazioner']);
 $bibli = trim($query['bibliografia']);
@@ -70,12 +72,18 @@ $schedatori_iniziali = trim($query['schedatori_iniziali']);
 
 // Ottengo tutti i beni inseriti
 $query_beni_aggiunti_tutti_select = "SELECT *, count(*) over() as total_rows
-     FROM benigeo_ruoli_schedatori ";
+     FROM funzionigeo_ruoli_schedatori ";
 $query_beni_aggiunti_tutti_where = "";
 
 // costruisco la clausola WHERE della query
 if (is_numeric($id)) {
     $query_beni_aggiunti_tutti_where .= "id='$id' AND ";
+}
+if (is_numeric($id_bene)) {
+    $query_beni_aggiunti_tutti_where .= "id_bene='$id_bene' AND ";
+}
+if (is_numeric($id_bener)) {
+    $query_beni_aggiunti_tutti_where .= "id='$id_bener' AND ";
 }
 if ($denom !== '') {
     $query_beni_aggiunti_tutti_where .= "denominazione ilike'%$denom%' AND ";
@@ -96,10 +104,10 @@ if ($funzione !== '') {
     $query_beni_aggiunti_tutti_where .= "funzione ilike'%$funzione%' AND ";
 }
 if ($ruolo !== '') {
-    $query_beni_aggiunti_tutti_where .= "ruolo ilike'%$ruolo%' AND ";
+    $query_beni_aggiunti_tutti_where .= "ruolo::text ilike'%$ruolo%' AND ";
 }
 if ($ruolor !== '') {
-    $query_beni_aggiunti_tutti_where .= "ruolor ilike'%$ruolor%' AND ";
+    $query_beni_aggiunti_tutti_where .= "ruolor::text ilike'%$ruolor%' AND ";
 }
 if ($note !== '') {
     $query_beni_aggiunti_tutti_where .= "note ilike'%$note%' AND ";
@@ -133,7 +141,7 @@ $params = [$limit, $offset];
 $query = runPreparedQuery($conn, $c++, $query_beni_aggiunti_tutti_select, $params);
 if ($query['ok']) {
     while ($row = pg_fetch_assoc($query['data'])) {
-        array_push($res['data'], beniPostgres2JS($row));
+        array_push($res['data'], funzioniPostgres2JS($row));
         $res['count'] = $row['total_rows'];
     }
 } else {
