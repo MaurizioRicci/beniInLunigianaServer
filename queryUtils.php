@@ -93,7 +93,7 @@ function esisteBene($conn, $stmtID, $idBene, $idUtenteBene) {
         $resp = runPreparedQuery($conn, $stmtID, "SELECT id from tmp_db.benigeo WHERE id=$1 and id_utente=$2",
                 [$idBene, $idUtenteBene]);
     }
-    return $resp['ok'] && pg_num_rows($resp['data']) > 0;
+    return isset($resp) && $resp['ok'] && pg_num_rows($resp['data']) > 0;
 }
 
 /*/

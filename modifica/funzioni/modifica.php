@@ -23,11 +23,13 @@ if (isset($My_POST['id']) && !$error) {
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
     $resp0 = $resp1 = $resp2 = $resp3 = $resp4 = $resp5 = $queryID = null;
 
-    // controllo benireferenziati
-    $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], $My_POST['id_utente_bene']);
-    $b2 = esisteBene($conn, $c++, $My_POST['id_bener'], $My_POST['id_utente_bener']);
+    // controllo benireferenziati. Cerco o in archivio definitivo o in quelli temporanei dell'utente
+    $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], $My_POST['id_utente_bene']) ||
+            esisteBene($conn, $c++, $My_POST['id_bene'], null);
+    $b2 = esisteBene($conn, $c++, $My_POST['id_bener'], $My_POST['id_utente_bener']) ||
+            esisteBene($conn, $c++, $My_POST['id_bener'], null);
     if (!$b1 || !$b2) {
-        $b_inesistente = $b1 ? $b2 : $b1;
+        $b_inesistente = $b1 ? $My_POST['id_bener'] : $My_POST['id_bene'];
         http_response_code(422);
         $error = true;
         $res['msg'] = "Il bene $b_inesistente non esiste.";
