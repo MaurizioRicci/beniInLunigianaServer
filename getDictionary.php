@@ -6,11 +6,11 @@ http_response_code(500);
 
 if (isset($_GET['dict_name']) ) {
 	
-	$param = $_GET['dict_name'];
-	
-	$result = pg_prepare($conn,'', "SELECT DISTINCT nome FROM vocabolari.\"$param\" ORDER BY nome ASC");
+	$dict_name = $_GET['dict_name'];
+	$dict_name_esc = pg_escape_identifier($dict_name);
+	$result = pg_prepare($conn,'', "SELECT DISTINCT nome FROM vocabolari.$dict_name_esc ORDER BY nome ASC");
 	if($result){
-		$result = pg_execute($conn,'', array());
+		$result = pg_execute($conn,'', []);
 		if (!$result) {
 		  echo "An error occurred.\n";
 		  exit;

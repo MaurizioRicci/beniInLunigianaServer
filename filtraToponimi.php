@@ -6,11 +6,11 @@ http_response_code(500);
 	
 if (isset($_GET['toponimo']) ) {
 	
-	$toponimo = $_GET['toponimo'];
-	$query = "SELECT DISTINCT topon FROM benigeo WHERE topon ILIKE '$toponimo%' ORDER BY topon ASC LIMIT 100";
+	$toponimo = $_GET['toponimo']."%";
+	$query = "SELECT DISTINCT topon FROM benigeo WHERE topon ILIKE $1 ORDER BY topon ASC LIMIT 100";
 	$result = pg_prepare($conn,'', $query);
 	if($result){
-		$result = pg_execute($conn,'', array());
+		$result = pg_execute($conn,'', [$toponimo]);
 		if (!$result) {
 		  echo "An error occurred.\n";
 		  exit;

@@ -28,7 +28,7 @@ function timestamp_utc_txt() {
 function checkID($conn, $stmtID, $username, $password, $id_to_check) {
     if (isset($username) && isset($password)) {
         $query = "SELECT id_min, id_max FROM public.utenti WHERE username=$1 and password=$2";
-        $resp = runPreparedQuery($conn, $stmtID, $query, array($username, $password));
+        $resp = runPreparedQuery($conn, $stmtID, $query, [$username, $password]);
         if ($resp['ok']) {
             $row = pg_fetch_assoc($resp['data']);
             return intval($row['id_min']) <= intval($id_to_check) &&
@@ -46,7 +46,7 @@ function checkID($conn, $stmtID, $username, $password, $id_to_check) {
 function risolviUtente($conn, $stmtID, $username, $password) {
     if (isset($username) && isset($password)) {
         $query = "SELECT gid, role FROM utenti WHERE username=$1 and password=$2";
-        $resp = runPreparedQuery($conn, $stmtID, $query, array($username, $password));
+        $resp = runPreparedQuery($conn, $stmtID, $query, [$username, $password]);
         if ($resp['ok'] && pg_num_rows($resp['data']) > 0) {
             $row = pg_fetch_assoc($resp['data']);
             return array(
@@ -76,7 +76,8 @@ function latLngArrToGeomTxt($latLngArr) {
     // l'ultimo elemento deve essere uguale al primo per chiudere il poligono
     array_push($strArr, $initialPairTxt);
     $txt = "MULTIPOLYGON(((" . join(',', $strArr) . ")))";
-    $ST_GeomFromText = "ST_GeomFromText('$txt'::text, 4326)";
+    $txtEsc = pg_escape_string($txt);
+    $ST_GeomFromText = "ST_GeomFromText('$txtEsc', 4326)";
     return $ST_GeomFromText;
 }
 

@@ -48,15 +48,19 @@ $offset = $limit * ($page - 1);
 // true serve a creare un array come in php
 $query = json_decode($_GET['query'], true);
 $id = trim($query['id']);
-$ident = trim($query['identificazione']);
-$descr = trim($query['descrizione']);
-$comun = trim($query['comune']);
-$mec = trim($query['macroEpocaCar']);
-$meo = trim($query['macroEpocaOrig']);
-$bibli = trim($query['bibliografia']);
-$note = trim($query['note']);
-$topon = trim($query['toponimo']);
-$schedatori_iniziali = trim($query['schedatori_iniziali']);
+$ident = '%' . trim($query['identificazione']) . '%';
+$descr = '%' . trim($query['descrizione']) . '%';
+$comun = '%' . trim($query['comune']) . '%';
+$mec = '%' . trim($query['macroEpocaCar']) . '%';
+$meo = '%' . trim($query['macroEpocaOrig']) . '%';
+$bibli = '%' . trim($query['bibliografia']) . '%';
+$note = '%' . trim($query['note']) . '%';
+$topon = '%' . trim($query['toponimo']) . '%';
+$schedatori_iniziali = '%' . trim($query['schedatori_iniziali']) . '%';
+
+// indice del parametro nella query preparata
+$paramIdx = 1;
+$params = [];
 
 // Ottengo tutti i beni inseriti
 $query_beni_aggiunti_tutti_select = "SELECT *, count(*) over() as total_rows
@@ -65,35 +69,54 @@ $query_beni_aggiunti_tutti_where = "";
 
 // costruisco la clausola WHERE della query
 if (is_numeric($id)) {
-    $query_beni_aggiunti_tutti_where .= "id='$id' AND ";
+    $query_beni_aggiunti_tutti_where .= "id=$$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $id);
 }
 if ($ident !== '') {
-    $query_beni_aggiunti_tutti_where .= "ident ilike'%$ident%' AND ";
+    $query_beni_aggiunti_tutti_where .= "ident ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $ident);
 }
 if ($descr !== '') {
-    $query_beni_aggiunti_tutti_where .= "descr ilike'%$descr%' AND ";
+    $query_beni_aggiunti_tutti_where .= "descr ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $descr);
 }
 if ($comun !== '') {
-    $query_beni_aggiunti_tutti_where .= $query_beni_aggiunti_tutti_where
-            . "comun ilike'%$comun%' AND ";
+    $query_beni_aggiunti_tutti_where .= "comun ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $comun);
 }
 if ($meo !== '') {
-    $query_beni_aggiunti_tutti_where .= "meo ilike'%$meo%' AND ";
+    $query_beni_aggiunti_tutti_where .= "meo ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $meo);
 }
 if ($mec !== '') {
-    $query_beni_aggiunti_tutti_where .= "mec ilike'%$mec%' AND ";
+    $query_beni_aggiunti_tutti_where .= "mec ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $mec);
 }
 if ($bibli !== '') {
-    $query_beni_aggiunti_tutti_where .= "bibli ilike'%$bibli%' AND ";
+    $query_beni_aggiunti_tutti_where .= "bibli ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $bibli);
 }
 if ($note !== '') {
-    $query_beni_aggiunti_tutti_where .= "note ilike'%$note%' AND ";
+    $query_beni_aggiunti_tutti_where .= "note ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $note);
 }
 if ($topon !== '') {
-    $query_beni_aggiunti_tutti_where .= "topon ilike'%$topon%' AND ";
+    $query_beni_aggiunti_tutti_where .= "topon ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $topon);
 }
 if ($schedatori_iniziali !== '') {
-    $query_beni_aggiunti_tutti_where .= "schedatori_iniziali ilike'%$schedatori_iniziali%' AND ";
+    $query_beni_aggiunti_tutti_where .= "schedatori_iniziali ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $schedatori_iniziali);
 }
 
 if ($query_beni_aggiunti_tutti_where !== '') {
@@ -102,8 +125,7 @@ if ($query_beni_aggiunti_tutti_where !== '') {
     // true è un escamotage per far quadrare l'ultimo AND aggiunto
     $query_beni_aggiunti_tutti_where = ' WHERE ' . $query_beni_aggiunti_tutti_where . 'TRUE ';
     // aggiungo il where alla select
-    $query_beni_aggiunti_tutti_select = $query_beni_aggiunti_tutti_select
-            . $query_beni_aggiunti_tutti_where;
+    $query_beni_aggiunti_tutti_select .= $query_beni_aggiunti_tutti_where;
 }
 
 if (isset($columnToOrder) && $columnToOrder !== '') {
@@ -111,11 +133,11 @@ if (isset($columnToOrder) && $columnToOrder !== '') {
             . "ORDER BY $columnToOrder $sortDirection";
 }
 
-$query_beni_aggiunti_tutti_select = $query_beni_aggiunti_tutti_select
-        . " LIMIT $1"
-        . " OFFSET $2";
+$query_beni_aggiunti_tutti_select .= " LIMIT $$paramIdx";
+$paramIdx++;
+$query_beni_aggiunti_tutti_select .= " OFFSET $$paramIdx";
 
-$params = [$limit, $offset];
+array_push($params, $limit, $offset);
 
 // eseguo la query
 $query = runPreparedQuery($conn, $c++, $query_beni_aggiunti_tutti_select, $params);
