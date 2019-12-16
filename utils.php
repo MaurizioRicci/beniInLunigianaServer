@@ -123,6 +123,8 @@ function funzioniJS2Postgres($JSDict) {
         'id_utente_bene' => getOrSet($JSDict, 'id_utente_bene', ''),
         'id_utente_bener' => getOrSet($JSDict, 'id_utente_bener', ''),
         'data' => getOrSet($JSDict, 'data', ''),
+        'data_ante' => getOrSet($JSDict, 'data_ante', ''),
+        'data_poste' => getOrSet($JSDict, 'data_poste', ''),
         'tipodata' => getOrSet($JSDict, 'tipodata', ''),
         'ruolo' => getOrSet($JSDict, 'ruolo', []),
         'id_bener' => getOrSet($JSDict, 'id_bener', ''),
