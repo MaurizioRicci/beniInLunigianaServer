@@ -48,15 +48,15 @@ $offset = $limit * ($page - 1);
 // true serve a creare un array come in php
 $query = json_decode($_GET['query'], true);
 $id = trim($query['id']);
-$ident = '%' . trim($query['identificazione']) . '%';
-$descr = '%' . trim($query['descrizione']) . '%';
-$comun = '%' . trim($query['comune']) . '%';
-$mec = '%' . trim($query['macroEpocaCar']) . '%';
-$meo = '%' . trim($query['macroEpocaOrig']) . '%';
-$bibli = '%' . trim($query['bibliografia']) . '%';
-$note = '%' . trim($query['note']) . '%';
-$topon = '%' . trim($query['toponimo']) . '%';
-$schedatori_iniziali = '%' . trim($query['schedatori_iniziali']) . '%';
+$ident = trim($query['identificazione']);
+$descr = trim($query['descrizione']);
+$comun = trim($query['comune']);
+$mec = trim($query['macroEpocaCar']);
+$meo = trim($query['macroEpocaOrig']);
+$bibli = trim($query['bibliografia']);
+$note = trim($query['note']);
+$topon = trim($query['toponimo']);
+$schedatori_iniziali = trim($query['schedatori_iniziali']);
 
 // indice del parametro nella query preparata
 $paramIdx = 1;
@@ -74,46 +74,55 @@ if (is_numeric($id)) {
     array_push($params, $id);
 }
 if ($ident !== '') {
+    $ident = '%' . $ident . '%';
     $query_beni_aggiunti_tutti_where .= "ident ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $ident);
 }
 if ($descr !== '') {
+    $descr = '%' . $descr . '%';
     $query_beni_aggiunti_tutti_where .= "descr ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $descr);
 }
 if ($comun !== '') {
+    $comun = '%' . $comun . '%';
     $query_beni_aggiunti_tutti_where .= "comun ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $comun);
 }
 if ($meo !== '') {
+    $meo = '%' . $meo . '%';
     $query_beni_aggiunti_tutti_where .= "meo ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $meo);
 }
 if ($mec !== '') {
+    $mec = '%' . $mec . '%';
     $query_beni_aggiunti_tutti_where .= "mec ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $mec);
 }
 if ($bibli !== '') {
+    $bibli = '%' . $bibli . '%';
     $query_beni_aggiunti_tutti_where .= "bibli ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $bibli);
 }
 if ($note !== '') {
+    $note = '%' . $note . '%';
     $query_beni_aggiunti_tutti_where .= "note ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $note);
 }
 if ($topon !== '') {
+    $topon = '%' . $topon . '%';
     $query_beni_aggiunti_tutti_where .= "topon ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $topon);
 }
 if ($schedatori_iniziali !== '') {
+    $schedatori_iniziali = '%' . $schedatori_iniziali . '%';
     $query_beni_aggiunti_tutti_where .= "schedatori_iniziali ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $schedatori_iniziali);

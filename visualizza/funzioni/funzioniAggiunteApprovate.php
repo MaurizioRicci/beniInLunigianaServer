@@ -57,18 +57,18 @@ $offset = $limit * ($page - 1);
 // true serve a creare un array come in php
 $query = json_decode($_GET['query'], true);
 $id = trim($query['id']);
-$id_bene = trim($query['id_bene']) . '%';
-$id_bener = trim($query['id_bener']) . '%';
-$denom = '%' . trim($query['denominazione']) . '%';
-$denomr = '%' . trim($query['denominazioner']) . '%';
-$bibli = '%' . trim($query['bibliografia']) . '%';
-$data = '%' . trim($query['data']) . '%';
-$tipodata = '%' . trim($query['tipodata']) . '%';
-$funzione = '%' . trim($query['funzione']) . '%';
-$note = '%' . trim($query['note']) . '%';
-$ruolo = '%' . trim($query['ruolo']) . '%';
-$ruolor = '%' . trim($query['ruolor']) . '%';
-$schedatori_iniziali = '%' . trim($query['schedatori_iniziali']) . '%';
+$id_bene = trim($query['id_bene']);
+$id_bener = trim($query['id_bener']);
+$denom = trim($query['denominazione']);
+$denomr = trim($query['denominazioner']);
+$bibli = trim($query['bibliografia']);
+$data = trim($query['data']);
+$tipodata = trim($query['tipodata']);
+$funzione = trim($query['funzione']);
+$note = trim($query['note']);
+$ruolo = trim($query['ruolo']);
+$ruolor = trim($query['ruolor']);
+$schedatori_iniziali = trim($query['schedatori_iniziali']);
 
 // Ottengo tutti i beni inseriti
 $query_funzioni_aggiunte_tutte_select = "SELECT *, count(*) over() as total_rows
@@ -96,51 +96,61 @@ if (is_numeric($id_bener)) {
     array_push($params, $id_bener);
 }
 if ($denom !== '') {
+    $denom = '%' . $denom . '%';
     $query_funzioni_aggiunte_tutte_where .= "denominazione ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $denom);
 }
 if ($denomr !== '') {
+    $denomr = '%' . $denomr . '%';
     $query_funzioni_aggiunte_tutte_where .= "denominazioner ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $denomr);
 }
 if ($bibli !== '') {
-    $query_funzioni_aggiunte_tutte_where .= "bibli ilike $$paramIdx AND ";
+    $bibli = '%' . $bibli . '%';
+    $query_funzioni_aggiunte_tutte_where .= "bibliografia ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $bibli);
 }
 if ($data !== '') {
-    $query_funzioni_aggiunte_tutte_where .= "data ilike'%$$paramIdx AND ";
+    $data = '%' . $data . '%';
+    $query_funzioni_aggiunte_tutte_where .= "data ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $data);
 }
 if ($tipodata !== '') {
+    $tipodata = '%' . $tipodata . '%';
     $query_funzioni_aggiunte_tutte_where .= "tipodata ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $tipodata);
 }
 if ($funzione !== '') {
-    $query_funzioni_aggiunte_tutte_where .= "funzione ilike $$paramIdx%' AND ";
+    $funzione = '%' . $funzione . '%';
+    $query_funzioni_aggiunte_tutte_where .= "funzione ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $funzione);
 }
-if ($ruolo !== '') {
-    $query_funzioni_aggiunte_tutte_where .= "ruolo::text ilike $$paramIdx%' AND ";
+if ($ruolor !== '') {
+    $ruolor = '%' . $ruolor . '%';
+    $query_funzioni_aggiunte_tutte_where .= "ruolo::text ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $ruolo);
 }
 if ($ruolor !== '') {
+    $ruolor = '%' . $ruolor . '%';
     $query_funzioni_aggiunte_tutte_where .= "ruolor::text ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $ruolor);
 }
 if ($note !== '') {
+    $note = '%' . $note . '%';
     $query_funzioni_aggiunte_tutte_where .= "note ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $note);
 }
 if ($schedatori_iniziali !== '') {
+    $schedatori_iniziali = '%' . $schedatori_iniziali . '%';
     $query_funzioni_aggiunte_tutte_where .= "schedatori_iniziali ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $schedatori_iniziali);
