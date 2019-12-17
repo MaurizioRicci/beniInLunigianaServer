@@ -94,6 +94,9 @@ if (isset($My_POST['id']) && !$error) {
                     // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
                     $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['ruolo'],
                             $My_POST['ruolor'], false);
+                    // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
+                    $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
+                    $c += $maxLength + 1;
                 }
             }
         } if ($user['role'] == 'schedatore') {
@@ -125,6 +128,9 @@ if (isset($My_POST['id']) && !$error) {
                         [$My_POST['id'], $user['id']]);
                 $resp4 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $user['id'],
                         $My_POST['ruolo'], $My_POST['ruolor'], true);
+                // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
+                $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
+                $c += $maxLength + 1;
             }
         }
     }
@@ -139,8 +145,9 @@ if (isset($My_POST['id']) && !$error) {
     } else {
         pg_query('ROLLBACK');
         $failed_query = getFirstFailedQuery($queryArr);
-        if (!isset($res['msg']) && isset($failed_query)) //magari ho già scritto io un messaggio d'errore
+        if (!isset($res['msg']) && isset($failed_query)) { //magari ho già scritto io un messaggio d'errore
             $res['msg'] = pg_result_error($failed_query['data']);
+        }
     }
 }
 

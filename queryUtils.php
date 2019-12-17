@@ -187,17 +187,17 @@ function insertFunzioniGeoRuoli($conn, $stmtID, $id_funzione, $id_utente, $ruolo
     $tablename = 'funzionigeo_ruoli';
     if ($tmp_db) {
         $query = "INSERT INTO tmp_db.$tablename(id_funzione, id_utente, ruolo, ruolor) VALUES($1,$2,$3,$4)";
-        $params = [$id_funzione, $id_utente];
+        $params1 = [$id_funzione, $id_utente];
     } else {
         $query = "INSERT INTO $tablename(id_funzione, ruolo, ruolor) VALUES($1,$2,$3)";
         $params = [$id_funzione];
     }
     for ($c = 0; $c < $maxLength; $c++) {
-        $curr_ruolo = isset($ruoloArr[$c]) ? $ruoloArr[$c] : null;
-        $curr_ruolor = isset($ruolorArr[$c]) ? $ruolorArr[$c] : null;
+        $curr_ruolo = $c < count($ruoloArr) ? $ruoloArr[$c] : null;
+        $curr_ruolor = $c < count($ruolorArr) ? $ruolorArr[$c] : null;
         // aggiungo i rimanenti parametri
-        $params = array_merge($params, [$curr_ruolo, $curr_ruolor]);
-        $lastQuery = runPreparedQuery($conn, $stmtID, $query, $params);
+        $params = array_merge($params1, [$curr_ruolo, $curr_ruolor]);
+        $lastQuery = runPreparedQuery($conn, $stmtID++, $query, $params);
         if (!$lastQuery['ok']) {
             break;
         }
@@ -260,7 +260,7 @@ function upsertIntoFunzioniGeoTmp($conn, $stmtID, $id, $idbene, $idbener, $denom
             VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
             ON CONFLICT (id,id_utente) DO UPDATE SET id_bene=$1,
             denominazione=$2, data=$3, data_ante=$4, data_poste=$5, tipodata=$6, funzione=$7,
-            id_bener=$2, denominazioner=$9, bibliografia=$10, note=$11,
+            id_bener=$8, denominazioner=$9, bibliografia=$10, note=$11,
             id=$12, id_utente=$13, id_utente_bene=$14, id_utente_bener=$15, status=$16
             RETURNING id";
     return runPreparedQuery($conn, $stmtID, $query,
