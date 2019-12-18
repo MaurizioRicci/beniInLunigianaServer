@@ -41,47 +41,47 @@ function emptyStr2NULL($var) {
 // tutto ciò che può servire al client per processare un bene
 // Inoltre questa cosa mi assicura l'esistenza delle variabili dentro i miei script, basta testare non siano NULL
 function beniPostgres2JS($PostgresDict) {
-    return ['id' => getOrSet($PostgresDict, 'id', ''),
-        'id_utente' => getOrSet($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
-        'identificazione' => getOrSet($PostgresDict, 'ident', ''),
-        'descrizione' => getOrSet($PostgresDict, 'descr', ''),
-        'macroEpocaOrig' => getOrSet($PostgresDict, 'meo', ''),
-        'macroEpocaCar' => getOrSet($PostgresDict, 'mec', ''),
-        'toponimo' => getOrSet($PostgresDict, 'topon', ''),
-        'esistenza' => getOrSet($PostgresDict, 'esist', ''),
-        'comune' => getOrSet($PostgresDict, 'comun', ''),
-        'bibliografia' => getOrSet($PostgresDict, 'bibli', ''),
-        'schedatori_iniziali' => getOrSet($PostgresDict, 'schedatori_iniziali', ''),
-        'note' => getOrSet($PostgresDict, 'note', ''),
-        'geojson' => json_decode(getOrSet($PostgresDict, 'geojson', '')),
-        'centroid' => json_decode(getOrSet($PostgresDict, 'centroid_geojson', '')),
-        'status' => getOrSet($PostgresDict, 'status', ''),
-        'msg_validatore' => getOrSet($PostgresDict, 'msg_validatore', '')
+    return ['id' => getOrDefault($PostgresDict, 'id', ''),
+        'id_utente' => getOrDefault($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
+        'identificazione' => getOrDefault($PostgresDict, 'ident', ''),
+        'descrizione' => getOrDefault($PostgresDict, 'descr', ''),
+        'macroEpocaOrig' => getOrDefault($PostgresDict, 'meo', ''),
+        'macroEpocaCar' => getOrDefault($PostgresDict, 'mec', ''),
+        'toponimo' => getOrDefault($PostgresDict, 'topon', ''),
+        'esistenza' => getOrDefault($PostgresDict, 'esist', ''),
+        'comune' => getOrDefault($PostgresDict, 'comun', ''),
+        'bibliografia' => getOrDefault($PostgresDict, 'bibli', ''),
+        'schedatori_iniziali' => getOrDefault($PostgresDict, 'schedatori_iniziali', ''),
+        'note' => getOrDefault($PostgresDict, 'note', ''),
+        'geojson' => json_decode(getOrDefault($PostgresDict, 'geojson', '')),
+        'centroid' => json_decode(getOrDefault($PostgresDict, 'centroid_geojson', '')),
+        'status' => getOrDefault($PostgresDict, 'status', ''),
+        'msg_validatore' => getOrDefault($PostgresDict, 'msg_validatore', '')
         ];
 }
 
 // stessa cosa per beniPostgres2JS
 // tutto ciò che può servire al server per processare un bene
 function beniJS2Postgres($JSDict) {
-    return ['username' => getOrSet($JSDict, 'username', ''),
-        'password' => getOrSet($JSDict, 'password', ''),
-        'id' => getOrSet($JSDict, 'id', ''),
-        'id_utente' => getOrSet($JSDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
-        'ident' => getOrSet($JSDict, 'identificazione', ''),
-        'descr' => getOrSet($JSDict, 'descrizione', ''),
-        'meo' => getOrSet($JSDict, 'macroEpocaOrig', ''),
-        'mec' => getOrSet($JSDict, 'macroEpocaCar', ''),
-        'topon' => getOrSet($JSDict, 'toponimo', ''),
-        'esist' => getOrSet($JSDict, 'esistenza', ''),
-        'comun' => getOrSet($JSDict, 'comune', ''),
-        'bibl' => getOrSet($JSDict, 'bibliografia', ''),
-        'schedatori_iniziali' => getOrSet($JSDict, 'schedatori_iniziali', ''),
-        'note' => getOrSet($JSDict, 'note', ''),
-        'geom' => getOrSet(getOrSet($JSDict, 'polygon', []), 'latlngArr', ''),
-        'status' => getOrSet($JSDict, 'status', ''),
-        'msg_validatore' => getOrSet($JSDict, 'msg_validatore', ''),
-        'switch_bene' => getOrSet($JSDict, 'switch_bene', ''),
-        'tmp_db' => getOrSet($JSDict, 'tmp_db', false)
+    return ['username' => getOrDefault($JSDict, 'username', ''),
+        'password' => getOrDefault($JSDict, 'password', ''),
+        'id' => getOrDefault($JSDict, 'id', ''),
+        'id_utente' => getOrDefault($JSDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
+        'ident' => getOrDefault($JSDict, 'identificazione', ''),
+        'descr' => getOrDefault($JSDict, 'descrizione', ''),
+        'meo' => getOrDefault($JSDict, 'macroEpocaOrig', ''),
+        'mec' => getOrDefault($JSDict, 'macroEpocaCar', ''),
+        'topon' => getOrDefault($JSDict, 'toponimo', ''),
+        'esist' => getOrDefault($JSDict, 'esistenza', ''),
+        'comun' => getOrDefault($JSDict, 'comune', ''),
+        'bibl' => getOrDefault($JSDict, 'bibliografia', ''),
+        'schedatori_iniziali' => getOrDefault($JSDict, 'schedatori_iniziali', ''),
+        'note' => getOrDefault($JSDict, 'note', ''),
+        'geom' => getOrDefault(getOrDefault($JSDict, 'polygon', []), 'latlngArr', ''),
+        'status' => getOrDefault($JSDict, 'status', ''),
+        'msg_validatore' => getOrDefault($JSDict, 'msg_validatore', ''),
+        'switch_bene' => getOrDefault($JSDict, 'switch_bene', ''),
+        'tmp_db' => getOrDefault($JSDict, 'tmp_db', false)
         ];
 }
 
@@ -90,59 +90,60 @@ function beniJS2Postgres($JSDict) {
 // beniPostgres2JS e beniJS2Postgres
 // tutto ciò che può servire al client per processare un bene
 function funzioniPostgres2JS($PostgresDict) {
-    return ['id' => getOrSet($PostgresDict, 'id', ''),
-        'id_utente' => getOrSet($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
-        'id_bene' => getOrSet($PostgresDict, 'id_bene', ''),
-        'denominazione' => getOrSet($PostgresDict, 'denominazione', ''),
-        'data' => getOrSet($PostgresDict, 'data', ''),
-        'tipodata' => getOrSet($PostgresDict, 'tipodata', ''),
-        'ruolo' => getOrSet($PostgresDict, 'ruolo', []),
-        'id_bener' => getOrSet($PostgresDict, 'id_bener', ''),
-        'id_utente_bene' => getOrSet($PostgresDict, 'id_utente_bene', ''),
-        'id_utente_bener' => getOrSet($PostgresDict, 'id_utente_bener', ''),
-        'denominazioner' => getOrSet($PostgresDict, 'denominazioner', ''),
-        'ruolor' => getOrSet($PostgresDict, 'ruolor', []),
-        'funzione' => getOrSet($PostgresDict, 'funzione', ''),
-        'bibliografia' => getOrSet($PostgresDict, 'bibliografia', ''),
-        'note' => getOrSet($PostgresDict, 'note', ''),
-        'status' => getOrSet($PostgresDict, 'status', ''),
-        'msg_validatore' => getOrSet($PostgresDict, 'msg_validatore', ''),
-        'schedatori_iniziali' => getOrSet($PostgresDict, 'schedatori_iniziali', ''),
+    return ['id' => getOrDefault($PostgresDict, 'id', ''),
+        'id_utente' => getOrDefault($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
+        'id_bene' => getOrDefault($PostgresDict, 'id_bene', ''),
+        'denominazione' => getOrDefault($PostgresDict, 'denominazione', ''),
+        'data' => getOrDefault($PostgresDict, 'data', ''),
+        'tipodata' => getOrDefault($PostgresDict, 'tipodata', ''),
+        'ruolo' => getOrDefault($PostgresDict, 'ruolo', []),
+        'id_bener' => getOrDefault($PostgresDict, 'id_bener', ''),
+        'id_utente_bene' => getOrDefault($PostgresDict, 'id_utente_bene', ''),
+        'id_utente_bener' => getOrDefault($PostgresDict, 'id_utente_bener', ''),
+        'denominazioner' => getOrDefault($PostgresDict, 'denominazioner', ''),
+        'ruolor' => getOrDefault($PostgresDict, 'ruolor', []),
+        'funzione' => getOrDefault($PostgresDict, 'funzione', ''),
+        'bibliografia' => getOrDefault($PostgresDict, 'bibliografia', ''),
+        'note' => getOrDefault($PostgresDict, 'note', ''),
+        'status' => getOrDefault($PostgresDict, 'status', ''),
+        'msg_validatore' => getOrDefault($PostgresDict, 'msg_validatore', ''),
+        'schedatori_iniziali' => getOrDefault($PostgresDict, 'schedatori_iniziali', ''),
         ];
 }
 
 // stessa cosa per beniPostgres2JS
 // tutto ciò che può servire al server per processare un bene
 function funzioniJS2Postgres($JSDict) {
-    return ['username' => getOrSet($JSDict, 'username', ''),
-        'password' => getOrSet($JSDict, 'password', ''),
-        'id' => getOrSet($JSDict, 'id', ''),
-        'id_utente' => getOrSet($JSDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
-        'id_bene' => getOrSet($JSDict, 'id_bene', ''),
-        'denominazione' => getOrSet($JSDict, 'denominazione', ''),
-        'id_utente_bene' => getOrSet($JSDict, 'id_utente_bene', ''),
-        'id_utente_bener' => getOrSet($JSDict, 'id_utente_bener', ''),
-        'data' => getOrSet($JSDict, 'data', ''),
-        'data_ante' => getOrSet($JSDict, 'data_ante', ''),
-        'data_poste' => getOrSet($JSDict, 'data_poste', ''),
-        'tipodata' => getOrSet($JSDict, 'tipodata', ''),
-        'ruolo' => getOrSet($JSDict, 'ruolo', []),
-        'id_bener' => getOrSet($JSDict, 'id_bener', ''),
-        'denominazioner' => getOrSet($JSDict, 'denominazioner', ''),
-        'ruolor' => getOrSet($JSDict, 'ruolor', []),
-        'funzione' => getOrSet($JSDict, 'funzione', ''),
-        'bibliografia' => getOrSet($JSDict, 'bibliografia', ''),
-        'note' => getOrSet($JSDict, 'note', ''),
-        'status' => getOrSet($JSDict, 'status', ''),
-        'msg_validatore' => getOrSet($JSDict, 'msg_validatore', ''),
-        'switch_funzione' => getOrSet($JSDict, 'switch_funzione', ''),
-        'tmp_db' => getOrSet($JSDict, 'tmp_db', false)
+    return ['username' => getOrDefault($JSDict, 'username', ''),
+        'password' => getOrDefault($JSDict, 'password', ''),
+        'id' => getOrDefault($JSDict, 'id', ''),
+        'id_utente' => getOrDefault($JSDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
+        'id_bene' => getOrDefault($JSDict, 'id_bene', ''),
+        'denominazione' => getOrDefault($JSDict, 'denominazione', ''),
+        'id_utente_bene' => getOrDefault($JSDict, 'id_utente_bene', ''),
+        'id_utente_bener' => getOrDefault($JSDict, 'id_utente_bener', ''),
+        'data' => getOrDefault($JSDict, 'data', ''),
+        'data_ante' => getOrDefault($JSDict, 'data_ante', ''),
+        'data_poste' => getOrDefault($JSDict, 'data_poste', ''),
+        'tipodata' => getOrDefault($JSDict, 'tipodata', ''),
+        'ruolo' => getOrDefault($JSDict, 'ruolo', []),
+        'id_bener' => getOrDefault($JSDict, 'id_bener', ''),
+        'denominazioner' => getOrDefault($JSDict, 'denominazioner', ''),
+        'ruolor' => getOrDefault($JSDict, 'ruolor', []),
+        'funzione' => getOrDefault($JSDict, 'funzione', ''),
+        'bibliografia' => getOrDefault($JSDict, 'bibliografia', ''),
+        'note' => getOrDefault($JSDict, 'note', ''),
+        'status' => getOrDefault($JSDict, 'status', ''),
+        'msg_validatore' => getOrDefault($JSDict, 'msg_validatore', ''),
+        'switch_funzione' => getOrDefault($JSDict, 'switch_funzione', ''),
+        'tmp_db' => getOrDefault($JSDict, 'tmp_db', false)
         ];
 }
 
-// praticamente rimpiazza i valori inesistenti (manca la chiave) o i valori NULL
-// con il valore di default. Comodo per evitare null exeption in Javascript.
-function getOrSet($dict, $key, $defaultVal) {
+// Se il valore ritrovato con la specifica chiave è diverso da NULL restituisce il valore.
+// Se il valore ritrovato è NULL o se la chiave non esiste, restituisce il valore di default.
+// Comodo per evitare null exeption in Javascript.
+function getOrDefault($dict, $key, $defaultVal) {
     if (isset($dict[$key]))
         return $dict[$key];
     else
