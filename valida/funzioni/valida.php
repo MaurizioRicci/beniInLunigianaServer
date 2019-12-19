@@ -9,7 +9,7 @@ $c = 0; // do un id progressivo alle query
 $error = false;
 http_response_code(500);
 // analizza $_POST e converte le stringhe vuote in null
-$My_POST = postEmptyStr2NULL();
+$My_POST = dictEmptyStr2NULL(funzioniJS2Postgres($_POST));
 $user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
 if (!isset($user) && !$error) {
     http_response_code(401);
@@ -24,8 +24,8 @@ if (!isset($user) && !$error) {
  *  se la funzione nell'archivio definitivo esiste già va sostituita NON cancellato!
  *  (per i vincoli d'integrità referenziale succede un casino se si cancella. Vedi le tabelle referenziate)
  * 3 inserire (eventualmente sostituire) la funzione nell'archio temporanea in quello definitiva
- * 4 segnarsi chi modifica cosa
- * 5 recuperare ruolo e ruolor, inserirli poi i ruoli in archivio definitivo
+ * 4 recuperare ruolo e ruolor, inserirli poi i ruoli in archivio definitivo
+ * 5 segnarsi chi modifica cosa
  * 6 cancellare la funzione nell'archivio temporaneo
  */
 if (isset($My_POST['id']) && !$error) {
@@ -36,8 +36,8 @@ if (isset($My_POST['id']) && !$error) {
     $respUpdt = $respRuoli = $respDel2 = $respDel3 = null;
 
     // PASSO 0 controllo benireferenziati. Cerco in archivio definitivo => funzione approvata richiede beni approvati
-    $b1 = esisteBene($conn, $c++, $My_POST['id_bene']);
-    $b2 = esisteBene($conn, $c++, $My_POST['id_bener']);
+    $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], null);
+    $b2 = esisteBene($conn, $c++, $My_POST['id_bener'], null);
     if (!$b1 || !$b2) {
         $b_inesistente = $b1 ? $My_POST['id_bener'] : $My_POST['id_bene'];
         http_response_code(422);
@@ -55,40 +55,43 @@ if (isset($My_POST['id']) && !$error) {
                 $res['msg'] = 'ID della funzione in revisione non trovato. Forse altri revisori hanno approvato la funzione.';
                 $error = true;
             }
+            // metto un lock sulla funzione in archivio definitivo se esiste
             $respFunzione = runPreparedQuery($conn, $c++,
                     'SELECT id from public.funzionigeo where id=$1 FOR UPDATE', [$My_POST['id']]);
             // controllo sia andata a buon fine la query senza sovrascrivere $error
             $error = $error || !$respFunzione['ok'];
             if (!$error) {
-                // PASSO 3. aggiungo/rimpiazzo la funzione nell'archivio definitivo. Se non esiste in tmp non fa niente
-                $respMove = upsertFunzioneTmpToFunzioniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
-                // errore se: c'era già un errore o se la query è fallita o se la query non ha dato risultati
-                $error |= !$respMove['ok'];
-                // PASSO 4. segno l'autore della modifica (non il revisore)
-                if (!$error) {
-                    $respIns = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
-                    // PASSO 5
-                    $respRuoloRuolor = runPreparedQuery($conn, $c++,
-                            'SELECT ruolo, ruolor FROM tmp_db.funzionigeo_e_ruoli WHERE id=$1 and id_utente=$2',
+                if (isset($My_POST['id_utente'])) {
+                    // PASSO 3
+                    $resp0 = replaceIntoFunzioniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
+                            $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
+                            $My_POST['data'], $My_POST['data_ante'], $My_POST['data_poste'],
+                            $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
+                            $My_POST['note'], $My_POST['id_utente'], $My_POST['id_utente_bene'],
+                            $My_POST['id_utente_bener'], $My_POST['status']);
+                    $resp1 = upsertFunzioneTmpToFunzioniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
+                    $resp2 = runPreparedQuery($conn, $c++,
+                            "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                             [$My_POST['id'], $My_POST['id_utente']]);
-                    if (!$error) {
-                        $ruolo_ruolor = pg_fetch_all($respRuoloRuolor['data']);
-                        if ($ruolo_ruolor) {
-                            // vero se ci sono righe o se non ci sono errori. Uso la PK, avrò quindi al massimo una riga
-                            $ruolo_ruolor[0]['ruolo'] = json_decode($ruolo_ruolor[0]['ruolo']);
-                            $ruolo_ruolor[0]['ruolor'] = json_decode($ruolo_ruolor[0]['ruolor']);
-                            $respRuoli = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'],
-                                    $My_POST['id_utente'], $ruolo_ruolor[0]['ruolo'],
-                                    $ruolo_ruolor[0]['ruolor'], false);
-                        }
-                        // PASSO 6
-                        $respDel2 = runPreparedQuery($conn, $c++,
-                                'DELETE FROM tmp_db.funzionigeo WHERE id=$1 AND id_utente=$2',
-                                [$My_POST['id'], $My_POST['id_utente']]);
-                        $respDel3 = runPreparedQuery($conn, $c++,
-                                'DELETE FROM tmp_db.funzionigeo_ruoli WHERE id_funzione=$1 AND id_utente=$2',
-                                [$My_POST['id'], $My_POST['id_utente']]);
-                    }
+                    // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
+                    // PASSO 4
+                    $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['id_utente'], $My_POST['ruolo'],
+                            $My_POST['ruolor'], false);
+                    // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
+                    $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
+                    $c += $maxLength + 1;
+                    $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'] || !$resp3['ok'];
+                    //manipolafunzione serve se è validato il bene, registra chi ha modificato
+                    // PASSO 5
+                    $resp4 = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
+                    // PASSO 6
+                    // cancello ruoli e funzione dal db temporaneo
+                    $resp5 = runPreparedQuery($conn, $c++,
+                            'DELETE FROM tmp_db.funzionigeo_ruoli WHERE id_funzione=$1 AND id_utente=$2',
+                            [$My_POST['id'], $My_POST['id_utente']]);
+                    $resp6 = runPreparedQuery($conn, $c++,
+                            'DELETE FROM tmp_db.funzionigeo WHERE id=$1 AND id_utente=$2',
+                            [$My_POST['id'], $My_POST['id_utente']]);
                 }
             }
         } else {

@@ -10,7 +10,7 @@ $c = 0; // do un id progressivo alle query
 $error = false;
 http_response_code(500);
 // analizza $_POST e converte le stringhe vuote in null
-$My_POST = postEmptyStr2NULL();
+$My_POST = dictEmptyStr2NULL(beniJS2Postgres($_POST));
 
 $user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
 if (!isset($user) && !$error) {
@@ -33,7 +33,7 @@ if (isset($My_POST['id']) && !$error) {
     // occorre proteggersi dalle possibili write skew risultanti 
     // dalla modifica/creazione concorrente dello stesso bene da validare.
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE') or die('Cant start transaction');
-    $respBeneTmp = $respBene = $respMove = $respIns = $respUpdt = $respDel2 = null;
+    $resp0 = $resp1 = $resp2 = $resp3 = null;
 
     // PASSO 1. controllo il ruolo.
     if ($user['role'] == 'revisore') {
@@ -53,7 +53,8 @@ if (isset($My_POST['id']) && !$error) {
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
                     $My_POST['id_utente'], $My_POST['status'], $My_POST['esist']);
             $resp1 = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
-            
+            // segno chi ha fatto cosa. PASSO 4
+            $resp2 = insertIntoManipolaBene($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
             $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'];
             // PASSO 5
             $resp3 = runPreparedQuery($conn, $c++,
@@ -67,7 +68,7 @@ if (isset($My_POST['id']) && !$error) {
     }
 
     // per sicurezza controllo tutte le query
-    $queryArr = array($respBeneTmp, $respBene, $respMove, $respUpdt, $respIns, $respDel2);
+    $queryArr = array($resp0, $resp1, $resp2, $resp3);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         // se COMMIT è andato a buon fine
         if (pg_query('COMMIT')) {

@@ -38,7 +38,7 @@ if (!$error) {
                 $query = $query_funzioni_temp;
                 if ($utente['role'] == 'revisore') {
                     $params = [];
-                    $query = 'SELECT * FROM tmp_db.funzionigeo WHERE status=0';
+                    $query = 'SELECT * FROM tmp_db.funzionigeo_e_ruoli WHERE status=0';
                 }
                 break;
         }

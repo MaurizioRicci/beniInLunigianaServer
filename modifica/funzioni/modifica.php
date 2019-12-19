@@ -72,8 +72,11 @@ if (isset($My_POST['id']) && !$error) {
                             "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                             [$My_POST['id'], $My_POST['id_utente']]);
                     // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
-                    $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['ruolo'],
-                            $My_POST['ruolor'], false);
+                    $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['id_utente'], $My_POST['ruolo'],
+                            $My_POST['ruolor'], true);
+                    // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
+                    $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
+                    $c += $maxLength + 1;
                     $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'] || !$resp3['ok'];
                     //manipolafunzione serve se è validato il bene, registra chi ha modificato
                     $resp4 = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
@@ -94,7 +97,7 @@ if (isset($My_POST['id']) && !$error) {
                     //manipolafunzione serve se è validato il bene, registra chi ha modificato
                     $resp2 = insertIntoManipolaFunzione($conn, $c++, $user['id'], $My_POST['id']);
                     // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
-                    $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['ruolo'],
+                    $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], null, $My_POST['ruolo'],
                             $My_POST['ruolor'], false);
                     // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
                     $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));

@@ -30,7 +30,8 @@ function dictEmptyStr2NULL($dict) {
 
 // converte le stringhe vuote (dopo trim()) in valori null
 function emptyStr2NULL($var) {
-    if(!is_string($var)) return $var;
+    if (!is_string($var))
+        return $var;
     $trimmed = trim($var);
     return $trimmed == '' ? null : $trimmed;
 }
@@ -57,7 +58,7 @@ function beniPostgres2JS($PostgresDict) {
         'centroid' => json_decode(getOrDefault($PostgresDict, 'centroid_geojson', '')),
         'status' => getOrDefault($PostgresDict, 'status', ''),
         'msg_validatore' => getOrDefault($PostgresDict, 'msg_validatore', '')
-        ];
+    ];
 }
 
 // stessa cosa per beniPostgres2JS
@@ -82,7 +83,7 @@ function beniJS2Postgres($JSDict) {
         'msg_validatore' => getOrDefault($JSDict, 'msg_validatore', ''),
         'switch_bene' => getOrDefault($JSDict, 'switch_bene', ''),
         'tmp_db' => getOrDefault($JSDict, 'tmp_db', false)
-        ];
+    ];
 }
 
 // in pratica rinomino le chiavi dei beni. Questo poichè nel caso cambi nome una attributo nel
@@ -95,6 +96,8 @@ function funzioniPostgres2JS($PostgresDict) {
         'id_bene' => getOrDefault($PostgresDict, 'id_bene', ''),
         'denominazione' => getOrDefault($PostgresDict, 'denominazione', ''),
         'data' => getOrDefault($PostgresDict, 'data', ''),
+        'data_ante' => getOrDefault($PostgresDict, 'data_ante', ''),
+        'data_poste' => getOrDefault($PostgresDict, 'data_poste', ''),
         'tipodata' => getOrDefault($PostgresDict, 'tipodata', ''),
         'ruolo' => getOrDefault($PostgresDict, 'ruolo', []),
         'id_bener' => getOrDefault($PostgresDict, 'id_bener', ''),
@@ -108,7 +111,7 @@ function funzioniPostgres2JS($PostgresDict) {
         'status' => getOrDefault($PostgresDict, 'status', ''),
         'msg_validatore' => getOrDefault($PostgresDict, 'msg_validatore', ''),
         'schedatori_iniziali' => getOrDefault($PostgresDict, 'schedatori_iniziali', ''),
-        ];
+    ];
 }
 
 // stessa cosa per beniPostgres2JS
@@ -137,7 +140,7 @@ function funzioniJS2Postgres($JSDict) {
         'msg_validatore' => getOrDefault($JSDict, 'msg_validatore', ''),
         'switch_funzione' => getOrDefault($JSDict, 'switch_funzione', ''),
         'tmp_db' => getOrDefault($JSDict, 'tmp_db', false)
-        ];
+    ];
 }
 
 // Se il valore ritrovato con la specifica chiave è diverso da NULL restituisce il valore.
@@ -149,25 +152,25 @@ function getOrDefault($dict, $key, $defaultVal) {
     else
         return $defaultVal;
 }
-/*/
-Da rivedere se serve
-function logInsert($txt) {
-    return logTitleTxt('Insert', $txt);
-}
 
-function logUpdate($txt) {
-    return logTitleTxt('Update', $txt);
-}
+/* /
+  Da rivedere se serve
+  function logInsert($txt) {
+  return logTitleTxt('Insert', $txt);
+  }
 
-function logDelete($txt) {
-    return logTitleTxt('Delete', $txt);
-}
+  function logUpdate($txt) {
+  return logTitleTxt('Update', $txt);
+  }
 
-// Non usare questa funzione
-function logTitleTxt($title, $txt) {
-    $query = "INSERT INTO logs.logs(title, txt) VALUES($1, $2)";
-    $resp = runPreparedQuery($conn, $query, array($title, $txt));
-    return $resp['ok'];
-}/*/
+  function logDelete($txt) {
+  return logTitleTxt('Delete', $txt);
+  }
 
+  // Non usare questa funzione
+  function logTitleTxt($title, $txt) {
+  $query = "INSERT INTO logs.logs(title, txt) VALUES($1, $2)";
+  $resp = runPreparedQuery($conn, $query, array($title, $txt));
+  return $resp['ok'];
+  }/ */
 ?>

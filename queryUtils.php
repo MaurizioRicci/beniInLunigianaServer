@@ -190,7 +190,7 @@ function insertFunzioniGeoRuoli($conn, $stmtID, $id_funzione, $id_utente, $ruolo
         $params1 = [$id_funzione, $id_utente];
     } else {
         $query = "INSERT INTO $tablename(id_funzione, ruolo, ruolor) VALUES($1,$2,$3)";
-        $params = [$id_funzione];
+        $params1 = [$id_funzione];
     }
     for ($c = 0; $c < $maxLength; $c++) {
         $curr_ruolo = $c < count($ruoloArr) ? $ruoloArr[$c] : null;
@@ -212,7 +212,7 @@ function replaceIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, 
     $tablename = 'tmp_db.benigeo';
     $query = "update $tablename SET ident=$1, descr=$2, mec=$3, meo=$4, bibli=$5," .
             " note=$6, topon=$7, comun=$8, geom=$geomTxt, id_utente=$9, status=$10,"
-            . "timestamp_utc_txt = $timestamp_utc_txt, esist=$11 WHERE id=$12 and id_utente=$9";
+            . "timestamp_utc = $timestamp_utc_txt, esist=$11 WHERE id=$12 and id_utente=$9";
     return runPreparedQuery($conn, $stmtID, $query, array(
         $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $user, $status, $esist, $id
     ));
@@ -226,7 +226,7 @@ function replaceIntoFunzioniGeoTmp($conn, $stmtID, $id, $idbene, $idbener, $deno
     $query = "update $tablename SET id_bene=$1, denominazione=$2, data=$3, data_ante=$4,"
             . " data_poste=$5, tipodata=$6, funzione=$7, id_bener=$8, denominazioner=$9,"
             . "bibliografia=$10, note=$11, id_utente=$12, status=$13, id_utente_bene=$14,"
-            . "id_utente_bener=15, timestamp_utc_txt=$timestamp_utc_txt WHERE id=$16 and id_utente=$12";
+            . "id_utente_bener=$15, timestamp_utc=$timestamp_utc_txt WHERE id=$16 and id_utente=$12";
     return runPreparedQuery($conn, $stmtID, $query,
             [$idbene, $denom, $data, $data_ante, $data_poste, $tipodata, $funzione,
                 $idbener, $denomr, $bibl, $note, $id_utente, $status, $id_utente_bene,
