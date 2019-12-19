@@ -44,22 +44,21 @@ if (isset($My_POST['id']) && !$error) {
             $res['msg'] = 'ID del bene in revisione non trovato. Forse altri revisori hanno approvato il bene.';
             $error = true;
         }
-
-        $respBene = runPreparedQuery($conn, $c++,
-                'SELECT id from public.benigeo where id=$1 FOR UPDATE', [$My_POST['id']]);
-        // controllo sia andata a buon fine la query senza sovrascrivere $error
-        $error = $error || !$respBene['ok'];
-        if (!$error) {
-            // PASSO 3. aggiungo/rimpiazzo il bene nell'archivio definitivo. Se non esiste in tmp non fa niente
-            $respMove = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
-            // PASSO 4. segno l'autore della modifica (non il revisore)
-            if (!$error) {
-                $respIns = insertIntoManipolaBene($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
-                // PASSO 5
-                $respDel2 = runPreparedQuery($conn, $c++,
-                        'DELETE FROM tmp_db.benigeo WHERE id=$1 and id_utente=$2',
-                        [$My_POST['id'], $My_POST['id_utente']]);
-            }
+        if (isset($My_POST['id_utente'])) {
+            // se viene fornito anche id_utente allora è parte della chiave per un bene in archivio temporaneo
+            // copio il bene temporaneo in archivio definitivo e cancello il bene temporaneo
+            // PASSO 3
+            $resp0 = replaceIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
+                    $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
+                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
+                    $My_POST['id_utente'], $My_POST['status'], $My_POST['esist']);
+            $resp1 = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
+            
+            $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'];
+            // PASSO 5
+            $resp3 = runPreparedQuery($conn, $c++,
+                    'DELETE FROM tmp_db.benigeo WHERE id=$1 AND id_utente=$2',
+                    [$My_POST['id'], $My_POST['id_utente']]);
         }
     } else {
         $error = true;

@@ -21,7 +21,7 @@ if (!isset($user) && !$error) {
 if (isset($My_POST['id']) && !$error) {
 
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
-    $resp0 = $resp1 = $resp2 = $resp3 = $queryID = null;
+    $resp0 = $resp1 = $resp2 = $resp3 = $resp4 = $queryID = null;
 
     //in base al ruolo utente scelgo in quale tabella mettere il bene
     if ($user['role'] == 'revisore') {
@@ -57,7 +57,8 @@ if (isset($My_POST['id']) && !$error) {
                         "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                         [$My_POST['id'], $My_POST['id_utente']]);
                 $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'];
-                $resp3 = runPreparedQuery($conn, $c++,
+                $resp3 = insertIntoManipolaBene($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
+                $resp4 = runPreparedQuery($conn, $c++,
                         'DELETE FROM tmp_db.benigeo WHERE id=$1 AND id_utente=$2',
                         [$My_POST['id'], $My_POST['id_utente']]);
             } else {
@@ -92,7 +93,7 @@ if (isset($My_POST['id']) && !$error) {
                     [$My_POST['id'], $My_POST['id_utente']]);
         }
     }
-    $queryArr = array($resp1, $queryID, $resp2, $resp3);
+    $queryArr = array($resp1, $queryID, $resp2, $resp3, $resp4);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
             http_response_code(200);
