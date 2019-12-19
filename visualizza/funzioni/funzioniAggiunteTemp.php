@@ -19,9 +19,10 @@ if (!isset($utente) && !$error) {
     $error = true;
 }
 // Ottengo in beni inseriti da un certo utente
+// se un utente ha fatto più modifiche mostra la funzione una volta sola
 $query_funzioni_aggiunte = 'SELECT * '
-        . 'FROM funzionigeo_ruoli_schedatori as b inner join manipola_funzione as m ON(b.id=m.id_funzione)
-    WHERE m.id_utente=$1';
+        . 'FROM funzionigeo_ruoli_schedatori as b inner join (
+            SELECT DISTINCT id_funzione, id_utente FROM manipola_funzione WHERE id_utente=$1) as m ON(b.id=m.id_funzione)';
 
 // Ottengo le funzioni di un certo utente
 $query_funzioni_temp = 'SELECT * '

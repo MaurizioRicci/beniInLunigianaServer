@@ -19,9 +19,10 @@ if (!isset($utente) && !$error) {
     $error = true;
 }
 // Ottengo in beni inseriti da un certo utente
+// se un utente ha fatto più modifiche mostra il bene una volta sola
 $query_beni_aggiunti = 'SELECT * '
-        . 'FROM benigeo as b inner join manipola_bene as m ON(b.id=m.id_bene)
-    WHERE m.id_utente=$1';
+        . 'FROM benigeo as b inner join (
+            SELECT DISTINCT id_bene, id_utente FROM manipola_bene WHERE id_utente=$1) as m ON(b.id=m.id_bene)';
 
 // Ottengo in beni di un certo utente
 $query_beni_temp = 'SELECT * '
