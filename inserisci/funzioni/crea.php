@@ -56,8 +56,8 @@ if (!$error) {
                     //manipolafunzione serve se è validata la funzione
                     $id_funzione = getIdFunzione($resp1);
                     if (isset($id_funzione)) {
-                        $resp2 = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $id_funzione);
-                        $resp3 = insertFunzioniGeoRuoli($conn, $c++, $id_funzione, $My_POST['id_utente'],
+                        $resp2 = insertIntoManipolaFunzione($conn, $c++, $user['id'], $id_funzione);
+                        $resp3 = insertFunzioniGeoRuoli($conn, $c++, $id_funzione, $user['id'],
                                 $My_POST['ruolo'], $My_POST['ruolor'], false);
                         $error = $error || !$resp1['ok'] || !$resp2['ok'] || !$resp3['ok'];
                     }

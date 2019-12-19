@@ -46,7 +46,7 @@ if (isset($My_POST['id']) && !$error) {
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $My_POST['esist']);
             //manipolabene serve se è validato il bene
-            $resp2 = insertIntoManipolaBene($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
+            $resp2 = insertIntoManipolaBene($conn, $c++, $user['id'], $My_POST['id']);
             $error = $error || !$resp1['ok'] || !$resp2['ok'];
         }
     } else if ($user['role'] == 'schedatore') {

@@ -141,7 +141,7 @@ function insertIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bib
     $geomTxt = latLngArrToGeomTxt($geom);
     $tablename = 'public.benigeo';
     $query = "INSERT INTO $tablename(id, ident, descr, mec, meo, bibli, note, topon, comun, geom, esist) " .
-            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$geomTxt,$10";
+            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$geomTxt,$10)";
     return runPreparedQuery($conn, $stmtID, $query, array(
         $id, $ident, $descr, $mec, $meo, $bibl, $note, $topon, $comun, $esist
     ));
