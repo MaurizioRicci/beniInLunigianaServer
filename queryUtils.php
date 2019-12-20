@@ -174,7 +174,7 @@ function insertIntoFunzioniGeoTmp($conn, $stmtID, $idbene, $idbener, $denom, $de
     $query = "INSERT INTO $tablename(id_bene, denominazione, data, data_ante,data_poste,"
             . " tipodata, funzione, id_bener, denominazioner,"
             . "bibliografia, note, id_utente, id_utente_bene, id_utente_bener, status) " .
-            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id";
+            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id";
     return runPreparedQuery($conn, $stmtID, $query,
             [$idbene, $denom, $data, $data_ante, $data_poste, $tipodata, $funzione, $idbener,
                 $denomr, $bibl, $note, $id_utente, $id_utente_bene, $id_utente_bener, $status]);
