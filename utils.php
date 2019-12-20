@@ -30,9 +30,10 @@ function dictEmptyStr2NULL($dict) {
 
 // converte le stringhe vuote (dopo trim()) in valori null
 function emptyStr2NULL($var) {
-    if (!is_string($var))
-        return $var;
-    $trimmed = trim($var);
+    $str = filter_var($var, FILTER_SANITIZE_STRING);
+    if (!is_string($str))
+        return $str;
+    $trimmed = trim($str);
     return $trimmed == '' ? null : $trimmed;
 }
 
