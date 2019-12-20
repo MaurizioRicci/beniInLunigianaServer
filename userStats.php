@@ -15,7 +15,8 @@ if (!isset($user)) {
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
 } else {
-    $getUserStats = "with id_min_max as (select id_min, id_max from utenti where gid=$1),
+    $getUserStats = "with role as (select role from utenti where gid=$1),
+        id_min_max as (select id_min, id_max from utenti where gid=$1),
         ultimo_id_bene as (
         select max(id_bene) as ultimo_id_bene
         from (
@@ -30,6 +31,10 @@ if (!isset($user)) {
               select count(*) as n_beni_rev
         from tmp_db.benigeo where id_utente=$1 and status=0
       ),
+      n_beni_pronti as (
+              select count(*) as n_beni_pronti
+        from tmp_db.benigeo where id_utente=$1 and status=2
+      ),
       n_beni_incompleti as (
               select count(*) as n_beni_incompleti
         from tmp_db.benigeo where id_utente=$1 and status=3
@@ -42,6 +47,10 @@ if (!isset($user)) {
               select count(*) as n_funzioni_rev
         from tmp_db.benigeo where id_utente=$1 and status=0
       ),
+      n_funzioni_pronte as (
+              select count(*) as n_funzioni_pronte
+        from tmp_db.benigeo where id_utente=$1 and status=2
+      ),
       n_funzioni_incomplete as (
               select count(*) as n_funzioni_incomplete
         from tmp_db.benigeo where id_utente=$1 and status=3
@@ -49,10 +58,19 @@ if (!isset($user)) {
       n_funzioni_da_correggere as (
               select count(*) as n_funzioni_da_correggere
         from tmp_db.benigeo where id_utente=$1 and status=1
+      ),
+      n_funzioni_da_revisionare as (
+              select count(*) as n_funzioni_da_revisionare
+        from tmp_db.funzionigeo where status=0
+      ),
+      n_beni_da_revisionare as (
+              select count(*) as n_beni_da_revisionare
+        from tmp_db.benigeo where status=0
       )
       select *
-      from id_min_max, ultimo_id_bene, n_beni_rev, n_beni_incompleti, n_beni_da_correggere,
-              n_funzioni_rev,n_funzioni_incomplete, n_funzioni_da_correggere";
+      from role, id_min_max, ultimo_id_bene, n_beni_rev, n_beni_incompleti, n_beni_da_correggere,
+              n_beni_pronti, n_funzioni_rev,n_funzioni_incomplete, n_funzioni_da_correggere,
+              n_funzioni_pronte, n_beni_da_revisionare, n_funzioni_da_revisionare";
 
     $resp = runPreparedQuery($conn, $c++, $getUserStats, [$user['id']]);
     if ($resp['ok']) {
