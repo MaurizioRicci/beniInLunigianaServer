@@ -22,11 +22,12 @@ if (!isset($utente) && !$error) {
 // se un utente ha fatto più modifiche mostra la funzione una volta sola
 $query_funzioni_aggiunte = 'SELECT * '
         . 'FROM funzionigeo_ruoli_schedatori as b inner join (
-            SELECT DISTINCT id_funzione, id_utente FROM manipola_funzione WHERE id_utente=$1) as m ON(b.id=m.id_funzione)';
+             SELECT DISTINCT id_funzione, id_utente FROM manipola_funzione WHERE id_utente=$1) as m ON(b.id=m.id_funzione)
+             ORDER BY id';
 
 // Ottengo le funzioni di un certo utente
 $query_funzioni_temp = 'SELECT * '
-        . 'FROM tmp_db.funzionigeo_e_ruoli WHERE id_utente=$1';
+        . 'FROM tmp_db.funzionigeo_e_ruoli WHERE id_utente=$1 ORDER BY id';
 
 if (!$error) {
     $params = array($utente['id']);
@@ -39,7 +40,7 @@ if (!$error) {
                 $query = $query_funzioni_temp;
                 if ($utente['role'] == 'revisore') {
                     $params = [];
-                    $query = 'SELECT * FROM tmp_db.funzionigeo_e_ruoli WHERE status=0';
+                    $query = 'SELECT * FROM tmp_db.funzionigeo_e_ruoli WHERE status=0 ORDER BY id';
                 }
                 break;
         }

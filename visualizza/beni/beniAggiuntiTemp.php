@@ -22,11 +22,12 @@ if (!isset($utente) && !$error) {
 // se un utente ha fatto più modifiche mostra il bene una volta sola
 $query_beni_aggiunti = 'SELECT * '
         . 'FROM benigeo as b inner join (
-            SELECT DISTINCT id_bene, id_utente FROM manipola_bene WHERE id_utente=$1) as m ON(b.id=m.id_bene)';
+             SELECT DISTINCT id_bene, id_utente FROM manipola_bene WHERE id_utente=$1) as m ON(b.id=m.id_bene)
+             ORDER BY id';
 
 // Ottengo in beni di un certo utente
 $query_beni_temp = 'SELECT * '
-        . 'FROM tmp_db.benigeo WHERE id_utente=$1';
+        . 'FROM tmp_db.benigeo WHERE id_utente=$1 ORDER BY id';
 
 
 if (!$error) {
@@ -41,7 +42,7 @@ if (!$error) {
                 $query = $query_beni_temp;
                 if ($utente['role'] == 'revisore') {
                     $params = [];
-                    $query = 'SELECT * FROM tmp_db.benigeo WHERE status=0';
+                    $query = 'SELECT * FROM tmp_db.benigeo WHERE status=0 ORDER BY id';
                 }
                 break;
         }

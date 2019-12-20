@@ -16,6 +16,7 @@ $limit = filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT);
 $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
 $sortDirection = filter_input(INPUT_GET, 'ascending', FILTER_SANITIZE_NUMBER_INT) == 1 ? 'ASC' : 'DESC';
 $columnToOrder = filter_input(INPUT_GET, 'orderBy', FILTER_SANITIZE_STRING);
+$columnToOrder = $columnToOrder == '' ? 'id' : $columnToOrder;
 switch ($columnToOrder) {
     case "id":
         $columnToOrder = "id";
