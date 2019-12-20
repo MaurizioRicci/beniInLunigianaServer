@@ -48,16 +48,16 @@ $offset = $limit * ($page - 1);
 // imposto i filtri sui campi
 // true serve a creare un array come in php
 $query = json_decode($_GET['query'], true);
-$id = trim($query['id']);
-$ident = trim($query['identificazione']);
-$descr = trim($query['descrizione']);
-$comun = trim($query['comune']);
-$mec = trim($query['macroEpocaCar']);
-$meo = trim($query['macroEpocaOrig']);
-$bibli = trim($query['bibliografia']);
-$note = trim($query['note']);
-$topon = trim($query['toponimo']);
-$schedatori_iniziali = trim($query['schedatori_iniziali']);
+$id = trim(getOrDefault($query, 'id', ''));
+$ident = trim(getOrDefault($query, 'identificazione', ''));
+$descr = trim(getOrDefault($query, 'descrizione', ''));
+$comun = trim(getOrDefault($query, 'comune', ''));
+$mec = trim(getOrDefault($query, 'macroEpocaCar', ''));
+$meo = trim(getOrDefault($query, 'macroEpocaOrig', ''));
+$bibli = trim(getOrDefault($query, 'bibliografia', ''));
+$note = trim(getOrDefault($query, 'note', ''));
+$topon = trim(getOrDefault($query, 'toponimo', ''));
+$schedatori_iniziali = trim(getOrDefault($query, 'schedatori_iniziali', ''));
 
 // indice del parametro nella query preparata
 $paramIdx = 1;

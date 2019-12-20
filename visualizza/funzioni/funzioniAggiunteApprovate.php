@@ -57,19 +57,19 @@ $offset = $limit * ($page - 1);
 // imposto i filtri sui campi
 // true serve a creare un array come in php
 $query = json_decode($_GET['query'], true);
-$id = trim($query['id']);
-$id_bene = trim($query['id_bene']);
-$id_bener = trim($query['id_bener']);
-$denom = trim($query['denominazione']);
-$denomr = trim($query['denominazioner']);
-$bibli = trim($query['bibliografia']);
-$data = trim($query['data']);
-$tipodata = trim($query['tipodata']);
-$funzione = trim($query['funzione']);
-$note = trim($query['note']);
-$ruolo = trim($query['ruolo']);
-$ruolor = trim($query['ruolor']);
-$schedatori_iniziali = trim($query['schedatori_iniziali']);
+$id = trim(getOrDefault($query, 'id', ''));
+$id_bene = trim(getOrDefault($query, 'id_bene', ''));
+$id_bener = trim(getOrDefault($query, 'id_bener', ''));
+$denom = trim(getOrDefault($query, 'denominazione', ''));
+$denomr = trim(getOrDefault($query, 'denominazioner', ''));
+$bibli = trim(getOrDefault($query, 'bibliografia', ''));
+$data = trim(getOrDefault($query, 'data', ''));
+$tipodata = trim(getOrDefault($query, 'tipodata', ''));
+$funzione = trim(getOrDefault($query, 'funzione', ''));
+$note = trim(getOrDefault($query, 'note', ''));
+$ruolo = trim(getOrDefault($query, 'ruolo', ''));
+$ruolor = trim(getOrDefault($query, 'ruolor', ''));
+$schedatori_iniziali = trim(getOrDefault($query, 'schedatori_iniziali', ''));
 
 // Ottengo tutti i beni inseriti
 $query_funzioni_aggiunte_tutte_select = "SELECT *, count(*) over() as total_rows
