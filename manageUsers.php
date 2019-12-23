@@ -22,7 +22,7 @@ if (!isset($user) && !$error) {
 // Controllo se è richiesta la lista utenti
 if (isset($My_POST['usersList'])) {
     if ($user['role'] == 'revisore') {
-        $query = runPreparedQuery($conn, $c++, "SELECT * FROM utenti", []);
+        $query = runPreparedQuery($conn, $c++, "SELECT * FROM utenti ORDER BY id_min", []);
         if ($query['ok']) {
             while ($row = pg_fetch_assoc($query['data'])) {
                 array_push($res, $row);
