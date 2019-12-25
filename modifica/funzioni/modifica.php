@@ -21,7 +21,7 @@ if (!isset($user) && !$error) {
 if (isset($My_POST['id']) && !$error) {
 
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
-    $resp0 = $resp1 = $resp2 = $resp3 = $resp4 = $resp5 = $resp6 = $queryID = null;
+    $resp0 = $resp1 = $resp2 = $resp3 = $resp4 = $resp5 = $resp6 = $resp7 = $queryID = null;
 
     // controllo benireferenziati. Cerco o in archivio definitivo o in quelli temporanei dell'utente
     $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], $My_POST['id_utente_bene']) ||
@@ -71,20 +71,23 @@ if (isset($My_POST['id']) && !$error) {
                     $resp2 = runPreparedQuery($conn, $c++,
                             "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                             [$My_POST['id'], $My_POST['id_utente']]);
+                    // cancello i ruoli precedenti
+                    $resp3 = runPreparedQuery($conn, $c++,
+                            "DELETE FROM public.funzionigeo_ruoli WHERE id_funzione=$1", [$My_POST['id']]);
                     // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
-                    $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['id_utente'], $My_POST['ruolo'],
+                    $resp4 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['id_utente'], $My_POST['ruolo'],
                             $My_POST['ruolor'], true);
                     // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
                     $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
                     $c += $maxLength + 1;
                     $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'] || !$resp3['ok'];
                     //manipolafunzione serve se è validato il bene, registra chi ha modificato
-                    $resp4 = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
+                    $resp5 = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
                     // cancello ruoli e funzione dal db temporaneo
-                    $resp5 = runPreparedQuery($conn, $c++,
+                    $resp6 = runPreparedQuery($conn, $c++,
                             'DELETE FROM tmp_db.funzionigeo_ruoli WHERE id_funzione=$1 AND id_utente=$2',
                             [$My_POST['id'], $My_POST['id_utente']]);
-                    $resp6 = runPreparedQuery($conn, $c++,
+                    $resp7 = runPreparedQuery($conn, $c++,
                             'DELETE FROM tmp_db.funzionigeo WHERE id=$1 AND id_utente=$2',
                             [$My_POST['id'], $My_POST['id_utente']]);
                 } else {
@@ -96,8 +99,11 @@ if (isset($My_POST['id']) && !$error) {
                             $My_POST['bibliografia'], $My_POST['note']);
                     //manipolafunzione serve se è validato il bene, registra chi ha modificato
                     $resp2 = insertIntoManipolaFunzione($conn, $c++, $user['id'], $My_POST['id']);
+                    // cancello i ruoli precedenti
+                    $resp3 = runPreparedQuery($conn, $c++,
+                            "DELETE FROM public.funzionigeo_ruoli WHERE id_funzione=$1", [$My_POST['id']]);
                     // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
-                    $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], null, $My_POST['ruolo'],
+                    $resp4 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], null, $My_POST['ruolo'],
                             $My_POST['ruolor'], false);
                     // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
                     $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
@@ -140,7 +146,7 @@ if (isset($My_POST['id']) && !$error) {
         }
     }
 
-    $queryArr = array($resp1, $queryID, $resp2, $resp3, $resp4, $resp5, $resp6);
+    $queryArr = array($resp1, $queryID, $resp2, $resp3, $resp4, $resp5, $resp6, $resp7);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
             http_response_code(200);

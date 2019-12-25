@@ -32,8 +32,8 @@ if (isset($My_POST['id']) && !$error) {
     // occorre proteggersi dalle possibili write skew risultanti 
     // dalla modifica/creazione concorrente dello stesso bene da validare.
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE') or die('Cant start transaction');
-    $respFunzioneTmp = $respFunzione = $respMove = $respIns = null;
-    $respUpdt = $respRuoli = $respDel2 = $respDel3 = null;
+    $respFunzioneTmp = $respFunzione = $resp0 = $resp1 = null;
+    $resp2 = $resp3 = $resp4 = $resp4 = $resp6 = $resp7 = null;
 
     // PASSO 0 controllo benireferenziati. Cerco in archivio definitivo => funzione approvata richiede beni approvati
     $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], null);
@@ -73,9 +73,12 @@ if (isset($My_POST['id']) && !$error) {
                     $resp2 = runPreparedQuery($conn, $c++,
                             "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                             [$My_POST['id'], $My_POST['id_utente']]);
+                    // cancello i ruoli precedenti in archivio definitivo per sostituirli
+                    $resp3 = runPreparedQuery($conn, $c++,
+                            "DELETE FROM public.funzionigeo_ruoli WHERE id_funzione=$1", [$My_POST['id']]);
                     // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
                     // PASSO 4
-                    $resp3 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['id_utente'], $My_POST['ruolo'],
+                    $resp4 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['id_utente'], $My_POST['ruolo'],
                             $My_POST['ruolor'], false);
                     // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
                     $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
@@ -83,13 +86,13 @@ if (isset($My_POST['id']) && !$error) {
                     $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'] || !$resp3['ok'];
                     //manipolafunzione serve se è validato il bene, registra chi ha modificato
                     // PASSO 5
-                    $resp4 = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
+                    $resp5 = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
                     // PASSO 6
                     // cancello ruoli e funzione dal db temporaneo
-                    $resp5 = runPreparedQuery($conn, $c++,
+                    $resp6 = runPreparedQuery($conn, $c++,
                             'DELETE FROM tmp_db.funzionigeo_ruoli WHERE id_funzione=$1 AND id_utente=$2',
                             [$My_POST['id'], $My_POST['id_utente']]);
-                    $resp6 = runPreparedQuery($conn, $c++,
+                    $resp7 = runPreparedQuery($conn, $c++,
                             'DELETE FROM tmp_db.funzionigeo WHERE id=$1 AND id_utente=$2',
                             [$My_POST['id'], $My_POST['id_utente']]);
                 }
@@ -101,8 +104,8 @@ if (isset($My_POST['id']) && !$error) {
         }
     }
     // per sicurezza controllo tutte le query
-    $queryArr = array($respFunzioneTmp, $respFunzione, $respMove, $respUpdt,
-        $respIns, $respRuoli, $respDel2, $respDel3);
+    $queryArr = array($respFunzioneTmp, $respFunzione, $resp0, $resp1,
+        $resp2, $resp3, $resp4, $resp4, $resp6, $resp7);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         // se COMMIT è andato a buon fine
         if (pg_query('COMMIT')) {
