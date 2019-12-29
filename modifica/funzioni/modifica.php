@@ -115,7 +115,7 @@ if (isset($My_POST['id']) && !$error) {
             // la PK delle funzioni temporane è id_funzione e id_utente (ovvero il proprietario)
             // questo poichè altri utenti potrebbero voler modificare (si serve per la modifica) la stessa funzione
             $queryID = runPreparedQuery($conn, $c++,
-                    'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2 and status=0
+                    'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2
                         FOR UPDATE', [$My_POST['id'], $user['id']]);
 
             if (pg_num_rows($queryID['data']) > 0) {
