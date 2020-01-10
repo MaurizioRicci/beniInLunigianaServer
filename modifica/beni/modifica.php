@@ -78,20 +78,13 @@ if (isset($My_POST['id']) && !$error) {
                 'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2
                     FOR UPDATE', [$My_POST['id'], $user['id']]);
 
-        if (pg_num_rows($queryID['data']) > 0) {
-            //richiesta sintatticamente corretta ma semanticamente errata
-            http_response_code(422);
-            $res['msg'] = "Hai già una modifica al bene con id ${My_POST['id']} in sospeso";
-            $error = true;
-        } else {
-            $resp1 = upsertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
-                    $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
-                    $user['id'], $My_POST['status'], $My_POST['esist']);
-            $resp2 = runPreparedQuery($conn, $c++,
-                    "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
-                    [$My_POST['id'], $My_POST['id_utente']]);
-        }
+        $resp1 = upsertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
+                $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
+                $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
+                $user['id'], $My_POST['status'], $My_POST['esist']);
+        $resp2 = runPreparedQuery($conn, $c++,
+                "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
+                [$My_POST['id'], $My_POST['id_utente']]);
     }
     $queryArr = array($resp1, $queryID, $resp2, $resp3, $resp4);
     if (!$error && checkAllPreparedQuery($queryArr)) {
