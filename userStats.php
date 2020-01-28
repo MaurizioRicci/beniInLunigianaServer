@@ -45,11 +45,11 @@ if (!isset($user)) {
       ),
       n_funzioni_rev as (
               select count(*) as n_funzioni_rev
-        from tmp_db.benigeo where id_utente=$1 and status=0
+        from tmp_db.funzionigeo where id_utente=$1 and status=0
       ),
       n_funzioni_pronte as (
               select count(*) as n_funzioni_pronte
-        from tmp_db.benigeo where id_utente=$1 and status=2
+        from tmp_db.funzionigeo where id_utente=$1 and status=2
       ),
       n_funzioni_incomplete as (
               select count(*) as n_funzioni_incomplete
