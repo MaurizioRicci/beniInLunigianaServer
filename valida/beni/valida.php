@@ -28,12 +28,13 @@ if (!isset($user) && !$error) {
  * 3 inserire (eventualmente sostituire) il bene nell'archio temporaneo in quello definitivo
  * 4 segnarsi chi modifica cosa
  * 5 cancellare il bene nell'archivio temporaneo
+ * 6 le funzioni dell'utente che puntavano a un bene temporaneo devono ora puntare a uno definitivo
  */
 if (isset($My_POST['id']) && !$error) {
     // occorre proteggersi dalle possibili write skew risultanti 
     // dalla modifica/creazione concorrente dello stesso bene da validare.
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE') or die('Cant start transaction');
-    $resp0 = $resp1 = $resp2 = $resp3 = null;
+    $resp0 = $resp1 = $resp2 = $resp3 = $resp4 = $resp5 = null;
 
     // PASSO 1. controllo il ruolo.
     if ($user['role'] == 'revisore') {
@@ -60,6 +61,13 @@ if (isset($My_POST['id']) && !$error) {
             $resp3 = runPreparedQuery($conn, $c++,
                     'DELETE FROM tmp_db.benigeo WHERE id=$1 AND id_utente=$2',
                     [$My_POST['id'], $My_POST['id_utente']]);
+            // PASSO 6
+            $resp4 = runPreparedQuery($conn, $c++,
+                    'UPDATE FROM tmp_db.funzionigeo WHERE id_bene=$1 AND id_utente_bene=$2 SET id_utente_bene=NULL',
+                    [$My_POST['id'], $My_POST['id_utente']]);
+            $resp5 = runPreparedQuery($conn, $c++,
+                    'UPDATE FROM tmp_db.funzionigeo WHERE id_bener=$1 AND id_utente_bener=$2 SET id_utente_bener=NULL',
+                    [$My_POST['id'], $My_POST['id_utente']]);
         }
     } else {
         $error = true;
@@ -68,7 +76,7 @@ if (isset($My_POST['id']) && !$error) {
     }
 
     // per sicurezza controllo tutte le query
-    $queryArr = array($resp0, $resp1, $resp2, $resp3);
+    $queryArr = array($resp0, $resp1, $resp2, $resp3, $resp4, $resp5);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         // se COMMIT è andato a buon fine
         if (pg_query('COMMIT')) {
