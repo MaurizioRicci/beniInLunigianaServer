@@ -20,9 +20,9 @@ if (!isset($user)) {
         ultimo_id_bene as (
         select max(id_bene) as ultimo_id_bene
         from (
-          select id_bene from public.manipola_bene where id_utente=$1
+          select max(id_bene) as id_bene from public.manipola_bene where id_utente=$1
           union
-          select id as id_bene from tmp_db.benigeo where id_utente=$1
+          select max(id) as id_bene from tmp_db.benigeo where id_utente=$1
           union
           select id_min as id_bene from id_min_max
         ) as _

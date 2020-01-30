@@ -34,9 +34,9 @@ if (!$error) {
         FROM (
             SELECT id FROM missingID
             UNION
-            SELECT id_bene FROM manipola_bene WHERE id_utente=$1
+            SELECT max(id_bene)+1 as id FROM manipola_bene WHERE id_utente=$1
             UNION
-            SELECT id_min FROM utenti where gid=$1
+            SELECT id_min as id FROM utenti where gid=$1
         ) as r", [$user['id']]);
     if ($query['ok']) {
         http_response_code(200);
