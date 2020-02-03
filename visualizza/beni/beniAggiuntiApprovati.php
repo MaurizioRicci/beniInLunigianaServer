@@ -30,6 +30,9 @@ switch ($columnToOrder) {
     case "comune":
         $columnToOrder = "comun";
         break;
+    case "esistenza":
+        $columnToOrder = "esist";
+        break;
     case "macroEpocaCar":
         $columnToOrder = "mec";
         break;
@@ -52,6 +55,7 @@ $id = trim(getOrDefault($query, 'id', ''));
 $ident = trim(getOrDefault($query, 'identificazione', ''));
 $descr = trim(getOrDefault($query, 'descrizione', ''));
 $comun = trim(getOrDefault($query, 'comune', ''));
+$esist = trim(getOrDefault($query, 'esistenza', ''));
 $mec = trim(getOrDefault($query, 'macroEpocaCar', ''));
 $meo = trim(getOrDefault($query, 'macroEpocaOrig', ''));
 $bibli = trim(getOrDefault($query, 'bibliografia', ''));
@@ -85,6 +89,11 @@ if ($descr !== '') {
     $query_beni_aggiunti_tutti_where .= "descr ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $descr);
+}
+if ($esist !== '') {
+    $query_beni_aggiunti_tutti_where .= "esist = $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $esist);
 }
 if ($comun !== '') {
     $comun = '%' . $comun . '%';
