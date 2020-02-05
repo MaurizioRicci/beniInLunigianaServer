@@ -9,6 +9,7 @@ http_response_code(500);
 $My_POST = postEmptyStr2NULL();
 $res = array(
     "role" => '',
+    "id" => '',
     "msg" => ''
 );
 
@@ -22,6 +23,7 @@ else {
     runPreparedQuery($conn, $c++, 'INSERT INTO logs.log_accessi VALUES($1)', [$user['id']]);
     http_response_code(200);
     $res['role'] = $user['role'];
+    $res['id'] = $user['id'];
 }
 
 echo json_encode($res);
