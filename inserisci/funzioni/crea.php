@@ -22,12 +22,18 @@ if (!$error) {
     pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
     $resp1 = $resp2 = $resp3 = $queryID = null;
     // controllo benireferenziati. Cerco o in archivio definitivo o in quelli temporanei dell'utente
-    $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], $My_POST['id_utente_bene']) ||
-            esisteBene($conn, $c++, $My_POST['id_bene'], null);
-    $b2 = esisteBene($conn, $c++, $My_POST['id_bener'], $My_POST['id_utente_bener']) ||
-            esisteBene($conn, $c++, $My_POST['id_bener'], null);
-    if (!$b1 || !$b2) {
-        $b_inesistente = $b1 ? $My_POST['id_bener'] : $My_POST['id_bene'];
+    // b1 esiste in archivio definitivo
+    $b1_def = esisteBene($conn, $c++, $My_POST['id_bene'], null);
+    //  b1 esiste in archivio temporaneo come bene di utente corrente
+    $b1_tmp = esisteBene($conn, $c++, $My_POST['id_bene'], $user['id']);
+    $b2_def = esisteBene($conn, $c++, $My_POST['id_bener'], null);
+    $b2_tmp = esisteBene($conn, $c++, $My_POST['id_bener'], $user['id']);
+    $curr_id_utente_bene = $b1_def ? null : $user['id'];
+    $curr_id_utente_bener = $b2_def ? null : $user['id'];
+    $b1_esiste = $b1_def || $b1_tmp;
+    $b2_esiste = $b2_def || $b2_tmp;
+    if (!$b1_esiste || !$b2_esiste) {
+        $b_inesistente = $b1_esiste ? $My_POST['id_bener'] : $My_POST['id_bene'];
         http_response_code(422);
         $error = true;
         $res['msg'] = "Il bene $b_inesistente non esiste.";
@@ -69,8 +75,8 @@ if (!$error) {
                         $My_POST['denominazione'], $My_POST['denominazioner'], $My_POST['data'],
                         $My_POST['data_ante'], $My_POST['data_poste'],
                         $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
-                        $My_POST['note'], $user['id'], $My_POST['id_utente_bene'],
-                        $My_POST['id_utente_bener'], $My_POST['status']);
+                        $My_POST['note'], $user['id'], $curr_id_utente_bene, 
+                        $curr_id_utente_bener, $My_POST['status']);
                 $id_funzione = getIdFunzione($resp1);
                 if (isset($id_funzione)) {
                     $resp2 = insertFunzioniGeoRuoli($conn, $c++, $id_funzione, $user['id'], $My_POST['ruolo'],
