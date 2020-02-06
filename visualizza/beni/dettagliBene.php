@@ -30,7 +30,7 @@ if (isset($My_POST['id'])) {
                 if (($utente['id'] != $My_POST['id_utente']) &&
                         ($utente['role'] !== 'revisore')) {
                     http_response_code(422);
-                    $res['msg'] = 'Sei uno scedatore, non puoi vedere i beni in revisione altrui';
+                    $res['msg'] = 'Sei uno schedatore, non puoi vedere i beni in revisione altrui';
                     echo json_encode($res);
                     return;
                 }
