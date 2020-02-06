@@ -40,7 +40,11 @@ if (!$error) {
                 $query = $query_funzioni_temp;
                 if ($utente['role'] == 'revisore') {
                     $params = [];
-                    $query = 'SELECT * FROM tmp_db.funzionigeo_e_ruoli WHERE status=0 ORDER BY id';
+                    $query = "SELECT *,"
+                            . " exists (select NULL from benigeo as b1 where b1.id=id_bene) as bene_approvato,"
+                            . " exists (select NULL from benigeo as b2 where b2.id=id_bener) as bener_approvato"
+                            . " FROM tmp_db.funzionigeo_e_ruoli"
+                            . " WHERE status=0 ORDER BY id";
                 }
                 break;
         }
@@ -48,7 +52,10 @@ if (!$error) {
 
         if ($resp['ok']) {
             while ($row = pg_fetch_assoc($resp['data'])) {
-                array_push($res, funzioniPostgres2JS($row));
+                $tmp = funzioniPostgres2JS($row);
+                $tmp['bene_approvato'] = getOrDefault($row, 'bene_approvato', 'true');
+                $tmp['bener_approvato'] = getOrDefault($row, 'bener_approvato', 'true');
+                array_push($res, $tmp);
             }
             http_response_code(200);
         } else
