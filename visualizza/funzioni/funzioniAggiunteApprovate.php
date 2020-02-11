@@ -81,10 +81,30 @@ $paramIdx = 1;
 $params = [];
 
 // costruisco la clausola WHERE della query
-if (is_numeric($id)) {
-    $query_funzioni_aggiunte_tutte_where .= "id=$$paramIdx AND ";
-    $paramIdx++;
-    array_push($params, $id);
+if ($id !== '') {
+    // se è un numero
+    if (is_numeric($id)) {
+        $query_funzioni_aggiunte_tutte_where .= "id=$$paramIdx AND ";
+        $paramIdx += 1;
+        array_push($params, $id);
+    } else { // se è un intervallo della forma X-Y. Se Y<X nessun record viene restituito
+        $id = str_replace(' ', '', $id);
+        $lowerUpperBounds = explode('-', $id, 2);
+        $lower = count($lowerUpperBounds) > 0 && is_numeric($lowerUpperBounds[0]) ?
+                $lowerUpperBounds[0] : '';
+        $upper = count($lowerUpperBounds) > 1 && is_numeric($lowerUpperBounds[1]) ?
+                $lowerUpperBounds[1] : '';
+        if ($lower !== '') {
+            $query_funzioni_aggiunte_tutte_where .= "id>=$$paramIdx AND ";
+            $paramIdx += 1;
+            array_push($params, $lower);
+        }
+        if ($upper !== '') {
+            $query_funzioni_aggiunte_tutte_where .= "id<=$$paramIdx AND ";
+            $paramIdx += 1;
+            array_push($params, $upper);
+        }
+    }
 }
 if (is_numeric($id_bene)) {
     $query_funzioni_aggiunte_tutte_where .= "id_bene=$$paramIdx AND ";
