@@ -63,7 +63,7 @@ if (isset($My_POST['id']) && !$error) {
                     // copio la funzione temporaneo in archivio definitivo e cancello la funzione temporanea
                     $resp0 = replaceIntoFunzioniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
                             $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
-                            $My_POST['data'], $My_POST['data_ante'], $My_POST['data_poste'],
+                            $My_POST['data_ante'], $My_POST['data_poste'],
                             $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
                             $My_POST['note'], $My_POST['id_utente'], $My_POST['id_utente_bene'],
                             $My_POST['id_utente_bener'], $My_POST['status']);
@@ -94,7 +94,7 @@ if (isset($My_POST['id']) && !$error) {
                     // sto modifcando una funzione già consolidata
                     $resp1 = replaceIntoFunzioniGeo($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
                             $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
-                            $My_POST['data'], $My_POST['data_ante'], $My_POST['data_poste'],
+                            $My_POST['data_ante'], $My_POST['data_poste'],
                             $My_POST['tipodata'], $My_POST['funzione'],
                             $My_POST['bibliografia'], $My_POST['note']);
                     //manipolafunzione serve se è validato il bene, registra chi ha modificato
@@ -130,7 +130,7 @@ if (isset($My_POST['id']) && !$error) {
             } else {
                 $resp1 = upsertIntoFunzioniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
                         $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
-                        $My_POST['data'], $My_POST['data_ante'], $My_POST['data_poste'],
+                        $My_POST['data_ante'], $My_POST['data_poste'],
                         $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
                         $My_POST['note'], $user['id'], $My_POST['id_utente_bene'],
                         $My_POST['id_utente_bener'], $My_POST['status']);

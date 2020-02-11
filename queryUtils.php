@@ -148,13 +148,13 @@ function insertIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bib
 }
 
 function insertIntoFunzioniGeo($conn, $stmtID, $idbene, $idbener, $denom, $denomr,
-        $data, $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note) {
+        $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note) {
     $tablename = 'funzionigeo';
-    $query = "INSERT INTO $tablename(id_bene, denominazione, data, data_ante, data_poste, tipodata,"
+    $query = "INSERT INTO $tablename(id_bene, denominazione, data_ante, data_poste, tipodata,"
             . " funzione, id_bener, denominazioner, bibliografia, note) " .
-            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING id";
+            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id";
     return runPreparedQuery($conn, $stmtID, $query,
-            [$idbene, $denom, $data, $data_ante, $data_poste, $tipodata, $funzione, $idbener, $denomr, $bibl, $note]);
+            [$idbene, $denom, $data_ante, $data_poste, $tipodata, $funzione, $idbener, $denomr, $bibl, $note]);
 }
 
 function insertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bibl, $note,
@@ -168,15 +168,15 @@ function insertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $
 }
 
 function insertIntoFunzioniGeoTmp($conn, $stmtID, $idbene, $idbener, $denom, $denomr,
-        $data, $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note, $id_utente,
+        $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note, $id_utente,
         $id_utente_bene, $id_utente_bener, $status) {
     $tablename = 'tmp_db.funzionigeo';
-    $query = "INSERT INTO $tablename(id_bene, denominazione, data, data_ante,data_poste,"
+    $query = "INSERT INTO $tablename(id_bene, denominazione, data_ante,data_poste,"
             . " tipodata, funzione, id_bener, denominazioner,"
             . "bibliografia, note, id_utente, id_utente_bene, id_utente_bener, status) " .
-            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id";
+            "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING id";
     return runPreparedQuery($conn, $stmtID, $query,
-            [$idbene, $denom, $data, $data_ante, $data_poste, $tipodata, $funzione, $idbener,
+            [$idbene, $denom, $data_ante, $data_poste, $tipodata, $funzione, $idbener,
                 $denomr, $bibl, $note, $id_utente, $id_utente_bene, $id_utente_bener, $status]);
 }
 
@@ -219,16 +219,16 @@ function replaceIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, 
 }
 
 function replaceIntoFunzioniGeoTmp($conn, $stmtID, $id, $idbene, $idbener, $denom, $denomr,
-        $data, $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note, $id_utente,
+        $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note, $id_utente,
         $id_utente_bene, $id_utente_bener, $status) {
     $tablename = 'tmp_db.funzionigeo';
     $timestamp_utc_txt = timestamp_utc_txt();
-    $query = "update $tablename SET id_bene=$1, denominazione=$2, data=$3, data_ante=$4,"
-            . " data_poste=$5, tipodata=$6, funzione=$7, id_bener=$8, denominazioner=$9,"
-            . "bibliografia=$10, note=$11, id_utente=$12, status=$13, id_utente_bene=$14,"
-            . "id_utente_bener=$15, timestamp_utc=$timestamp_utc_txt WHERE id=$16 and id_utente=$12";
+    $query = "update $tablename SET id_bene=$1, denominazione=$2, data_ante=$3,"
+            . " data_poste=$4, tipodata=$5, funzione=$6, id_bener=$7, denominazioner=$8,"
+            . "bibliografia=$9, note=$10, id_utente=$11, status=$12, id_utente_bene=$13,"
+            . "id_utente_bener=$14, timestamp_utc=$timestamp_utc_txt WHERE id=$15 and id_utente=$11";
     return runPreparedQuery($conn, $stmtID, $query,
-            [$idbene, $denom, $data, $data_ante, $data_poste, $tipodata, $funzione,
+            [$idbene, $denom, $data_ante, $data_poste, $tipodata, $funzione,
                 $idbener, $denomr, $bibl, $note, $id_utente, $status, $id_utente_bene,
                 $id_utente_bener, $id]);
 }
@@ -251,20 +251,20 @@ function upsertIntoBeniGeoTmp($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $
 }
 
 function upsertIntoFunzioniGeoTmp($conn, $stmtID, $id, $idbene, $idbener, $denom, $denomr,
-        $data, $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note, $id_utente,
+        $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note, $id_utente,
         $id_utente_bene, $id_utente_bener, $status) {
     $tablename = 'tmp_db.funzionigeo';
-    $query = "INSERT INTO $tablename(id_bene, denominazione, data, data_ante, data_poste, 
+    $query = "INSERT INTO $tablename(id_bene, denominazione, data_ante, data_poste, 
             tipodata, funzione, id_bener, denominazioner,
             bibliografia, note, id, id_utente, id_utente_bene, id_utente_bener, status)
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+            VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
             ON CONFLICT (id,id_utente) DO UPDATE SET id_bene=$1,
-            denominazione=$2, data=$3, data_ante=$4, data_poste=$5, tipodata=$6, funzione=$7,
-            id_bener=$8, denominazioner=$9, bibliografia=$10, note=$11,
-            id=$12, id_utente=$13, id_utente_bene=$14, id_utente_bener=$15, status=$16
+            denominazione=$2, data_ante=$3, data_poste=$4, tipodata=$5, funzione=$6,
+            id_bener=$7, denominazioner=$8, bibliografia=$9, note=$10,
+            id=$11, id_utente=$12, id_utente_bene=$13, id_utente_bener=$14, status=$15
             RETURNING id";
     return runPreparedQuery($conn, $stmtID, $query,
-            [$idbene, $denom, $data, $data_ante, $data_poste, $tipodata, $funzione,
+            [$idbene, $denom, $data_ante, $data_poste, $tipodata, $funzione,
                 $idbener, $denomr, $bibl, $note, $id, $id_utente, $id_utente_bene,
                 $id_utente_bener, $status]);
 }
@@ -309,13 +309,13 @@ function upsertFunzioneTmpToFunzioniGeo($conn, $stmtID, $id, $id_utente) {
     $query = "WITH tmp_funzione AS (
                 SELECT * from tmp_db.funzionigeo WHERE id=$1 and id_utente=$2
             )
-            INSERT INTO public.funzionigeo(id_bene, lotto, denominazione, data, data_ante, data_poste,
+            INSERT INTO public.funzionigeo(id_bene, lotto, denominazione, data_ante, data_poste,
             tipodata, funzione, id_bener, denominazioner, bibliografia, note, id)
-            SELECT id_bene, lotto, denominazione, data, data_ante, data_poste,
+            SELECT id_bene, lotto, denominazione, data_ante, data_poste,
             tipodata, funzione, id_bener, denominazioner, bibliografia, note, id FROM tmp_funzione
             ON CONFLICT (id) DO UPDATE SET id_bene=(SELECT id_bene FROM tmp_funzione),
             lotto=(SELECT lotto FROM tmp_funzione), denominazione=(SELECT denominazione FROM tmp_funzione),
-            data=(SELECT data FROM tmp_funzione), data_ante=(SELECT data_ante FROM tmp_funzione),
+            data_ante=(SELECT data_ante FROM tmp_funzione),
             data_poste=(SELECT data_poste FROM tmp_funzione), tipodata=(SELECT tipodata FROM tmp_funzione),
             funzione=(SELECT funzione FROM tmp_funzione), id_bener=(SELECT id_bener FROM tmp_funzione),
             denominazioner=(SELECT id_bene FROM tmp_funzione), bibliografia=(SELECT id_bene FROM tmp_funzione),

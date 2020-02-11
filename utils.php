@@ -95,7 +95,6 @@ function funzioniPostgres2JS($PostgresDict) {
         'id_utente' => getOrDefault($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
         'id_bene' => getOrDefault($PostgresDict, 'id_bene', ''),
         'denominazione' => getOrDefault($PostgresDict, 'denominazione', ''),
-        'data' => getOrDefault($PostgresDict, 'data', ''),
         'data_ante' => getOrDefault($PostgresDict, 'data_ante', ''),
         'data_poste' => getOrDefault($PostgresDict, 'data_poste', ''),
         'tipodata' => getOrDefault($PostgresDict, 'tipodata', ''),
@@ -125,7 +124,6 @@ function funzioniJS2Postgres($JSDict) {
         'denominazione' => getOrDefault($JSDict, 'denominazione', ''),
         'id_utente_bene' => getOrDefault($JSDict, 'id_utente_bene', ''),
         'id_utente_bener' => getOrDefault($JSDict, 'id_utente_bener', ''),
-        'data' => getOrDefault($JSDict, 'data', ''),
         'data_ante' => getOrDefault($JSDict, 'data_ante', ''),
         'data_poste' => getOrDefault($JSDict, 'data_poste', ''),
         'tipodata' => getOrDefault($JSDict, 'tipodata', ''),

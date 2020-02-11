@@ -55,7 +55,7 @@ if (!$error) {
             } else {
                 if (!$error) {
                     $resp1 = insertIntoFunzioniGeo($conn, $c++, $My_POST['id_bene'], $My_POST['id_bener'],
-                            $My_POST['denominazione'], $My_POST['denominazioner'], $My_POST['data'],
+                            $My_POST['denominazione'], $My_POST['denominazioner'],
                             $My_POST['data_ante'], $My_POST['data_poste'],
                             $My_POST['tipodata'], $My_POST['funzione'],
                             $My_POST['bibliografia'], $My_POST['note'], $user['id'], $My_POST['status']);
@@ -72,7 +72,7 @@ if (!$error) {
         } else if ($user['role'] == 'schedatore') {
             if (!$error) {
                 $resp1 = insertIntoFunzioniGeoTmp($conn, $c++, $My_POST['id_bene'], $My_POST['id_bener'],
-                        $My_POST['denominazione'], $My_POST['denominazioner'], $My_POST['data'],
+                        $My_POST['denominazione'], $My_POST['denominazioner'],
                         $My_POST['data_ante'], $My_POST['data_poste'],
                         $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
                         $My_POST['note'], $user['id'], $curr_id_utente_bene, 
