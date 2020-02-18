@@ -1,6 +1,6 @@
 <?php
 
-include('conncetion.php');
+include('connection.php');
 include('utils.php');
 include('queryUtils.php');
 
