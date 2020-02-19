@@ -22,21 +22,27 @@ if (!$error) {
     $tableName = 'tmp_db.benigeo';
     // ottengo il primo buco negli id della tabella desiderata
     $query = runPreparedQuery($conn, $c++, "
-        WITH missingID AS (   
-        SELECT id+1 as id
-        FROM $tableName t1
-        WHERE id_utente=$1 AND NOT EXISTS (
-          SELECT NULL
-          FROM $tableName t2
-          WHERE t2.id=(t1.id+1) AND id_utente=$1
-        ) ORDER BY id LIMIT 1)
+        WITH idMinMax AS (
+            SELECT id_min,id_max FROM utenti where gid=$1),
+        missingID AS (   
+            SELECT id+1 as id
+            FROM $tableName t1
+            WHERE id_utente=$1
+            AND id>= (SELECT id_min FROM idMinMax) --il buco negli id deve essere usabile dall'utente
+            AND id<= (SELECT id_max FROM idMinMax) --e' possibile che trovi id di beni non sui che ha modificato altrimenti
+            AND NOT EXISTS (
+              SELECT NULL
+              FROM $tableName t2
+              WHERE t2.id=(t1.id+1) AND id_utente=$1
+            ) ORDER BY id LIMIT 1
+        )
         SELECT MAX(id) as id
         FROM (
             SELECT id FROM missingID
             UNION
             SELECT max(id_bene)+1 as id FROM manipola_bene WHERE id_utente=$1
             UNION
-            SELECT id_min as id FROM utenti where gid=$1
+            SELECT id_min as id FROM idMinMax
         ) as r", [$user['id']]);
     if ($query['ok']) {
         http_response_code(200);

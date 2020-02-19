@@ -35,7 +35,7 @@ if (isset($My_POST['id'])) {
                 }
             }
             // se cerco nel db temporaneo serve anche l'id utente
-            $query = "SELECT * FROM tmp_db.funzionigeo_e_ruoli WHERE id=$1 AND id_utente=$2";
+            $query = "SELECT * FROM tmp_db.funzionigeo_e_ruoli_schedatore WHERE id=$1 AND id_utente=$2";
             $params = [$id, $id_utente];
         }
     }
