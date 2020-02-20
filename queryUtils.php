@@ -32,8 +32,9 @@ function checkID($conn, $stmtID, $username, $password, $id_to_check) {
         $resp = runPreparedQuery($conn, $stmtID, $query, [$username, $password]);
         if ($resp['ok']) {
             $row = pg_fetch_assoc($resp['data']);
-            return intval($row['id_min']) <= intval($id_to_check) &&
-                    intval($row['id_max']) >= intval($id_to_check);
+            $id_to_checkN = intval($id_to_check);
+            return $id_to_checkN > 0 && intval($row['id_min']) <= $id_to_checkN &&
+                    intval($row['id_max']) >= $id_to_checkN;
         }
     }
     return false;
