@@ -31,7 +31,7 @@ if (isset($My_POST['id']) && !$error) {
         $respBene = runPreparedQuery($conn, $c++,
                 // status: 0 se revisione, 1 se necessita correzioni
                 'UPDATE tmp_db.benigeo SET status=1, msg_validatore=$1 where id=$2 and id_utente=$3 and status=0',
-                array($My_POST['msg_validatore'], $My_POST['id'], $user['id']));
+                array($My_POST['msg_validatore'], $My_POST['id'], $My_POST['id_utente']));
         // vediamo se ha cancellato qualcosa
         if (pg_num_rows($respBene['data']) < 0) {
             $res['msg'] = 'ID del bene in revisione non trovato';
