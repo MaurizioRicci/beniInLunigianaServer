@@ -128,12 +128,14 @@ if (isset($My_POST['id']) && !$error) {
                 $res['msg'] = "La funzione con id ${My_POST['id']} è in revisione, non puoi modificarla.";
                 $error = true;
             } else {
+                // se lo status era da rivedere una modifica porta il bene in attesa di invio
+                $status = $My_POST['status'] == "1" ? "2" : $My_POST['status'];
                 $resp1 = upsertIntoFunzioniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
                         $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
                         $My_POST['data_ante'], $My_POST['data_poste'],
                         $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
                         $My_POST['note'], $user['id'], $My_POST['id_utente_bene'],
-                        $My_POST['id_utente_bener'], $My_POST['status']);
+                        $My_POST['id_utente_bener'], $status);
                 $resp2 = runPreparedQuery($conn, $c++,
                         "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                         [$My_POST['id'], $user['id']]);

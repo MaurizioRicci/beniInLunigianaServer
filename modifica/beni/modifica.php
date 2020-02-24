@@ -26,7 +26,7 @@ if (isset($My_POST['id']) && !$error) {
     //in base al ruolo utente scelgo in quale tabella mettere il bene
     if ($user['role'] == 'revisore') {
         // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
-        // questo poichè altri utenti potrebbero volero modificare (si serve per la modifica) lo stesso bene
+        // questo poichè altri utenti potrebbero volerlo modificare (si serve per la modifica) lo stesso bene
         if (isset($My_POST['id_utente'])) {
             // se viene fornito anche id_utente allora è parte della chiave per un bene in archivio temporaneo
             $queryBeneTmp = 'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2 FOR UPDATE';
@@ -71,7 +71,6 @@ if (isset($My_POST['id']) && !$error) {
             }
         }
     } if ($user['role'] == 'schedatore') {
-
         // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
         // questo poichè altri utenti potrebbero voler modificare (si serve per la modifica) lo stesso bene
         $queryID = runPreparedQuery($conn, $c++,
@@ -87,10 +86,12 @@ if (isset($My_POST['id']) && !$error) {
             $res['msg'] = "Il bene con id ${My_POST['id']} è in revisione, non puoi modificarlo.";
             $error = true;
         } else {
+            // se lo status era da rivedere una modifica porta il bene in attesa di invio
+            $status = $My_POST['status'] == "1" ? "2" : $My_POST['status'];
             $resp1 = upsertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
-                    $user['id'], $My_POST['status'], $My_POST['esist']);
+                    $user['id'], $status, $My_POST['esist']);
             $resp2 = runPreparedQuery($conn, $c++,
                     "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                     [$My_POST['id'], $My_POST['id_utente']]);
