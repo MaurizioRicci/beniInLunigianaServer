@@ -12,6 +12,10 @@ http_response_code(500);
 // analizza $_POST e converte le stringhe vuote in null
 $My_POST = postEmptyStr2NULL();
 
+$null2EmptyStr = function ($el) {
+    return $el == null ? '' : $el;
+};
+
 $user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
 if (!isset($user) && !$error) {
     http_response_code(401);
@@ -25,7 +29,8 @@ if (isset($My_POST['usersList'])) {
         $query = runPreparedQuery($conn, $c++, "SELECT * FROM utenti ORDER BY id_min", []);
         if ($query['ok']) {
             while ($row = pg_fetch_assoc($query['data'])) {
-                array_push($res, $row);
+                $newRow = array_map($null2EmptyStr, $row);
+                array_push($res, $newRow);
             }
             http_response_code(200);
             echo json_encode($res);
@@ -55,10 +60,10 @@ if (!$error) {
                 if (!$error) {
                     // agiungo utente corrente
                     $respIns = runPreparedQuery($conn, $c++,
-                            'INSERT INTO utenti(username, password, role, iniziali, nome, cognome, id_min, id_max)
-                            VALUES($1, $2, $3, $4, $5, $6, $7, $8)', array(
+                            'INSERT INTO utenti(username, password, role, iniziali, nome, cognome, id_min, id_max, email)
+                            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)', array(
                         $userIns['username'], $userIns['password'], $userIns['role'], $userIns['iniziali'],
-                        $userIns['nome'], $userIns['cognome'], $userIns['id_min'], $userIns['id_max']
+                        $userIns['nome'], $userIns['cognome'], $userIns['id_min'], $userIns['id_max'], $userIns['email']
                     ));
                     // controllo sia andata a buon fine la query senza sovrascrivere $error
                     $error = $error || !$respIns['ok'];
@@ -77,9 +82,10 @@ if (!$error) {
                     // aggiorno utente corrente
                     $respMod = runPreparedQuery($conn, $c++,
                             'UPDATE utenti SET username=$1, password=$2, role=$3, iniziali=$4,
-                            nome=$5, cognome=$6, id_min=$7, id_max=$8 WHERE gid=$9', array(
+                            nome=$5, cognome=$6, id_min=$7, id_max=$8, email=$9 WHERE gid=$10', array(
                         $userMod['username'], $userMod['password'], $userMod['role'], $userMod['iniziali'],
-                        $userMod['nome'], $userMod['cognome'], $userMod['id_min'], $userMod['id_max'], $userMod['gid']
+                        $userMod['nome'], $userMod['cognome'], $userMod['id_min'], $userMod['id_max'],
+                        $userMod['email'], $userMod['gid']
                     ));
                     // controllo sia andata a buon fine la query senza sovrascrivere $error
                     $error = $error || !$respMod['ok'];
