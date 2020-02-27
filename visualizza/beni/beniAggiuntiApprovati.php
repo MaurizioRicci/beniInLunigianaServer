@@ -42,6 +42,12 @@ switch ($columnToOrder) {
     case "toponimo":
         $columnToOrder = "topon";
         break;
+    case "bibliografia":
+        $columnToOrder = "bibli";
+        break;
+    case "note":
+        $columnToOrder = "note";
+        break;
     default:
         $columnToOrder = "";
         break;
