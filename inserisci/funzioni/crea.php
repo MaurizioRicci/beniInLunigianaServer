@@ -75,7 +75,7 @@ if (!$error) {
                         $My_POST['denominazione'], $My_POST['denominazioner'],
                         $My_POST['data_ante'], $My_POST['data_poste'],
                         $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
-                        $My_POST['note'], $user['id'], $curr_id_utente_bene, 
+                        $My_POST['note'], $user['id'], $curr_id_utente_bene,
                         $curr_id_utente_bener, $My_POST['status']);
                 $id_funzione = getIdFunzione($resp1);
                 if (isset($id_funzione)) {
@@ -89,6 +89,8 @@ if (!$error) {
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
             http_response_code(200);
+            logTxt($conn, "Crea funzione", "ID utente: ${user['id']}, "
+                    . "ID funzione: ${My_POST['id']}, ID utente funzione: ${My_POST['id_utente']}");
         } else {
             $res['msg'] = $transazione_fallita_msg;
         }

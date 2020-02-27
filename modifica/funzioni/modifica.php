@@ -156,6 +156,8 @@ if (isset($My_POST['id']) && !$error) {
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
             http_response_code(200);
+            logTxt($conn, "Modifica funzione", "ID utente: ${user['id']}, "
+                    . "ID funzione: ${My_POST['id']}, ID utente funzione: ${My_POST['id_utente']}");
         } else {
             $res['msg'] = $transazione_fallita_msg;
         }

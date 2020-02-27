@@ -384,3 +384,10 @@ function getIdFunzione($query) {
     }
     return $idFunzione;
 }
+
+// scrive nei log con un certo titolo e testo
+function logTxt($conn, $title, $txt) {
+    $esc_title = pg_escape_string($title);
+    $esc_txt = pg_escape_string($txt);
+    pg_query($conn, "INSERT INTO logs.logs(title,txt) VALUES('$esc_title', '$esc_txt')");
+}

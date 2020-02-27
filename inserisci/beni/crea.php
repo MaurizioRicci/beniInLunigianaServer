@@ -74,6 +74,8 @@ if (isset($My_POST['id']) && !$error) {
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
             http_response_code(200);
+            logTxt($conn, "Crea bene", "ID utente: ${user['id']}, "
+                    . "ID bene: ${My_POST['id']}");
         } else {
             $res['msg'] = $transazione_fallita_msg;
         }
