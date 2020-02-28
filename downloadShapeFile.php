@@ -5,6 +5,12 @@ $password = "postgres";
 $workingDir = "./shapefile/";
 $zipName = "benigeo_funzioni.zip";
 
+function makeDir($path)
+{
+     return is_dir($path) || mkdir($path);
+}
+// creo la cartella di lavoro se non esiste
+makeDir($workingDir);
 // creo gli shape con pgsql2shp
 $output1 = shell_exec("pgsql2shp -f ${workingDir}benigeo -P $password -u $user postgis_db benigeo");
 $output2 = shell_exec("pgsql2shp -f ${workingDir}funzionigeo -P $password -u $user postgis_db funzionigeo_ruoli_schedatori");
