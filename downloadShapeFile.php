@@ -1,8 +1,7 @@
 <?php
 
+include 'connectionString.php';
 // -------------------------COSTANTI PER IL PROGRAMMA
-$user = "postgres";
-$password = "postgres";
 $workingDir = "./shapefile/";
 $zipName = "benigeo_funzioni.zip";
 
@@ -23,20 +22,22 @@ if (isset($file_lock) && !empty($file_lock)) {
     // Volendo si può fare $obtain_lock = flock($file_lock, LOCK_EX | LOCK_NB);
     // LOCK_NB non blocca lo script e se trova che altri hanno il lock da errore e muore
     // Mettere solo LOCK_EX invece blocca lo script fino a che gli altri hanno fatto il loro lavoro
-    
+
     /* /$obtain_lock = flock($file_lock, LOCK_EX | LOCK_NB);
       if (!$obtain_lock || true) {
       // error_log("Not obtain lock-> $file_lock , insert operation inside queue! \n", 0);
       die("Accesso concorrente, riprovare più tardi");
       }/ */
-    
-    // Se il file è occupato aspetto un numero esponenziale di secondi max 3 tentativi
+
+    // Se il file è occupato aspetto un numero casuale ma esponenziale di secondi max 3 tentativi
     // Al massimo aspetto 2^0+2^1+2^2 secondi, 7 secondi max
+    // Faccio una sorta di esponential back-off con N=2
     $esponente = 0;
     while (!flock($file_lock, LOCK_EX | LOCK_NB)) {
-        sleep(pow(2, $esponente));
+        $rand_int = rand(1, pow(2, $esponente));
+        sleep($rand_int);
         $esponente += 1;
-        if ($esponente > 3) {
+        if ($esponente > 2) {
             die("Troppi accessi concorrenti, riprovare più tardi");
         }
     }
@@ -48,8 +49,8 @@ if (isset($file_lock) && !empty($file_lock)) {
 
 //----------------------------ESPORTO GLI SHAPE FILE DAL DB IN DEI FILE
 // creo gli shape con pgsql2shp
-$output1 = shell_exec("pgsql2shp -f ${workingDir}benigeo -P $password -u $user postgis_db benigeo");
-$output2 = shell_exec("pgsql2shp -f ${workingDir}funzionigeo -P $password -u $user postgis_db funzionigeo_ruoli_schedatori");
+$output1 = shell_exec("pgsql2shp -f ${workingDir}benigeo -P $password -u $username $db_name benigeo");
+$output2 = shell_exec("pgsql2shp -f ${workingDir}funzionigeo -P $password -u $username $db_name funzionigeo_ruoli_schedatori");
 
 printf($output1);
 printf($output2);
