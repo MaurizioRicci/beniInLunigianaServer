@@ -28,3 +28,8 @@ if ($ret !== TRUE) {
     $zip->close();
     printf("OK");
 }
+
+//Faccio scaricare lo zip
+$zipPath = $workingDir . $zipName;
+// faccio redirect allo zip
+header('Location: '.$zipPath, true, 302);
