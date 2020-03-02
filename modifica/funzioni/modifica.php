@@ -167,6 +167,9 @@ if (isset($My_POST['id']) && !$error) {
         if (!isset($res['msg']) && isset($failed_query)) { //magari ho già scritto io un messaggio d'errore
             $res['msg'] = pg_result_error($failed_query['data']);
         }
+        $msg = getOrDefault($res, 'msg', '');
+        logTxt($conn, "Modifica funzione fallita", "ID utente: ${user['id']}, "
+                . "ID funzione: ${My_POST['id']} - $msg");
     }
 }
 

@@ -84,6 +84,9 @@ if (isset($My_POST['id']) && !$error) {
         $failed_query = getFirstFailedQuery($queryArr);
         if (!isset($res['msg']) && isset($failed_query)) //magari ho già scritto io un messaggio d'errore
             $res['msg'] = pg_result_error($failed_query['data']);
+        $msg = getOrDefault($res, 'msg', '');
+        logTxt($conn, "Crea bene fallito", "ID utente: ${user['id']}, "
+                . "ID bene: ${My_POST['id']} - $msg");
     }
 }
 
