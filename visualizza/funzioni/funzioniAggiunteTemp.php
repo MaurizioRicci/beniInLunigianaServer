@@ -18,7 +18,7 @@ if (!isset($utente) && !$error) {
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
 }
-// Ottengo in beni inseriti da un certo utente
+// Ottengo le funzioni inserite/modificate da un certo utente
 // se un utente ha fatto più modifiche mostra la funzione una volta sola
 $query_funzioni_aggiunte = 'SELECT * '
         . 'FROM funzionigeo_ruoli_schedatori as b inner join (

@@ -18,14 +18,14 @@ if (!isset($utente) && !$error) {
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
 }
-// Ottengo in beni inseriti da un certo utente
+// Ottengo in beni inseriti/modificati da un certo utente
 // se un utente ha fatto più modifiche mostra il bene una volta sola
 $query_beni_aggiunti = 'SELECT * '
         . 'FROM benigeo_e_schedatori as b inner join (
              SELECT DISTINCT id_bene, id_utente FROM manipola_bene WHERE id_utente=$1) as m ON(b.id=m.id_bene)
              ORDER BY id';
 
-// Ottengo in beni di un certo utente
+// Ottengo i beni di un certo utente
 $query_beni_temp = 'SELECT * '
         . 'FROM tmp_db.benigeo_e_schedatori WHERE id_utente=$1 ORDER BY id';
 
