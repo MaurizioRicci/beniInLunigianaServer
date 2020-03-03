@@ -18,7 +18,10 @@ if (!isset($user) && !$error) {
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
 }
-
+if (!isset($My_POST['msg_validatore'])) {
+    $error = true;
+    $res['msg'] = 'Per segnalare devi scrivere un messaggio per lo schedatore';
+}
 if (isset($My_POST['id']) && !$error) {
     // occorre proteggersi dalle possibili write skew risultanti 
     // dalla modifica/creazione concorrente dello stesso bene da validare.
