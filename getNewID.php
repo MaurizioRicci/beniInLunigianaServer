@@ -47,12 +47,10 @@ if (!$error) {
             )
             ORDER BY id LIMIT 1 -- rendo un solo id alla fine
         )
-        SELECT COALESCE(MAX(id), -1) as id --rendo -1 nel caso abbia finito gli id
+        SELECT COALESCE(id, -1) as id --rendo -1 nel caso abbia finito gli id
         FROM (                             -- tanto -1 non viene accettato
             SELECT id FROM missingID
-            UNION
-            SELECT id_min as id FROM idMinMax
-        ) as r", [$user['id']]);
+            ) as r", [$user['id']]);
     if ($query['ok']) {
         http_response_code(200);
         $row = pg_fetch_assoc($query['data']);
