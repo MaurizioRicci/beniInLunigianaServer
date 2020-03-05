@@ -24,12 +24,12 @@ if (!$error) {
     $query = runPreparedQuery($conn, $c++, "
         WITH idMinMax AS (
             SELECT id_min,id_max FROM utenti where gid=$1),
-        idUsati AS (
+        idUsati AS ( -- id usati di beni temporanei e approvati
             SELECT id FROM $tableName WHERE id_utente=$1
             UNION
             SELECT id_bene as id FROM manipola_bene WHERE id_utente=$1
         ),
-        missingID AS (   
+        missingID AS ( -- cerco il primo buco tra gli id usati
             SELECT id+1 as id
             FROM idUsati t1
             WHERE
@@ -45,7 +45,7 @@ if (!$error) {
               FROM benigeo b
               WHERE b.id=t1.id
             )
-            ORDER BY id LIMIT 1
+            ORDER BY id LIMIT 1 -- rendo un solo id alla fine
         )
         SELECT COALESCE(MAX(id), -1) as id --rendo -1 nel caso abbia finito gli id
         FROM (                             -- tanto -1 non viene accettato
