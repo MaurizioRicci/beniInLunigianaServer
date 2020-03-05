@@ -82,10 +82,10 @@ if (!$error) {
                     // aggiorno utente corrente
                     $respMod = runPreparedQuery($conn, $c++,
                             'UPDATE utenti SET username=$1, password=$2, role=$3, iniziali=$4,
-                            nome=$5, cognome=$6, id_min=$7, id_max=$8, email=$9 WHERE gid=$10', array(
+                            nome=$5, cognome=$6, id_min=$7, id_max=$8, email=$9 WHERE uid=$10', array(
                         $userMod['username'], $userMod['password'], $userMod['role'], $userMod['iniziali'],
                         $userMod['nome'], $userMod['cognome'], $userMod['id_min'], $userMod['id_max'],
-                        $userMod['email'], $userMod['gid']
+                        $userMod['email'], $userMod['uid']
                     ));
                     // controllo sia andata a buon fine la query senza sovrascrivere $error
                     $error = $error || !$respMod['ok'];

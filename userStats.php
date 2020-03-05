@@ -15,8 +15,8 @@ if (!isset($user)) {
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
 } else {
-    $getUserStats = "with role as (select role from utenti where gid=$1),
-        id_min_max as (select id_min, id_max from utenti where gid=$1),
+    $getUserStats = "with role as (select role from utenti where uid=$1),
+        id_min_max as (select id_min, id_max from utenti where uid=$1),
         ultimo_id_bene as (
         select max(id_bene) as ultimo_id_bene
         from (

@@ -47,12 +47,12 @@ function checkID($conn, $stmtID, $username, $password, $id_to_check) {
 
 function risolviUtente($conn, $stmtID, $username, $password) {
     if (isset($username) && isset($password)) {
-        $query = "SELECT gid, role FROM utenti WHERE username=$1 and password=$2";
+        $query = "SELECT uid, role FROM utenti WHERE username=$1 and password=$2";
         $resp = runPreparedQuery($conn, $stmtID, $query, [$username, $password]);
         if ($resp['ok'] && pg_num_rows($resp['data']) > 0) {
             $row = pg_fetch_assoc($resp['data']);
             return array(
-                'id' => $row['gid'],
+                'id' => $row['uid'],
                 'role' => $row['role']
             );
         }

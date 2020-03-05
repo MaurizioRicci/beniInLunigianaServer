@@ -23,7 +23,7 @@ if (!$error) {
     // ottengo il primo buco negli id della tabella desiderata
     $query = runPreparedQuery($conn, $c++, "
         WITH idMinMax AS (
-            SELECT id_min,id_max FROM utenti where gid=$1),
+            SELECT id_min,id_max FROM utenti where uid=$1),
         idUsati AS ( -- id usati di beni temporanei e approvati
             SELECT id FROM $tableName WHERE id_utente=$1
             UNION
