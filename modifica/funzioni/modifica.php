@@ -117,7 +117,12 @@ if (isset($My_POST['id']) && !$error) {
             $queryID = runPreparedQuery($conn, $c++,
                     'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2
                         FOR UPDATE', [$My_POST['id'], $user['id']]);
-
+            if (pg_num_rows($queryID['data']) > 0) {
+                //richiesta sintatticamente corretta ma semanticamente errata
+                http_response_code(422);
+                $res['msg'] = "La funzione non esiste.";
+                $error = true;
+            }
             // controllo se è già in revisione
             $queryRev = runPreparedQuery($conn, $c++,
                     'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2 AND status=0',
@@ -127,7 +132,8 @@ if (isset($My_POST['id']) && !$error) {
                 http_response_code(422);
                 $res['msg'] = "La funzione con id ${My_POST['id']} è in revisione, non puoi modificarla.";
                 $error = true;
-            } else {
+            }
+            if (!$error) {
                 // se lo status era da rivedere una modifica porta il bene in attesa di invio
                 $status = $My_POST['status'] == "1" ? "2" : $My_POST['status'];
                 $resp1 = upsertIntoFunzioniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
