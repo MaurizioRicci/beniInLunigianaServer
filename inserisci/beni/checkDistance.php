@@ -12,7 +12,7 @@ http_response_code(200);
 $My_POST = dictEmptyStr2NULL(beniJS2Postgres($_POST));
 
 if (isset($My_POST['geom']) && count($My_POST['geom']) > 0 && !$error) {
-    $maxDist = 50;
+    $maxDist = 500; // distanza massima in metri
     $geomTxt = latLngArrToGeomTxt($My_POST['geom']);
     // converto in 3857 per avere le distance in metri
     $resp = runPreparedQuery($conn, $c++, "SELECT *,
