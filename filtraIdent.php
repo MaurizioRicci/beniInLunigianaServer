@@ -14,13 +14,11 @@ http_response_code(200);
 if (isset($My_GET['identificazione'])) {
 
     $identificazione = $My_GET['identificazione'] . "%";
-    $query = runPreparedQuery($conn, $c++, "SELECT id, ident FROM benigeo WHERE ident ILIKE $1 ORDER BY ident ASC LIMIT 100",
+    $query = runPreparedQuery($conn, $c++, "SELECT ident FROM benigeo WHERE ident ILIKE $1 ORDER BY ident ASC LIMIT 100",
             [$identificazione]);
     if ($query['ok']) {
         while ($row = pg_fetch_assoc($query['data'])) {
-            $temp = array(
-                'id' => $row['id'],
-                'value' => $row['ident']);
+            $temp = ['value' => $row['ident']];
             array_push($res, $temp);
         }
     } else {
@@ -31,4 +29,3 @@ if (isset($My_GET['identificazione'])) {
 }
 
 echo json_encode($res);
-?>

@@ -1,30 +1,28 @@
 <?php
 
 include('connection.php');
+include('utils.php');
+include('queryUtils.php');
 
+$c = 0; // do un id progressivo alle query
 $res = array();
-http_response_code(500);
+http_response_code(200);
 
 if (isset($_GET['comune'])) {
 
     $comune = $_GET['comune'] . "%";
-    $query = "SELECT DISTINCT comun FROM benigeo WHERE comun ILIKE $1 ORDER BY comun ASC LIMIT 100";
-    $result = pg_prepare($conn, '', $query);
-    if ($result) {
-        $result = pg_execute($conn, '', array($comune));
-        if (!$result) {
-            echo "An error occurred.\n";
-            exit;
-        }
-
-        while ($row = pg_fetch_assoc($result)) {
-            $temp = array(
-                'value' => $row['comun']);
+    $query = runPreparedQuery($conn, $c++, "SELECT DISTINCT comun FROM benigeo WHERE comun ILIKE $1 ORDER BY comun ASC LIMIT 100",
+            [$comune]);
+    if ($query['ok']) {
+        while ($row = pg_fetch_assoc($query['data'])) {
+            $temp = ['value' => $row['comun']];
             array_push($res, $temp);
         }
-        http_response_code(200);
+    } else {
+        http_response_code(500);
+        $error = true;
+        $res['msg'] = 'An error occured';
     }
 }
 header('Content-type: application/json');
 echo json_encode($res);
-?>
