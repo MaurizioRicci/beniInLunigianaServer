@@ -36,10 +36,16 @@ if (isset($My_POST['id']) && !$error) {
     $resp2 = $resp3 = $resp4 = $resp4 = $resp6 = $resp7 = null;
 
     // PASSO 0 controllo benireferenziati. Cerco in archivio definitivo => funzione approvata richiede beni approvati
-    $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], null);
-    $b2 = esisteBene($conn, $c++, $My_POST['id_bener'], null);
-    if (!$b1 || !$b2) {
-        $b_inesistente = $b1 ? $My_POST['id_bener'] : $My_POST['id_bene'];
+    $b1_esiste = esisteBene($conn, $c++, $My_POST['id_bene'], null);
+    $b2_esiste = esisteBene($conn, $c++, $My_POST['id_bener'], null);
+    if ($b1_esiste && !isset($My_POST['id_bener'])) {
+        // ok bene 1 esiste e bene2=null
+    } else if ($b2_esiste && !isset($My_POST['id_bene'])) {
+        // ok bene 2 esiste e bene1=null
+    } else if ($b1_esiste && $b2_esiste) {
+        // ok entrambi i beni esistono
+    } else {
+        $b_inesistente = $b1_esiste ? $My_POST['id_bener'] : $My_POST['id_bene'];
         http_response_code(422);
         $error = true;
         $res['msg'] = "Il bene $b_inesistente non esiste.";

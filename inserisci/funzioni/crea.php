@@ -32,7 +32,13 @@ if (!$error) {
     $curr_id_utente_bener = $b2_def ? null : $user['id'];
     $b1_esiste = $b1_def || $b1_tmp;
     $b2_esiste = $b2_def || $b2_tmp;
-    if (!$b1_esiste || !$b2_esiste) {
+    if ($b1_esiste && !isset($My_POST['id_bener'])) {
+        // ok bene 1 esiste e bene2=null
+    } else if ($b2_esiste && !isset($My_POST['id_bene'])) {
+        // ok bene 2 esiste e bene1=null
+    } else if ($b1_esiste && $b2_esiste) {
+        // ok entrambi i beni esistono
+    } else {
         $b_inesistente = $b1_esiste ? $My_POST['id_bener'] : $My_POST['id_bene'];
         http_response_code(422);
         $error = true;

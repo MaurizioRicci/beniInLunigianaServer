@@ -89,15 +89,18 @@ function latLngArrToGeomTxt($latLngArr) {
  */
 
 function esisteBene($conn, $stmtID, $idBene, $idUtenteBene) {
-    $resp = null;
-    if (!isset($idUtenteBene)) {
-        $resp = runPreparedQuery($conn, $stmtID, "SELECT id from benigeo WHERE id=$1",
-                [$idBene]);
-    } else {
-        $resp = runPreparedQuery($conn, $stmtID, "SELECT id from tmp_db.benigeo WHERE id=$1 and id_utente=$2",
-                [$idBene, $idUtenteBene]);
+    $resp = false;
+    if (isset($idBene)) {
+        if (!isset($idUtenteBene)) {
+            $resp = runPreparedQuery($conn, $stmtID, "SELECT id from benigeo WHERE id=$1",
+                    [$idBene]);
+        } else {
+            $resp = runPreparedQuery($conn, $stmtID, "SELECT id from tmp_db.benigeo WHERE id=$1 and id_utente=$2",
+                    [$idBene, $idUtenteBene]);
+        }
+        return isset($resp) && $resp['ok'] && pg_num_rows($resp['data']) > 0;
     }
-    return isset($resp) && $resp['ok'] && pg_num_rows($resp['data']) > 0;
+    return $resp;
 }
 
 /* /
