@@ -19,7 +19,7 @@ if (!isset($user) && !$error) {
 }
 
 if (!$error) {
-    pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
+    pg_query('BEGIN') or die('Cant start transaction');
     $resp1 = $resp2 = $resp3 = $queryID = null;
     // controllo benireferenziati. Cerco o in archivio definitivo o in quelli temporanei dell'utente
     // b1 esiste in archivio definitivo

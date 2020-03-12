@@ -25,7 +25,7 @@ if (!isset($My_POST['msg_validatore'])) {
 if (isset($My_POST['id']) && !$error) {
     // occorre proteggersi dalle possibili write skew risultanti 
     // dalla modifica/creazione concorrente dello stesso bene da validare.
-    pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
+    pg_query('BEGIN TRANSACTION') or die('Cant start transaction');
     $respBene = null;
 
     // PASSO 1. controllo il ruolo.

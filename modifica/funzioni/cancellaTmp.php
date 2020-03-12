@@ -27,7 +27,7 @@ if ($user['role'] == 'schedatore' && ($user['id'] !== $My_POST['id_utente'])) {
 
 if (isset($user) && isset($My_POST['id']) && !$error) {
 
-    pg_query('BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE') or die('Cant start transaction');
+    pg_query('BEGIN') or die('Cant start transaction');
     $resp0 = $resp1 = null;
     // controllo esistenza
     $esist = runPreparedQuery($conn, $c++, 'SELECT FROM tmp_db.funzionigeo '

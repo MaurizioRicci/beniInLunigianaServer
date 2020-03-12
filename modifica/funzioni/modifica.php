@@ -20,7 +20,7 @@ if (!isset($user) && !$error) {
 
 if (isset($My_POST['id']) && !$error) {
 
-    pg_query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ') or die('Cant start transaction');
+    pg_query('BEGIN') or die('Cant start transaction');
     $resp0 = $resp1 = $resp2 = $resp3 = $resp4 = $resp5 = $resp6 = $resp7 = $queryID = null;
 
     // controllo benireferenziati. Cerco o in archivio definitivo o in quelli temporanei dell'utente
