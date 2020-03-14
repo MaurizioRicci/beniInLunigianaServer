@@ -29,8 +29,8 @@ if (!$error) {
     $b1_tmp = esisteBene($conn, $c++, $My_POST['id_bene'], $user['id']);
     $b2_def = esisteBene($conn, $c++, $My_POST['id_bener'], null);
     $b2_tmp = esisteBene($conn, $c++, $My_POST['id_bener'], $user['id']);
-    $curr_id_utente_bene = $b1_def ? null : $user['id'];
-    $curr_id_utente_bener = $b2_def ? null : $user['id'];
+    $curr_id_utente_bene = $b1_def || !isset($My_POST['id_bene']) ? null : $user['id'];
+    $curr_id_utente_bener = $b2_def || !isset($My_POST['id_bener'])? null : $user['id'];
     $b1_esiste = $b1_def || $b1_tmp;
     $b2_esiste = $b2_def || $b2_tmp;
     if ($b1_esiste && !isset($My_POST['id_bener'])) {

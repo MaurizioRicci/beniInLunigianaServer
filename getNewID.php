@@ -19,16 +19,19 @@ if (!isset($user)) {
 }
 
 if (!$error) {
-    $tableName = 'tmp_db.benigeo';
     // ottengo il primo buco negli id della tabella desiderata
     $query = runPreparedQuery($conn, $c++, "
         WITH idMinMax AS (
             SELECT id_min,id_max FROM utenti where uid=$1
         ),
         idUsati AS ( -- id usati di beni temporanei e approvati
-            SELECT id FROM $tableName WHERE id_utente=$1
+            SELECT id FROM tmp_db.benigeo WHERE id_utente=$1
             UNION
             SELECT id_bene as id FROM manipola_bene WHERE id_utente=$1
+        ),
+        countIdUsati AS ( --conto il numero di id usati
+            SELECT COUNT(*) as c
+            FROM idUsati
         ),
         missingID AS ( -- cerco il primo buco tra gli id usati
             SELECT id+1 as id
@@ -49,8 +52,15 @@ if (!$error) {
             ORDER BY id LIMIT 1 -- rendo un solo id alla fine
         )
         SELECT COALESCE(id, -1) as id --rendo -1 nel caso abbia finito gli id
-        FROM (                             -- tanto -1 non viene accettato
-            SELECT id FROM missingID
+        FROM (                             -- il valore -1 non viene accettato
+            SELECT CASE
+                --se non ha ancora usato id allora gli rendo id_min
+                WHEN (SELECT c from countIdUsati)=0 THEN id_min
+                -- se ha usato qualche id gli rendo il primo id libero
+                -- se non ci sono id liberi id vale NULL
+                ELSE (SELECT id FROM missingID)
+                END as id
+            FROM idMinMax
             ) as r", [$user['id']]);
     if ($query['ok']) {
         http_response_code(200);

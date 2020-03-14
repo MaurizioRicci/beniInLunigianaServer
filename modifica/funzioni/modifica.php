@@ -24,10 +24,16 @@ if (isset($My_POST['id']) && !$error) {
     $resp0 = $resp1 = $resp2 = $resp3 = $resp4 = $resp5 = $resp6 = $resp7 = $queryID = null;
 
     // controllo benireferenziati. Cerco o in archivio definitivo o in quelli temporanei dell'utente
-    $b1 = esisteBene($conn, $c++, $My_POST['id_bene'], $My_POST['id_utente_bene']) ||
-            esisteBene($conn, $c++, $My_POST['id_bene'], null);
-    $b2 = esisteBene($conn, $c++, $My_POST['id_bener'], $My_POST['id_utente_bener']) ||
-            esisteBene($conn, $c++, $My_POST['id_bener'], null);
+    // b1 esiste in archivio definitivo
+    $b1_def = esisteBene($conn, $c++, $My_POST['id_bene'], null);
+    //  b1 esiste in archivio temporaneo come bene di utente corrente
+    $b1_tmp = esisteBene($conn, $c++, $My_POST['id_bene'], $user['id']);
+    $b2_def = esisteBene($conn, $c++, $My_POST['id_bener'], null);
+    $b2_tmp = esisteBene($conn, $c++, $My_POST['id_bener'], $user['id']);
+    $curr_id_utente_bene = $b1_def || !isset($My_POST['id_bene']) ? null : $user['id'];
+    $curr_id_utente_bener = $b2_def || !isset($My_POST['id_bener'])? null : $user['id'];
+    $b1_esiste = $b1_def || $b1_tmp;
+    $b2_esiste = $b2_def || $b2_tmp;
     if ($b1_esiste && !isset($My_POST['id_bener'])) {
         // ok bene 1 esiste e bene2=null
     } else if ($b2_esiste && !isset($My_POST['id_bene'])) {
@@ -123,7 +129,7 @@ if (isset($My_POST['id']) && !$error) {
             $queryID = runPreparedQuery($conn, $c++,
                     'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2
                         FOR UPDATE', [$My_POST['id'], $user['id']]);
-            if (pg_num_rows($queryID['data']) > 0) {
+            if (pg_num_rows($queryID['data']) <= 0) {
                 //richiesta sintatticamente corretta ma semanticamente errata
                 http_response_code(422);
                 $res['msg'] = "La funzione non esiste.";
@@ -146,8 +152,8 @@ if (isset($My_POST['id']) && !$error) {
                         $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
                         $My_POST['data_ante'], $My_POST['data_poste'],
                         $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
-                        $My_POST['note'], $user['id'], $My_POST['id_utente_bene'],
-                        $My_POST['id_utente_bener'], $status);
+                        $My_POST['note'], $user['id'], $curr_id_utente_bene,
+                        $curr_id_utente_bener, $status);
                 $resp2 = runPreparedQuery($conn, $c++,
                         "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
                         [$My_POST['id'], $user['id']]);
