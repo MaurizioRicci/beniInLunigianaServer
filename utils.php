@@ -4,7 +4,9 @@
 function postEmptyStr2NULL() {
     $copy = array();
     foreach ($_POST as $key => $val) {
-        $val = filter_input(INPUT_POST, $key, FILTER_CALLBACK, array('options' => 'emptyStr2NULL'));
+        if ($key !== 'username' && $key !== 'password') {
+            $val = filter_input(INPUT_POST, $key, FILTER_CALLBACK, array('options' => 'emptyStr2NULL'));
+        }
         $copy[$key] = $val ? $val : null;
     }
     return $copy;
@@ -28,7 +30,7 @@ function dictEmptyStr2NULL($dict) {
     return $dict;
 }
 
-// converte le stringhe vuote (dopo trim()) in valori null
+// converte le stringhe vuote (dopo trim()) in valori null & fail trim della stringa
 function emptyStr2NULL($var) {
     if (!is_string($var))
         return $var;
