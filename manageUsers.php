@@ -44,11 +44,21 @@ if (isset($My_POST['usersList'])) {
     return;
 }
 
+// Mi accerto che nel range di id assegnato all'utente non siano compresi beni già approvati o beni temporanei di altri utenti
+function testID($conn, $stmtID, $idMin, $idMax) {
+    // se id utente non c'è è perchè si aggiunge l'utente
+    // qualsiasi id utente è diverso da -1
+    $query = "SELECT id FROM benigeo WHERE id>=$1 AND id<=$2
+             UNION
+             SELECT id FROM tmp_db.benigeo WHERE id>=$1 AND id<=$2";
+    $resp_ID_OK = runPreparedQuery($conn, $stmtID, $query, [$idMin, $idMax]);
+    return $resp_ID_OK['ok'] && pg_num_rows($resp_ID_OK['data']) <= 0;
+}
+
 // Da qua in poi non è richiesta la lista utenti
 if (!$error) {
-    pg_query('BEGIN') or die('Cant start transaction');
+    pg_query('BEGIN ISOLATION LEVEL SERIALIZABLE') or die('Cant start transaction');
     $respMod = $respIns = null;
-
     // PASSO 1. controllo il ruolo.
     if ($user['role'] == 'revisore') {
         // PASSO 2. aggiungo nuovi utenti
@@ -58,15 +68,21 @@ if (!$error) {
                 if (!isset($userIns['username']) && !isset($userIns['password']))
                     continue;
                 if (!$error) {
-                    // agiungo utente corrente
-                    $respIns = runPreparedQuery($conn, $c++,
-                            'INSERT INTO utenti(username, password, role, iniziali, nome, cognome, id_min, id_max, email)
+                    if (!testID($conn, $c++, $userIns['id_min'], $userIns['id_max'])) {
+                        $error = true;
+                        $res['msg'] = "Il range di id assegnato a ${userIns['username']} collide con quello di beni approvati o con quello di altri beni in revisione. "
+                                . "Potrebbe anche avere dei beni in sospeso.";
+                    } else {
+                        // agiungo utente corrente
+                        $respIns = runPreparedQuery($conn, $c++,
+                                'INSERT INTO utenti(username, password, role, iniziali, nome, cognome, id_min, id_max, email)
                             VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)', array(
-                        $userIns['username'], $userIns['password'], $userIns['role'], $userIns['iniziali'],
-                        $userIns['nome'], $userIns['cognome'], $userIns['id_min'], $userIns['id_max'], $userIns['email']
-                    ));
-                    // controllo sia andata a buon fine la query senza sovrascrivere $error
-                    $error = $error || !$respIns['ok'];
+                            $userIns['username'], $userIns['password'], $userIns['role'], $userIns['iniziali'],
+                            $userIns['nome'], $userIns['cognome'], $userIns['id_min'], $userIns['id_max'], $userIns['email']
+                        ));
+                        // controllo sia andata a buon fine la query senza sovrascrivere $error
+                        $error = $error || !$respIns['ok'];
+                    }
                 } else {
                     break;
                 }
@@ -79,16 +95,22 @@ if (!$error) {
                 if (!isset($userMod['username']) && !isset($userMod['password']))
                     continue;
                 if (!$error) {
-                    // aggiorno utente corrente
-                    $respMod = runPreparedQuery($conn, $c++,
-                            'UPDATE utenti SET username=$1, password=$2, role=$3, iniziali=$4,
+                    if (!testID($conn, $c++, $userIns['id_min'], $userIns['id_max'])) {
+                        $error = true;
+                        $res['msg'] = "Il range di id assegnato a ${userMod['username']} collide con quello di beni approvati o con quello di altri beni in revisione. "
+                                . "Potrebbe anche avere dei beni in sospeso.";
+                    } else {
+                        // aggiorno utente corrente
+                        $respMod = runPreparedQuery($conn, $c++,
+                                'UPDATE utenti SET username=$1, password=$2, role=$3, iniziali=$4,
                             nome=$5, cognome=$6, id_min=$7, id_max=$8, email=$9 WHERE uid=$10', array(
-                        $userMod['username'], $userMod['password'], $userMod['role'], $userMod['iniziali'],
-                        $userMod['nome'], $userMod['cognome'], $userMod['id_min'], $userMod['id_max'],
-                        $userMod['email'], $userMod['uid']
-                    ));
-                    // controllo sia andata a buon fine la query senza sovrascrivere $error
-                    $error = $error || !$respMod['ok'];
+                            $userMod['username'], $userMod['password'], $userMod['role'], $userMod['iniziali'],
+                            $userMod['nome'], $userMod['cognome'], $userMod['id_min'], $userMod['id_max'],
+                            $userMod['email'], $userMod['uid']
+                        ));
+                        // controllo sia andata a buon fine la query senza sovrascrivere $error
+                        $error = $error || !$respMod['ok'];
+                    }
                 } else {
                     break;
                 }
