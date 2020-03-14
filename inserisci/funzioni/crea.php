@@ -17,7 +17,8 @@ if (!isset($user) && !$error) {
     $res['msg'] = 'Username/Password invalidi';
     $error = true;
 }
-
+// Mi serve per loggare il suo ID
+$id_funzione;
 if (!$error) {
     pg_query('BEGIN') or die('Cant start transaction');
     $resp1 = $resp2 = $resp3 = $queryID = null;
@@ -96,7 +97,7 @@ if (!$error) {
         if (pg_query('COMMIT')) {
             http_response_code(200);
             logTxt($conn, "Crea funzione", "ID utente: ${user['id']}, "
-                    . "ID funzione: ${My_POST['id']}, ID utente funzione: ${My_POST['id_utente']}");
+                    . "ID funzione: $id_funzione");
         } else {
             $res['msg'] = $transazione_fallita_msg;
         }
@@ -108,7 +109,7 @@ if (!$error) {
         }
         $msg = getOrDefault($res, 'msg', '');
         logTxt($conn, "Crea funzione fallita", "ID utente: ${user['id']}, "
-                . "ID funzione: ${My_POST['id']} - $msg");
+                . "ID funzione: $id_funzione - $msg");
     }
 }
 
