@@ -23,7 +23,8 @@ if (!$error) {
     // ottengo il primo buco negli id della tabella desiderata
     $query = runPreparedQuery($conn, $c++, "
         WITH idMinMax AS (
-            SELECT id_min,id_max FROM utenti where uid=$1),
+            SELECT id_min,id_max FROM utenti where uid=$1
+        ),
         idUsati AS ( -- id usati di beni temporanei e approvati
             SELECT id FROM $tableName WHERE id_utente=$1
             UNION
@@ -34,7 +35,7 @@ if (!$error) {
             FROM idUsati t1
             WHERE
             id>= (SELECT id_min FROM idMinMax) --il buco negli id deve essere usabile dall'utente
-            AND id<= (SELECT id_max FROM idMinMax) --e' possibile che trovi id di beni non sui che ha modificato altrimenti
+            AND id<= (SELECT id_max FROM idMinMax) --e' possibile che trovi id di beni non suoi che ha modificato altrimenti
             AND NOT EXISTS ( --cerco il primo buco
               SELECT NULL
               FROM idUsati t2
