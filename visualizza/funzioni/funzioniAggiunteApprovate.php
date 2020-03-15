@@ -21,6 +21,12 @@ switch ($columnToOrder) {
     case "id":
         $columnToOrder = "id";
         break;
+    case "id_bene":
+        $columnToOrder = "id_bene";
+        break;
+    case "id_bener":
+        $columnToOrder = "id_bener";
+        break;
     case "denominazione":
         $columnToOrder = "denominazione";
         break;
