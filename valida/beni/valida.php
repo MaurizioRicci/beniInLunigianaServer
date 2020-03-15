@@ -65,10 +65,10 @@ if (isset($My_POST['id']) && !$error) {
                         [$My_POST['id'], $My_POST['id_utente']]);
                 // PASSO 6
                 $resp4 = runPreparedQuery($conn, $c++,
-                        'UPDATE FROM tmp_db.funzionigeo WHERE id_bene=$1 AND id_utente_bene=$2 SET id_utente_bene=NULL',
+                        'UPDATE tmp_db.funzionigeo SET id_utente_bene=NULL WHERE id_bene=$1 AND id_utente_bene=$2',
                         [$My_POST['id'], $My_POST['id_utente']]);
                 $resp5 = runPreparedQuery($conn, $c++,
-                        'UPDATE FROM tmp_db.funzionigeo WHERE id_bener=$1 AND id_utente_bener=$2 SET id_utente_bener=NULL',
+                        'UPDATE tmp_db.funzionigeo SET id_utente_bener=NULL WHERE id_bener=$1 AND id_utente_bener=$2',
                         [$My_POST['id'], $My_POST['id_utente']]);
             }
         } else {
