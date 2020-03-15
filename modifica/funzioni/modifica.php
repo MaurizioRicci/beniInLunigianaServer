@@ -31,7 +31,7 @@ if (isset($My_POST['id']) && !$error) {
     $b2_def = esisteBene($conn, $c++, $My_POST['id_bener'], null);
     $b2_tmp = esisteBene($conn, $c++, $My_POST['id_bener'], $user['id']);
     $curr_id_utente_bene = $b1_def || !isset($My_POST['id_bene']) ? null : $user['id'];
-    $curr_id_utente_bener = $b2_def || !isset($My_POST['id_bener'])? null : $user['id'];
+    $curr_id_utente_bener = $b2_def || !isset($My_POST['id_bener']) ? null : $user['id'];
     $b1_esiste = $b1_def || $b1_tmp;
     $b2_esiste = $b2_def || $b2_tmp;
     if ($b1_esiste && !isset($My_POST['id_bener'])) {
@@ -126,9 +126,12 @@ if (isset($My_POST['id']) && !$error) {
 
             // la PK delle funzioni temporane è id_funzione e id_utente (ovvero il proprietario)
             // questo poichè altri utenti potrebbero voler modificare (si serve per la modifica) la stessa funzione
-            $queryID = runPreparedQuery($conn, $c++,
-                    'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2
-                        FOR UPDATE', [$My_POST['id'], $user['id']]);
+            // se c'è id_utente è in archivio temp sennò definiti
+            $queryID = isset($My_POST['id_utente']) ?
+                    'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2 FOR UPDATE' :
+                    'SELECT id FROM benigeo WHERE id=$1';
+            $paramsQueryID = isset($My_POST['id_utente']) ? [$My_POST['id'], $user['id']] : [$My_POST['id']];
+            $queryID = runPreparedQuery($conn, $c++,$queryID, $paramsQueryID);
             if (pg_num_rows($queryID['data']) <= 0) {
                 //richiesta sintatticamente corretta ma semanticamente errata
                 http_response_code(422);
