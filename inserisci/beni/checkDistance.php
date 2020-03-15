@@ -17,7 +17,11 @@ if (isset($My_POST['geom']) && count($My_POST['geom']) > 0 && !$error) {
     // converto in 3857 per avere le distance in metri
     $resp = runPreparedQuery($conn, $c++, "SELECT *,
             ST_DISTANCE(ST_Transform($geomTxt,3857), ST_Transform(geom,3857)) as dist
-        FROM benigeo_e_schedatori 
+        FROM ( 
+            SELECT id,null as id_utente,schedatori_iniziali,geom FROM benigeo_e_schedatori
+            UNION
+            SELECT id,id_utente,schedatori_iniziali,geom FROM tmp_db.benigeo_e_schedatori
+        ) as t
         WHERE id <> $1 AND      
         ST_DWITHIN(ST_Transform($geomTxt,3857), ST_Transform(geom,3857), $2)
         ORDER BY dist",

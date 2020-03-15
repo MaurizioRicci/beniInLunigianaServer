@@ -23,18 +23,6 @@ if (isset($My_POST['id'])) {
         $tmp_db = filter_var($My_POST['tmp_db'], FILTER_VALIDATE_BOOLEAN);
         if ($tmp_db) {
             $id_utente = $My_POST['id_utente'];
-            // controllo che se viene richiesto un bene in revisione, chi lo richiede sia o un revisore o il proprietario
-            if (isset($My_POST['username']) && isset($My_POST['id_utente'])) {
-                $utente = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
-
-                if (($utente['id'] != $My_POST['id_utente']) &&
-                        ($utente['role'] !== 'revisore')) {
-                    http_response_code(422);
-                    $res['msg'] = 'Sei uno schedatore, non puoi vedere i beni in revisione altrui';
-                    echo json_encode($res);
-                    return;
-                }
-            }
             // se cerco nel db temporaneo serve anche l'id utente
             $query = "SELECT *, ST_AsGeoJSON(geom) as geojson, ST_AsGeoJSON(ST_Centroid(geom)) " .
                     "as centroid_geojson FROM tmp_db.benigeo_e_schedatori WHERE id=$1 AND id_utente=$2";
