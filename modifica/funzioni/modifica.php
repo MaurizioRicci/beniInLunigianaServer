@@ -128,8 +128,8 @@ if (isset($My_POST['id']) && !$error) {
             // questo poichè altri utenti potrebbero voler modificare (si serve per la modifica) la stessa funzione
             // se c'è id_utente è in archivio temp sennò definiti
             $queryID = isset($My_POST['id_utente']) ?
-                    'SELECT id from tmp_db.benigeo where id=$1 AND id_utente=$2 FOR UPDATE' :
-                    'SELECT id FROM benigeo WHERE id=$1';
+                    'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2 FOR UPDATE' :
+                    'SELECT id FROM funzionigeo WHERE id=$1';
             $paramsQueryID = isset($My_POST['id_utente']) ? [$My_POST['id'], $user['id']] : [$My_POST['id']];
             $queryID = runPreparedQuery($conn, $c++,$queryID, $paramsQueryID);
             if (pg_num_rows($queryID['data']) <= 0) {

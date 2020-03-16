@@ -129,14 +129,14 @@ function replaceIntoBeniGeo($conn, $stmtID, $id, $ident, $descr, $mec, $meo, $bi
 }
 
 function replaceIntoFunzioniGeo($conn, $stmtID, $id, $idbene, $idbener, $denom, $denomr,
-        $data, $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note) {
+        $data_ante, $data_poste, $tipodata, $funzione, $bibl, $note) {
     $tablename = 'funzionigeo';
-    $query = "update $tablename SET id_bene=$1, denominazione=$2, data=$3, "
-            . "data_ante=$4, data_poste=$5, tipodata=$6,"
-            . "funzione=$7, id_bener=$8, denominazioner=$9,"
-            . "bibliografia=$10, note=$11 WHERE id=$12";
+    $query = "update $tablename SET id_bene=$1, denominazione=$2, "
+            . "data_ante=$3, data_poste=$4, tipodata=$5,"
+            . "funzione=$6, id_bener=$7, denominazioner=$8,"
+            . "bibliografia=$9, note=$10 WHERE id=$11";
     return runPreparedQuery($conn, $stmtID, $query,
-            [$idbene, $denom, $data, $data_ante, $data_poste, $tipodata,
+            [$idbene, $denom, $data_ante, $data_poste, $tipodata,
                 $funzione, $idbener, $denomr, $bibl, $note, $id]);
 }
 
