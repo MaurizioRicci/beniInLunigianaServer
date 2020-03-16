@@ -33,11 +33,11 @@ if (isset($My_POST['id']) && !$error) {
 
         $respFunzione = runPreparedQuery($conn, $c++,
                 // status: 0 se revisione, 1 se necessita correzioni
-                'UPDATE tmp_db.funzionigeo SET status=1, msg_validatore=$1 where id=$2 and id_utente=$3 and status=0',
+                'UPDATE tmp_db.funzionigeo SET status=1, msg_validatore=$1 where id=$2 and id_utente=$3 and (status=0 OR status=1)',
                 array($My_POST['msg_validatore'], $My_POST['id'], $My_POST['id_utente']));
         // vediamo se ha cancellato qualcosa
         if (pg_num_rows($respBene['data']) < 0) {
-            $res['msg'] = 'ID del bene in revisione non trovato';
+            $res['msg'] = 'ID della funzione in revisione non trovato';
             $error = true;
         }
         // controllo sia andata a buon fine la query senza sovrascrivere $error
