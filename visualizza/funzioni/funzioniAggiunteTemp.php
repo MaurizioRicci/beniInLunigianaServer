@@ -44,7 +44,7 @@ if (!$error) {
                             . " exists (select NULL from benigeo as b1 where b1.id=id_bene) as bene_approvato,"
                             . " exists (select NULL from benigeo as b2 where b2.id=id_bener) as bener_approvato"
                             . " FROM tmp_db.funzionigeo_e_ruoli_schedatore"
-                            . " WHERE status=0 ORDER BY id";
+                            . " WHERE status=0 OR status=1 ORDER BY id";
                 }
                 break;
         }

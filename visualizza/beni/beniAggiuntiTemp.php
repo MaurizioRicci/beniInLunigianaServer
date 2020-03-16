@@ -42,7 +42,7 @@ if (!$error) {
                 $query = $query_beni_temp;
                 if ($utente['role'] == 'revisore') {
                     $params = [];
-                    $query = 'SELECT * FROM tmp_db.benigeo_e_schedatori WHERE status=0 ORDER BY id';
+                    $query = 'SELECT * FROM tmp_db.benigeo_e_schedatori WHERE status=0 OR status=1 ORDER BY id';
                 }
                 break;
         }
