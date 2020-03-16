@@ -70,57 +70,23 @@ if (isset($My_POST['id']) && !$error) {
                 $res['msg'] = "La funzione con id ${My_POST['id']} non esiste";
                 $error = true;
             } else {
-                if (isset($My_POST['id_utente'])) {
-                    // se viene fornito anche id_utente allora è parte della chiave per una funzione in archivio temporaneo
-                    // copio la funzione temporaneo in archivio definitivo e cancello la funzione temporanea
-                    $resp0 = replaceIntoFunzioniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
-                            $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
-                            $My_POST['data_ante'], $My_POST['data_poste'],
-                            $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
-                            $My_POST['note'], $My_POST['id_utente'], $My_POST['id_utente_bene'],
-                            $My_POST['id_utente_bener'], $My_POST['status']);
-                    $resp1 = upsertFunzioneTmpToFunzioniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
-                    $resp2 = runPreparedQuery($conn, $c++,
-                            "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
-                            [$My_POST['id'], $My_POST['id_utente']]);
-                    // cancello i ruoli precedenti
-                    $resp3 = runPreparedQuery($conn, $c++,
-                            "DELETE FROM public.funzionigeo_ruoli WHERE id_funzione=$1", [$My_POST['id']]);
-                    // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
-                    $resp4 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], $My_POST['id_utente'], $My_POST['ruolo'],
-                            $My_POST['ruolor'], true);
-                    // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
-                    $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
-                    $c += $maxLength + 1;
-                    $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'] || !$resp3['ok'];
-                    //manipolafunzione serve se è validato il bene, registra chi ha modificato
-                    $resp5 = insertIntoManipolaFunzione($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
-                    // cancello ruoli e funzione dal db temporaneo
-                    $resp6 = runPreparedQuery($conn, $c++,
-                            'DELETE FROM tmp_db.funzionigeo_ruoli WHERE id_funzione=$1 AND id_utente=$2',
-                            [$My_POST['id'], $My_POST['id_utente']]);
-                    $resp7 = runPreparedQuery($conn, $c++,
-                            'DELETE FROM tmp_db.funzionigeo WHERE id=$1 AND id_utente=$2',
-                            [$My_POST['id'], $My_POST['id_utente']]);
-                } else {
-                    // sto modifcando una funzione già consolidata
-                    $resp1 = replaceIntoFunzioniGeo($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
-                            $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
-                            $My_POST['data_ante'], $My_POST['data_poste'],
-                            $My_POST['tipodata'], $My_POST['funzione'],
-                            $My_POST['bibliografia'], $My_POST['note']);
-                    //manipolafunzione serve se è validato il bene, registra chi ha modificato
-                    $resp2 = insertIntoManipolaFunzione($conn, $c++, $user['id'], $My_POST['id']);
-                    // cancello i ruoli precedenti
-                    $resp3 = runPreparedQuery($conn, $c++,
-                            "DELETE FROM public.funzionigeo_ruoli WHERE id_funzione=$1", [$My_POST['id']]);
-                    // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
-                    $resp4 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], null, $My_POST['ruolo'],
-                            $My_POST['ruolor'], false);
-                    // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
-                    $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
-                    $c += $maxLength + 1;
-                }
+                // sto modifcando una funzione già consolidata
+                $resp1 = replaceIntoFunzioniGeo($conn, $c++, $My_POST['id'], $My_POST['id_bene'],
+                        $My_POST['id_bener'], $My_POST['denominazione'], $My_POST['denominazioner'],
+                        $My_POST['data_ante'], $My_POST['data_poste'],
+                        $My_POST['tipodata'], $My_POST['funzione'],
+                        $My_POST['bibliografia'], $My_POST['note']);
+                //manipolafunzione serve se è validato il bene, registra chi ha modificato
+                $resp2 = insertIntoManipolaFunzione($conn, $c++, $user['id'], $My_POST['id']);
+                // cancello i ruoli precedenti
+                $resp3 = runPreparedQuery($conn, $c++,
+                        "DELETE FROM public.funzionigeo_ruoli WHERE id_funzione=$1", [$My_POST['id']]);
+                // inserisco i ruoli dei vari beni associati alla funzione in archivio definitivo
+                $resp4 = insertFunzioniGeoRuoli($conn, $c++, $My_POST['id'], null, $My_POST['ruolo'],
+                        $My_POST['ruolor'], false);
+                // aggiunge N ruoli con N query preparate => devo incrementare l'id delle query preparate
+                $maxLength = max(count($My_POST['ruolo']), count($My_POST['ruolor']));
+                $c += $maxLength + 1;
             }
         } if ($user['role'] == 'schedatore') {
 
@@ -131,7 +97,7 @@ if (isset($My_POST['id']) && !$error) {
                     'SELECT id from tmp_db.funzionigeo where id=$1 AND id_utente=$2 FOR UPDATE' :
                     'SELECT id FROM funzionigeo WHERE id=$1';
             $paramsQueryID = isset($My_POST['id_utente']) ? [$My_POST['id'], $user['id']] : [$My_POST['id']];
-            $queryID = runPreparedQuery($conn, $c++,$queryID, $paramsQueryID);
+            $queryID = runPreparedQuery($conn, $c++, $queryID, $paramsQueryID);
             if (pg_num_rows($queryID['data']) <= 0) {
                 //richiesta sintatticamente corretta ma semanticamente errata
                 http_response_code(422);

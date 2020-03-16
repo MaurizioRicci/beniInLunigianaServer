@@ -45,6 +45,7 @@ function emptyStr2NULL($var) {
 // Inoltre questa cosa mi assicura l'esistenza delle variabili dentro i miei script, basta testare non siano NULL
 function beniPostgres2JS($PostgresDict) {
     return ['id' => getOrDefault($PostgresDict, 'id', ''),
+        // id_utente serve per validare, segnalare beni. Quando il revisore tocca qualcosa in tmp_db serve id_utente
         'id_utente' => getOrDefault($PostgresDict, 'id_utente', ''), // in tmp_db è parte della chiave primaria per il bene
         'identificazione' => getOrDefault($PostgresDict, 'ident', ''),
         'descrizione' => getOrDefault($PostgresDict, 'descr', ''),

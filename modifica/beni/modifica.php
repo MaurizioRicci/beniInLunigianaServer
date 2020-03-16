@@ -45,30 +45,12 @@ if (isset($My_POST['id']) && !$error) {
             $res['msg'] = "Il bene con id ${My_POST['id']} non esiste";
             $error = true;
         } else {
-            if (isset($My_POST['id_utente'])) {
-                // se viene fornito anche id_utente allora è parte della chiave per un bene in archivio temporaneo
-                // copio il bene temporaneo in archivio definitivo e cancello il bene temporaneo
-                $resp0 = replaceIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
-                        $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                        $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
-                        $My_POST['id_utente'], $My_POST['status'], $My_POST['esist']);
-                $resp1 = upsertBeneTmpToBeniGeo($conn, $c++, $My_POST['id'], $My_POST['id_utente']);
-                $resp2 = runPreparedQuery($conn, $c++,
-                        "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
-                        [$My_POST['id'], $My_POST['id_utente']]);
-                $error = $error || !$resp0['ok'] || !$resp1['ok'] || !$resp2['ok'];
-                $resp3 = insertIntoManipolaBene($conn, $c++, $My_POST['id_utente'], $My_POST['id']);
-                $resp4 = runPreparedQuery($conn, $c++,
-                        'DELETE FROM tmp_db.benigeo WHERE id=$1 AND id_utente=$2',
-                        [$My_POST['id'], $My_POST['id_utente']]);
-            } else {
-                // sto modifcando un bene già consolidato
-                $resp1 = replaceIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
-                        $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
-                        $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $My_POST['esist']);
-                //manipolabene serve se è validato il bene
-                $resp2 = insertIntoManipolaBene($conn, $c++, $user['id'], $My_POST['id']);
-            }
+            // sto modifcando un bene già consolidato
+            $resp1 = replaceIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
+                    $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
+                    $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $My_POST['esist']);
+            //manipolabene serve se è validato il bene
+            $resp2 = insertIntoManipolaBene($conn, $c++, $user['id'], $My_POST['id']);
         }
     } if ($user['role'] == 'schedatore') {
         // la PK dei beni temporanei è id_bene e id_utente (ovvero il proprietario)
