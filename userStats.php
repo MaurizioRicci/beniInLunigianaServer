@@ -20,9 +20,12 @@ if (!isset($user)) {
         ultimo_id_bene as (
         select max(id_bene) as ultimo_id_bene
         from (
+          --considero solo gli id che può usare
           select max(id_bene) as id_bene from public.manipola_bene where id_utente=$1
+          AND id_bene>= (SELECT id_min FROM id_min_max) AND id_bene<= (SELECT id_max FROM id_min_max)
           union
           select max(id) as id_bene from tmp_db.benigeo where id_utente=$1
+            AND id>= (SELECT id_min FROM id_min_max) AND id<= (SELECT id_max FROM id_min_max)
           union
           select id_min as id_bene from id_min_max
         ) as _

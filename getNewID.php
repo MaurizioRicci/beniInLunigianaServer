@@ -26,8 +26,13 @@ if (!$error) {
         ),
         idUsati AS ( -- id usati di beni temporanei e approvati
             SELECT id FROM tmp_db.benigeo WHERE id_utente=$1
+                --considero solo gli id che può usare
+                AND id>= (SELECT id_min FROM idMinMax)
+                AND id<= (SELECT id_max FROM idMinMax)
             UNION
             SELECT id_bene as id FROM manipola_bene WHERE id_utente=$1
+                AND id_bene>= (SELECT id_min FROM idMinMax)
+                AND id_bene<= (SELECT id_max FROM idMinMax)
         ),
         countIdUsati AS ( --conto il numero di id usati
             SELECT COUNT(*) as c
@@ -50,18 +55,17 @@ if (!$error) {
               WHERE b.id=t1.id
             )
             ORDER BY id LIMIT 1 -- rendo un solo id alla fine
+        ),
+        missingID2 AS (
+            -- se esiste un buco negli id lo trova
+            SELECT CASE WHEN EXISTS(SELECT id FROM missingID) 
+            THEN (SELECT id FROM missingID)
+            -- altrimenti incrementa di 1 l'ultimo id usato
+            ELSE (SELECT MAX(id)+1 FROM idUsati) END AS id
         )
-        SELECT COALESCE(id, -1) as id --rendo -1 nel caso abbia finito gli id
-        FROM (                             -- il valore -1 non viene accettato
-            SELECT CASE
-                --se non ha ancora usato id allora gli rendo id_min
-                WHEN (SELECT c from countIdUsati)=0 THEN id_min
-                -- se ha usato qualche id gli rendo il primo id libero
-                -- se non ci sono id liberi id vale NULL
-                ELSE (SELECT id FROM missingID)
-                END as id
-            FROM idMinMax
-            ) as r", [$user['id']]);
+        -- se l'utente è nuovo rendo id_min
+        SELECT COALESCE(id, (SELECT id_min FROM idMinMax)) as id
+        FROM missingID2 --rendo -1 nel caso abbia finito gli id", [$user['id']]);
     if ($query['ok']) {
         http_response_code(200);
         $row = pg_fetch_assoc($query['data']);
