@@ -16,6 +16,7 @@ if (!isset($user)) {
     $error = true;
 } else {
     $getUserStats = "with role as (select role from utenti where uid=$1),
+        sigla as (select iniziali from utenti where uid=$1),
         id_min_max as (select id_min, id_max from utenti where uid=$1),
         ultimo_id_bene as (
         select max(id_bene) as ultimo_id_bene
@@ -71,7 +72,7 @@ if (!isset($user)) {
         from tmp_db.benigeo where status=0
       )
       select *
-      from role, id_min_max, ultimo_id_bene, n_beni_rev, n_beni_incompleti, n_beni_da_correggere,
+      from role, sigla, id_min_max, ultimo_id_bene, n_beni_rev, n_beni_incompleti, n_beni_da_correggere,
               n_beni_pronti, n_funzioni_rev,n_funzioni_incomplete, n_funzioni_da_correggere,
               n_funzioni_pronte, n_beni_da_revisionare, n_funzioni_da_revisionare";
 
