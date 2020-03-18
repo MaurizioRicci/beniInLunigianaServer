@@ -9,6 +9,7 @@ $c = 0;
 http_response_code(500);
 $res = [];
 
+// computo le statistiche per l'utente da fargli vedere nella home page del client
 $user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
 if (!isset($user)) {
     http_response_code(401);

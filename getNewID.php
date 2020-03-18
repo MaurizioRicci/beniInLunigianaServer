@@ -20,6 +20,7 @@ if (!isset($user)) {
 
 if (!$error) {
     // ottengo il primo buco negli id della tabella desiderata
+    // la query ha commenti all'interno
     $query = runPreparedQuery($conn, $c++, "
         WITH idMinMax AS (
             SELECT id_min,id_max FROM utenti where uid=$1
@@ -65,7 +66,7 @@ if (!$error) {
         )
         -- se l'utente è nuovo rendo id_min
         SELECT COALESCE(id, (SELECT id_min FROM idMinMax)) as id
-        FROM missingID2 --rendo -1 nel caso abbia finito gli id", [$user['id']]);
+        FROM missingID2", [$user['id']]);
     if ($query['ok']) {
         http_response_code(200);
         $row = pg_fetch_assoc($query['data']);

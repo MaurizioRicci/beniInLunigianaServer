@@ -14,6 +14,9 @@ http_response_code(200);
 $limit = isset($My_GET['limit']) &&
         filter_var($My_GET['limit'], FILTER_VALIDATE_INT) ? $My_GET['limit'] : 100;
 
+// Mostro i log che ho scritto
+// accetto il parametro limit per determinare il numero di log da vedere. Con il tempo crescono e più di
+//500-1000 è bene non inserirli nel browser pena il rallentamento
 $query = runPreparedQuery($conn, $c++, "SELECT * from logs.logs ORDER BY date DESC LIMIT $1", [$limit]);
 if ($query['ok']) {
     while ($row = pg_fetch_assoc($query['data'])) {

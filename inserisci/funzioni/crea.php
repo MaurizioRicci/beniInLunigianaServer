@@ -30,7 +30,7 @@ if (!$error) {
     $b2_def = esisteBene($conn, $c++, $My_POST['id_bener'], null);
     $b2_tmp = esisteBene($conn, $c++, $My_POST['id_bener'], $user['id']);
     $curr_id_utente_bene = $b1_def || !isset($My_POST['id_bene']) ? null : $user['id'];
-    $curr_id_utente_bener = $b2_def || !isset($My_POST['id_bener'])? null : $user['id'];
+    $curr_id_utente_bener = $b2_def || !isset($My_POST['id_bener']) ? null : $user['id'];
     $b1_esiste = $b1_def || $b1_tmp;
     $b2_esiste = $b2_def || $b2_tmp;
     if ($b1_esiste && !isset($My_POST['id_bener'])) {
@@ -61,6 +61,7 @@ if (!$error) {
                 $error = true;
             } else {
                 if (!$error) {
+                    // inserisco la funzione in archivio definitivo
                     $resp1 = insertIntoFunzioniGeo($conn, $c++, $My_POST['id_bene'], $My_POST['id_bener'],
                             $My_POST['denominazione'], $My_POST['denominazioner'],
                             $My_POST['data_ante'], $My_POST['data_poste'],
@@ -78,6 +79,7 @@ if (!$error) {
             }
         } else if ($user['role'] == 'schedatore') {
             if (!$error) {
+                // inserisco la funzione in archivio temporaneo
                 $resp1 = insertIntoFunzioniGeoTmp($conn, $c++, $My_POST['id_bene'], $My_POST['id_bener'],
                         $My_POST['denominazione'], $My_POST['denominazioner'],
                         $My_POST['data_ante'], $My_POST['data_poste'],
@@ -95,18 +97,23 @@ if (!$error) {
     $queryArr = array($resp1, $queryID, $resp2, $resp3);
     if (!$error && checkAllPreparedQuery($queryArr)) {
         if (pg_query('COMMIT')) {
+            // se va tutto bene risposta ok
             http_response_code(200);
+            // loggo che è andato tutto bene
             logTxt($conn, "Crea funzione", "ID utente: ${user['id']}, "
                     . "ID funzione: $id_funzione");
         } else {
             $res['msg'] = $transazione_fallita_msg;
         }
     } else {
+        // se va male trovo la prima query che ha fallito e ne rendo il messaggio
+        // utile per capire il problema
         pg_query('ROLLBACK');
         $failed_query = getFirstFailedQuery($queryArr);
         if (!isset($res['msg']) && isset($failed_query)) { //magari ho già scritto io un messaggio d'errore
             $res['msg'] = pg_result_error($failed_query['data']);
         }
+        // loggo il fallimento
         $msg = getOrDefault($res, 'msg', '');
         logTxt($conn, "Crea funzione fallita", "ID utente: ${user['id']}, "
                 . "ID funzione: $id_funzione - $msg");

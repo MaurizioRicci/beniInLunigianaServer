@@ -42,6 +42,7 @@ if (isset($My_POST['id']) && !$error) {
             $res['msg'] = "Il bene con id ${My_POST['id']} esiste già";
             $error = true;
         } else {
+            // inserisco in archivio definitivo
             $resp1 = insertIntoBeniGeo($conn, $c++, $My_POST['id'], $My_POST['ident'],
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'], $My_POST['esist']);
@@ -62,7 +63,7 @@ if (isset($My_POST['id']) && !$error) {
             $error = true;
         } else {
             //non possono esserci più crea bene concorrenti poichè violerebbero
-            // la pk (id) di tmp_db.benigeo. Quindi la query sotto fallirebbe facendo fallire la transazione.
+            // la pk (id, id_utente) di tmp_db.benigeo. Quindi la query sotto fallirebbe facendo fallire la transazione.
             $resp1 = insertIntoBeniGeoTmp($conn, $c++, $My_POST['id'], $My_POST['ident'],
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
@@ -80,6 +81,8 @@ if (isset($My_POST['id']) && !$error) {
             $res['msg'] = $transazione_fallita_msg;
         }
     } else {
+        // se va male trovo la prima query che ha fallito e ne rendo il messaggio
+        // utile per capire il problema
         pg_query('ROLLBACK');
         $failed_query = getFirstFailedQuery($queryArr);
         if (!isset($res['msg']) && isset($failed_query)) //magari ho già scritto io un messaggio d'errore
