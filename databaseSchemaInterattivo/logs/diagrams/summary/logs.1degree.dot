@@ -1,0 +1,32 @@
+// dot 2.38.0 on Windows 10 10.0
+// SchemaSpy rev 590
+digraph "logs" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "logs" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">logs</TD></TR>
+      <TR><TD PORT="title" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">title</TD></TR>
+      <TR><TD PORT="txt" COLSPAN="3" ALIGN="LEFT">txt</TD></TR>
+      <TR><TD PORT="date" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">date</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/logs.html"
+    tooltip="logs"
+  ];
+}

@@ -20,8 +20,7 @@ if (!isset($user)) {
     $error = true;
 }
 else {
-    runPreparedQuery($conn, $c++, 'INSERT INTO logs.log_accessi VALUES($1)', [$user['id']]);
-    http_response_code(200);
+    // comunico id utente e ruolo al client. Serve per scegliere quale interfaccia utente mostrare in base al ruolo.
     $res['role'] = $user['role'];
     $res['id'] = $user['id'];
 }

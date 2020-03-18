@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="postgis_db" schema="logs" type="PostgreSQL - 11.5">
+   <tables>
+      <table name="logs" remarks="Memorizzo i log come creazione/modifica di beni/funzioni o errori del server.&#10;Si possono cercare eventi (es: crea funzione fallita) utilizzando la colonna title.&#10;La data è nel fuso orario della macchina che ospita il db." schema="logs" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="title" nullable="true" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="1" name="txt" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP(6)" digits="6" id="2" name="date" nullable="false" remarks="" size="35" type="timestamp with time zone"/>
+         <index name="date_idx" unique="false">
+            <column ascending="true" name="date"/>
+         </index>
+         <index name="logs_title_idx" unique="false">
+            <column ascending="true" name="title"/>
+         </index>
+      </table>
+   </tables>
+</database>

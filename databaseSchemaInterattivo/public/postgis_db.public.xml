@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="postgis_db" schema="public" type="PostgreSQL - 11.5">
+   <tables>
+      <table name="benigeo" remarks="ident=Identificazione&#10;meo=MacroEpocaOriginale&#10;mec=MacroEpocaCaratteristica" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="int4">
+            <child column="id_bene" foreignKey="idbene_fk" implied="false" onDeleteCascade="true" table="funzionigeo"/>
+            <child column="id_bener" foreignKey="idbener_fk" implied="false" onDeleteCascade="true" table="funzionigeo"/>
+            <child column="id_bene" foreignKey="manipola_beni_id_bene_fkey" implied="false" onDeleteCascade="true" table="manipola_bene"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="ident" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="descr" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="meo" nullable="true" remarks="" size="254" type="varchar">
+            <parent column="nome" foreignKey="fk_benigeo_mEpocaOrig" implied="false" onDeleteCascade="false" table="macroEpocaOrig"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="4" name="mec" nullable="true" remarks="" size="254" type="varchar">
+            <parent column="nome" foreignKey="fk_benigeo_macroEpocaCar" implied="false" onDeleteCascade="false" table="macroEpocaCar"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="5" name="topon" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="6" name="esist" nullable="true" remarks="" size="254" type="varchar">
+            <parent column="nome" foreignKey="fk_benigeo_esistenza" implied="false" onDeleteCascade="false" table="esistenza"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="7" name="comun" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="8" name="bibli" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="note" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="benigeo3att_geom_idx" unique="false">
+            <column ascending="true" name="geom"/>
+         </index>
+      </table>
+      <table name="funzionigeo" remarks="Funzioni/Relazioni. Possono legare due beni o coinvolgerne uno solo.&#10;id_bene= ID del Bene 1&#10;id_bener= ID del Bene 2 di riferimento" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id_bene" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="idbene_fk" implied="false" onDeleteCascade="true" table="benigeo"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="lotto" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="2" name="denominazione" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="data_ante" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="tipodata" nullable="true" remarks="" size="254" type="varchar">
+            <parent column="nome" foreignKey="tipodata_fk" implied="false" onDeleteCascade="false" table="tipoData"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="5" name="funzione" nullable="true" remarks="" size="254" type="varchar">
+            <parent column="nome" foreignKey="funzione_fk" implied="false" onDeleteCascade="false" table="funzione"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="6" name="id_bener" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="idbener_fk" implied="false" onDeleteCascade="true" table="benigeo"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="7" name="denominazioner" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="bibliografia" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="note" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('funzionigeo_id_seq'::regclass)" digits="0" id="10" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="id_funzione" foreignKey="funzionigeo_ruoli_id_funzione_fkey" implied="false" onDeleteCascade="true" table="funzionigeo_ruoli"/>
+            <child column="id_funzione" foreignKey="manipola_funzioni_id_funzione_fkey" implied="false" onDeleteCascade="true" table="manipola_funzione"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="11" name="data_poste" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="funzionigeo_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="funzionigeo_ruoli" remarks="Registra per un data funzione tutti i ruoli dei due beni. Un bene può avere più ruoli." schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id_funzione" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="funzionigeo_ruoli_id_funzione_fkey" implied="false" onDeleteCascade="true" table="funzionigeo"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="ruolo" nullable="true" remarks="" size="254" type="varchar">
+            <parent column="nome" foreignKey="funzionigeo_ruoli_ruolo_fkey" implied="false" onDeleteCascade="false" table="ruolo"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="ruolor" nullable="true" remarks="" size="254" type="varchar">
+            <parent column="nome" foreignKey="funzionigeo_ruoli_ruolor_fkey" implied="false" onDeleteCascade="false" table="ruolo"/>
+         </column>
+         <index name="funzionigeo_ruoli_id_funzione_idx" unique="false">
+            <column ascending="true" name="id_funzione"/>
+         </index>
+      </table>
+      <table name="manipola_bene" remarks="Traccia utente che aggiunge/modifica un bene." schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id_utente" nullable="false" remarks="" size="10" type="int4">
+            <parent column="uid" foreignKey="manipola_beni_id_utente_fkey" implied="false" onDeleteCascade="false" table="utenti"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="id_bene" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="manipola_beni_id_bene_fkey" implied="false" onDeleteCascade="true" table="benigeo"/>
+         </column>
+         <column autoUpdated="false" defaultValue="timezone('UTC'::text, CURRENT_TIMESTAMP)" digits="6" id="2" name="timestamp_utc" nullable="false" remarks="" size="29" type="timestamp without time zone"/>
+         <index name="manipola_bene_id_utente_id_bene_idx" unique="false">
+            <column ascending="true" name="id_utente"/>
+            <column ascending="true" name="id_bene"/>
+         </index>
+      </table>
+      <table name="manipola_funzione" remarks="Traccia utente che aggiunge/modifica una funzione." schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id_utente" nullable="false" remarks="" size="10" type="int4">
+            <parent column="uid" foreignKey="manipola_funzioni_id_utente_fkey" implied="false" onDeleteCascade="false" table="utenti"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="id_funzione" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="manipola_funzioni_id_funzione_fkey" implied="false" onDeleteCascade="true" table="funzionigeo"/>
+         </column>
+         <column autoUpdated="false" defaultValue="timezone('UTC'::text, CURRENT_TIMESTAMP)" digits="6" id="2" name="timestamp_utc" nullable="false" remarks="" size="29" type="timestamp without time zone"/>
+      </table>
+      <table name="province" remarks="Usato per far scegliere il centro della mappa per future visualizzazioni. Ad esempio scelgo di avere la mappa con centro in provincia di Pisa." schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('provincie_gid_seq'::regclass)" digits="0" id="0" name="gid" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="cod_rip" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="2" name="cod_reg" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="3" name="cod_prov" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="4" name="cod_cm" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="5" name="cod_uts" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="6" name="den_prov" nullable="true" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="7" name="den_cm" nullable="true" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="8" name="den_uts" nullable="true" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="9" name="sigla" nullable="true" remarks="" size="2" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="10" name="tipo_uts" nullable="true" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="11" name="shape_leng" nullable="true" remarks="" size="131089" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="12" name="shape_area" nullable="true" remarks="" size="131089" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="13" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <column autoUpdated="false" digits="0" id="14" name="centroid" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <primaryKey column="gid" sequenceNumberInPK="1"/>
+         <index name="provincie_pkey" unique="true">
+            <column ascending="true" name="gid"/>
+         </index>
+         <index name="provincie_geom_idx" unique="false">
+            <column ascending="true" name="geom"/>
+         </index>
+      </table>
+      <table name="spatial_ref_sys" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="srid" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="auth_name" nullable="true" remarks="" size="256" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="auth_srid" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="srtext" nullable="true" remarks="" size="2048" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="proj4text" nullable="true" remarks="" size="2048" type="varchar"/>
+         <primaryKey column="srid" sequenceNumberInPK="1"/>
+         <index name="spatial_ref_sys_pkey" unique="true">
+            <column ascending="true" name="srid"/>
+         </index>
+      </table>
+      <table name="system_status" remarks="Piccola tabella che indica se il sistema dovrebbe essere attivo. Se online viene messo a false qualsiasi connessione dei client verrà bloccata dicendo che il sistema non è attivo. Si pensa possa essere utile mentre si fa manutenzione." schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="true" digits="0" id="0" name="online" nullable="false" remarks="" size="1" type="bool"/>
+      </table>
+      <table name="utenti" remarks="Tabella degli utenti. Ognuno può modificare beni o funzioni. Per discriminare tra schedatori o revisore è presente il campo ruolo." schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="username" nullable="false" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="1" name="password" nullable="false" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" defaultValue="'schedatore'::character varying" digits="0" id="2" name="role" nullable="false" remarks="" size="20" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="iniziali" nullable="false" remarks="" size="20" type="varchar"/>
+         <column autoUpdated="true" defaultValue="nextval('utenti_uid_seq'::regclass)" digits="0" id="4" name="uid" nullable="false" remarks="" size="10" type="serial">
+            <child column="id_utente" foreignKey="user_id_fk" implied="false" onDeleteCascade="false" table="benigeo"/>
+            <child column="id_utente" foreignKey="user_id_fk" implied="false" onDeleteCascade="false" table="funzionigeo"/>
+            <child column="id_utente_bene" foreignKey="funzionigeo_id_utente_bene_fkey" implied="false" onDeleteCascade="false" table="funzionigeo"/>
+            <child column="id_utente_bener" foreignKey="funzionigeo_id_utente_bener_fkey" implied="false" onDeleteCascade="false" table="funzionigeo"/>
+            <child column="id_utente" foreignKey="id_utente_fk" implied="false" onDeleteCascade="false" table="funzionigeo_ruoli"/>
+            <child column="id_utente" foreignKey="manipola_beni_id_utente_fkey" implied="false" onDeleteCascade="false" table="manipola_bene"/>
+            <child column="id_utente" foreignKey="manipola_funzioni_id_utente_fkey" implied="false" onDeleteCascade="false" table="manipola_funzione"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="5" name="nome" nullable="false" remarks="" size="40" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="6" name="cognome" nullable="false" remarks="" size="40" type="varchar"/>
+         <column autoUpdated="false" defaultValue="'-1'::integer" digits="0" id="7" name="id_min" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" defaultValue="'-1'::integer" digits="0" id="8" name="id_max" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="9" name="email" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="uid" sequenceNumberInPK="1"/>
+         <index name="utenti_pkey" unique="true">
+            <column ascending="true" name="uid"/>
+         </index>
+         <index name="username_password_unique" unique="true">
+            <column ascending="true" name="username"/>
+            <column ascending="true" name="password"/>
+         </index>
+      </table>
+   </tables>
+</database>

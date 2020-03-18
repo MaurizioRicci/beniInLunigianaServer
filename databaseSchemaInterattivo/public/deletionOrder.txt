@@ -1,0 +1,9 @@
+system_status
+spatial_ref_sys
+province
+funzionigeo_ruoli
+manipola_funzione
+manipola_bene
+funzionigeo
+benigeo
+utenti

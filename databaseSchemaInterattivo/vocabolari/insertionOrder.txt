@@ -1,0 +1,7 @@
+ruolo
+esistenza
+funzione
+macroEpocaCar
+macroEpocaOrig
+tipoData
+descrizione
