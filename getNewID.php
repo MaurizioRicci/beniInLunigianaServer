@@ -35,10 +35,6 @@ if (!$error) {
                 AND id_bene>= (SELECT id_min FROM idMinMax)
                 AND id_bene<= (SELECT id_max FROM idMinMax)
         ),
-        countIdUsati AS ( --conto il numero di id usati
-            SELECT COUNT(*) as c
-            FROM idUsati
-        ),
         missingID AS ( -- cerco il primo buco tra gli id usati
             SELECT id+1 as id
             FROM idUsati t1
@@ -58,15 +54,30 @@ if (!$error) {
             ORDER BY id LIMIT 1 -- rendo un solo id alla fine
         ),
         missingID2 AS (
+            -- l'utente non ha usato degli id => e' nuovo
+            SELECT CASE WHEN NOT EXISTS(SELECT NULL FROM idUsati)
+                THEN (SELECT id_min FROM idMinMax)
+            --l'utente ha usato degli id
             -- se esiste un buco negli id lo trova
-            SELECT CASE WHEN EXISTS(SELECT id FROM missingID) 
+            WHEN EXISTS(SELECT id FROM missingID) 
             THEN (SELECT id FROM missingID)
             -- altrimenti incrementa di 1 l'ultimo id usato
-            ELSE (SELECT MAX(id)+1 FROM idUsati) END AS id
+            ELSE (SELECT MAX(id)+1 FROM idUsati)
+            END AS id 
+        ),
+        missingID3 AS (
+            SELECT id
+            FROM missingID2
+            -- filtro gli id, incrementare di 1 l'ultimo id usato potrebbe essere
+            -- un numero fuori intervallo
+            WHERE id>= (SELECT id_min FROM idMinMax)
+                AND id<= (SELECT id_max FROM idMinMax)
         )
-        -- se l'utente è nuovo rendo id_min
-        SELECT COALESCE(id, (SELECT id_min FROM idMinMax)) as id
-        FROM missingID2", [$user['id']]);
+        SELECT CASE WHEN EXISTS(SELECT id FROM missingID3)
+            -- se ho trovato qualcosa lo rendo, altrimenti -1
+            THEN (SELECT id FROM missingID3)
+            ELSE -1 END AS id
+        ", [$user['id']]);
     if ($query['ok']) {
         http_response_code(200);
         $row = pg_fetch_assoc($query['data']);
