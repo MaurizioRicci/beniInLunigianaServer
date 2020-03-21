@@ -49,12 +49,10 @@ if (isset($file_lock) && !empty($file_lock)) {
 
 //----------------------------ESPORTO GLI SHAPE FILE DAL DB IN DEI FILE
 // creo gli shape con pgsql2shp
-// le funzioni occorre risistemare le colonne
-$query_funzioni = "SELECT id_bene,denominazione, data_ante,data_post,ruolo,funzione,id_bener,
-        denominazioner,ruolor,bibliografia,schedatori_iniziali,note
-    FROM funzionigeo_ruoli_schedatori";
+// le funzioni occorre risistemare le colonne. La query deve essere su una riga sennò fallisce
+$query_funzioni = "SELECT id_bene,denominazione, data_ante,data_post,tipodata,ruolo,funzione,id_bener,denominazioner,ruolor,bibliografia,note FROM funzionigeo_ruoli_schedatori";
 $output1 = shell_exec("pgsql2shp -f ${workingDir}benigeo -P $password -u $username $db_name benigeo");
-$output2 = shell_exec("pgsql2shp -f ${workingDir}funzionigeo -P $password -u $username $db_name $query_funzioni");
+$output2 = shell_exec("pgsql2shp -f ${workingDir}funzionigeo -P $password -u $username $db_name \"${query_funzioni}\"");
 
 printf($output1);
 printf($output2);
@@ -68,9 +66,10 @@ if ($ret !== TRUE) {
     printf('Failed with code %d', $ret);
 } else {
     $directory = realpath($workingDir);
+	//remove_path dalla documentazione: "Prefix to remove from matching file paths before adding to the archive."
     $options = array('remove_path' => $directory);
     // matcha tutti i file incluso lo zip stesso
-    $zip->addPattern('/.*/', $directory, $options);
+    $zip->addPattern('/\.(?:shp|cpg|dbf|prj|shx)$/', $directory, $options);
     // tolgo lo zip da tutto
     $zip->deleteName($zipName);
     $zip->close();
