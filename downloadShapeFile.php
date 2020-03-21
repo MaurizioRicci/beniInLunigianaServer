@@ -49,8 +49,12 @@ if (isset($file_lock) && !empty($file_lock)) {
 
 //----------------------------ESPORTO GLI SHAPE FILE DAL DB IN DEI FILE
 // creo gli shape con pgsql2shp
+// le funzioni occorre risistemare le colonne
+$query_funzioni = "SELECT id_bene,denominazione, data_ante,data_post,ruolo,funzione,id_bener,
+        denominazioner,ruolor,bibliografia,schedatori_iniziali,note
+    FROM funzionigeo_ruoli_schedatori";
 $output1 = shell_exec("pgsql2shp -f ${workingDir}benigeo -P $password -u $username $db_name benigeo");
-$output2 = shell_exec("pgsql2shp -f ${workingDir}funzionigeo -P $password -u $username $db_name funzionigeo_ruoli_schedatori");
+$output2 = shell_exec("pgsql2shp -f ${workingDir}funzionigeo -P $password -u $username $db_name $query_funzioni");
 
 printf($output1);
 printf($output2);
