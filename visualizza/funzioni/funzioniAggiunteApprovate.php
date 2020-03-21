@@ -33,8 +33,11 @@ switch ($columnToOrder) {
     case "denominazioner":
         $columnToOrder = "denominazioner";
         break;
-    case "data":
-        $columnToOrder = "data";
+    case "data_ante":
+        $columnToOrder = "data_ante";
+        break;
+    case "data_post":
+        $columnToOrder = "data_post";
         break;
     case "tipodata":
         $columnToOrder = "tipodata";
@@ -69,7 +72,8 @@ $id_bener = trim(getOrDefault($query, 'id_bener', ''));
 $denom = trim(getOrDefault($query, 'denominazione', ''));
 $denomr = trim(getOrDefault($query, 'denominazioner', ''));
 $bibli = trim(getOrDefault($query, 'bibliografia', ''));
-$data = trim(getOrDefault($query, 'data', ''));
+$data_ante = trim(getOrDefault($query, 'data_ante', ''));
+$data_post = trim(getOrDefault($query, 'data_post', ''));
 $tipodata = trim(getOrDefault($query, 'tipodata', ''));
 $funzione = trim(getOrDefault($query, 'funzione', ''));
 $note = trim(getOrDefault($query, 'note', ''));
@@ -78,8 +82,7 @@ $ruolor = trim(getOrDefault($query, 'ruolor', ''));
 $schedatori_iniziali = trim(getOrDefault($query, 'schedatori_iniziali', ''));
 
 // Ottengo tutti i beni inseriti
-$query_funzioni_aggiunte_tutte_select = "SELECT *, count(*) over() as total_rows
-     FROM funzionigeo_ruoli_schedatori ";
+$query_funzioni_aggiunte_tutte_select = "SELECT * FROM funzionigeo_ruoli_schedatori ";
 $query_funzioni_aggiunte_tutte_where = "";
 
 // indice del parametro nella query preparata
@@ -140,11 +143,17 @@ if ($bibli !== '') {
     $paramIdx++;
     array_push($params, $bibli);
 }
-if ($data !== '') {
-    $data = '%' . $data . '%';
-    $query_funzioni_aggiunte_tutte_where .= "data ilike $$paramIdx AND ";
+if ($data_ante !== '') {
+    $data_ante = '%' . $data_ante . '%';
+    $query_funzioni_aggiunte_tutte_where .= "data_ante ilike $$paramIdx AND ";
     $paramIdx++;
-    array_push($params, $data);
+    array_push($params, $data_ante);
+}
+if ($data_post !== '') {
+    $data_post = '%' . $data_post . '%';
+    $query_funzioni_aggiunte_tutte_where .= "data_post ilike $$paramIdx AND ";
+    $paramIdx++;
+    array_push($params, $data_post);
 }
 if ($tipodata !== '') {
     $tipodata = '%' . $tipodata . '%';
@@ -206,9 +215,10 @@ array_push($params, $limit, $offset);
 // eseguo la query
 $query = runPreparedQuery($conn, $c++, $query_funzioni_aggiunte_tutte_select, $params);
 if ($query['ok']) {
+    $total_rows = pg_num_rows($query['data']);
     while ($row = pg_fetch_assoc($query['data'])) {
         array_push($res['data'], funzioniPostgres2JS($row));
-        $res['count'] = $row['total_rows'];
+        $res['count'] = $total_rows;
     }
 } else {
     http_response_code(500);

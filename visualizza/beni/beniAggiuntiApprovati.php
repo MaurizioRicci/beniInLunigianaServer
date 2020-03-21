@@ -74,8 +74,7 @@ $paramIdx = 1;
 $params = [];
 
 // Ottengo tutti i beni inseriti
-$query_beni_aggiunti_tutti_select = "SELECT *, count(*) over() as total_rows
-     FROM benigeo_e_schedatori ";
+$query_beni_aggiunti_tutti_select = "SELECT * FROM benigeo_e_schedatori ";
 $query_beni_aggiunti_tutti_where = "";
 
 // costruisco la clausola WHERE della query
@@ -194,9 +193,10 @@ array_push($params, $limit, $offset);
 // eseguo la query
 $query = runPreparedQuery($conn, $c++, $query_beni_aggiunti_tutti_select, $params);
 if ($query['ok']) {
+    $total_rows = pg_num_rows($query['data']);
     while ($row = pg_fetch_assoc($query['data'])) {
         array_push($res['data'], beniPostgres2JS($row));
-        $res['count'] = $row['total_rows'];
+        $res['count'] = $total_rows;
     }
 } else {
     http_response_code(500);
