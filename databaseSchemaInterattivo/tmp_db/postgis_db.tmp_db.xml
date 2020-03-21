@@ -66,7 +66,7 @@
             <parent column="uid" foreignKey="funzionigeo_id_utente_bener_fkey" implied="false" onDeleteCascade="false" table="utenti"/>
          </column>
          <column autoUpdated="false" digits="0" id="16" name="lotto" nullable="true" remarks="" size="10" type="int4"/>
-         <column autoUpdated="false" digits="0" id="17" name="data_poste" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="17" name="data_post" nullable="true" remarks="" size="2147483647" type="text"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <primaryKey column="id_utente" sequenceNumberInPK="2"/>
          <index name="funzionigeo_pkey" unique="true">

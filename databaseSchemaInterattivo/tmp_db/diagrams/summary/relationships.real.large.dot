@@ -86,7 +86,7 @@ digraph "largeRelationshipsDiagram" {
       <TR><TD PORT="id_utente_bene" COLSPAN="3" ALIGN="LEFT">id_utente_bene</TD></TR>
       <TR><TD PORT="id_utente_bener" COLSPAN="3" ALIGN="LEFT">id_utente_bener</TD></TR>
       <TR><TD PORT="lotto" COLSPAN="3" ALIGN="LEFT">lotto</TD></TR>
-      <TR><TD PORT="data_poste" COLSPAN="3" ALIGN="LEFT">data_poste</TD></TR>
+      <TR><TD PORT="data_post" COLSPAN="3" ALIGN="LEFT">data_post</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 5</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
     URL="tables/funzionigeo.html"

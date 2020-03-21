@@ -64,7 +64,7 @@ if (!$error) {
                     // inserisco la funzione in archivio definitivo
                     $resp1 = insertIntoFunzioniGeo($conn, $c++, $My_POST['id_bene'], $My_POST['id_bener'],
                             $My_POST['denominazione'], $My_POST['denominazioner'],
-                            $My_POST['data_ante'], $My_POST['data_poste'],
+                            $My_POST['data_ante'], $My_POST['data_post'],
                             $My_POST['tipodata'], $My_POST['funzione'],
                             $My_POST['bibliografia'], $My_POST['note'], $user['id'], $My_POST['status']);
                     //manipolafunzione serve se è validata la funzione
@@ -82,7 +82,7 @@ if (!$error) {
                 // inserisco la funzione in archivio temporaneo
                 $resp1 = insertIntoFunzioniGeoTmp($conn, $c++, $My_POST['id_bene'], $My_POST['id_bener'],
                         $My_POST['denominazione'], $My_POST['denominazioner'],
-                        $My_POST['data_ante'], $My_POST['data_poste'],
+                        $My_POST['data_ante'], $My_POST['data_post'],
                         $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
                         $My_POST['note'], $user['id'], $curr_id_utente_bene,
                         $curr_id_utente_bener, $My_POST['status']);

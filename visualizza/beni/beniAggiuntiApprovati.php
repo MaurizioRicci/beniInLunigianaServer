@@ -88,16 +88,23 @@ if ($id !== '') {
     } else { // se è un intervallo della forma X-Y. Se Y<X nessun record viene restituito
         $id = str_replace(' ', '', $id);
         $lowerUpperBounds = explode('-', $id, 2);
+        // controllo che esista X
         $lower = count($lowerUpperBounds) > 0 && is_numeric($lowerUpperBounds[0]) ?
                 $lowerUpperBounds[0] : '';
+        // controllo che esista Y
         $upper = count($lowerUpperBounds) > 1 && is_numeric($lowerUpperBounds[1]) ?
                 $lowerUpperBounds[1] : '';
         if ($lower !== '') {
+            // se X è dato filtro
+            // paramIdx è l'indice da usare per quel dato parametro
+            // va cercato dentro l'array params
+            // es: Supponiamo di filtrare con id 5-10 => params=[5,10] => Scriverò la quey preparata come: id>=$1 and i<=$2
             $query_beni_aggiunti_tutti_where .= "id>=$$paramIdx AND ";
             $paramIdx += 1;
             array_push($params, $lower);
         }
         if ($upper !== '') {
+            // se Y è dato filtro
             $query_beni_aggiunti_tutti_where .= "id<=$$paramIdx AND ";
             $paramIdx += 1;
             array_push($params, $upper);

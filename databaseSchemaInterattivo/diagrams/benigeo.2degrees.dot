@@ -85,7 +85,7 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="bibliografia" COLSPAN="3" ALIGN="LEFT">bibliografia</TD></TR>
       <TR><TD PORT="note" COLSPAN="3" ALIGN="LEFT">note</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
-      <TR><TD PORT="data_poste" COLSPAN="3" ALIGN="LEFT">data_poste</TD></TR>
+      <TR><TD PORT="data_post" COLSPAN="3" ALIGN="LEFT">data_post</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
     URL="funzionigeo.html"
