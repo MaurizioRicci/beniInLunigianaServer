@@ -35,6 +35,24 @@
             <column ascending="true" name="geom"/>
          </index>
       </table>
+      <table name="benigeo_e_schedatori" remarks="" schema="tmp_db" type="VIEW">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="ident" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="descr" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="meo" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="mec" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="5" name="topon" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="6" name="esist" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="7" name="comun" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="8" name="bibli" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="note" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <column autoUpdated="false" digits="0" id="11" name="id_utente" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="12" name="timestamp_utc" nullable="true" remarks="" size="29" type="timestamp without time zone"/>
+         <column autoUpdated="false" digits="0" id="13" name="msg_validatore" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="14" name="status" nullable="true" remarks="" size="5" type="int2"/>
+         <column autoUpdated="false" digits="0" id="15" name="schedatori_iniziali" nullable="true" remarks="" size="20" type="varchar"/>
+      </table>
       <table name="funzionigeo" remarks="id &amp; id_utente sono la PK di questa tabella; si ipotizza che più utenti possano avere una versione differente della stessa funzione.&#10;status= 0 se in revisione, 1 se necessita correzioni,2=in attesa invio,3=incompleto" schema="tmp_db" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="id_bene" nullable="true" remarks="" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="1" name="denominazione" nullable="true" remarks="" size="2147483647" type="text"/>
@@ -65,14 +83,56 @@
          <column autoUpdated="false" digits="0" id="15" name="id_utente_bener" nullable="true" remarks="" size="10" type="int4">
             <parent column="uid" foreignKey="funzionigeo_id_utente_bener_fkey" implied="false" onDeleteCascade="false" table="utenti"/>
          </column>
-         <column autoUpdated="false" digits="0" id="16" name="lotto" nullable="true" remarks="" size="10" type="int4"/>
-         <column autoUpdated="false" digits="0" id="17" name="data_post" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="16" name="data_post" nullable="true" remarks="" size="2147483647" type="text"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <primaryKey column="id_utente" sequenceNumberInPK="2"/>
          <index name="funzionigeo_pkey" unique="true">
             <column ascending="true" name="id"/>
             <column ascending="true" name="id_utente"/>
          </index>
+      </table>
+      <table name="funzionigeo_e_ruoli" remarks="Mette insieme le funzioni temporanee con i loro ruoli" schema="tmp_db" type="VIEW">
+         <column autoUpdated="false" digits="0" id="0" name="id_bene" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="denominazione" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="data_ante" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="tipodata" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="funzione" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="5" name="id_bener" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="6" name="denominazioner" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="bibliografia" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="note" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="10" name="id_utente" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="11" name="timestamp_utc" nullable="true" remarks="" size="29" type="timestamp without time zone"/>
+         <column autoUpdated="false" digits="0" id="12" name="msg_validatore" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="13" name="status" nullable="true" remarks="" size="5" type="int2"/>
+         <column autoUpdated="false" digits="0" id="14" name="id_utente_bene" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="15" name="id_utente_bener" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="16" name="data_post" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="17" name="ruolo" nullable="true" remarks="" size="2147483647" type="json"/>
+         <column autoUpdated="false" digits="0" id="18" name="ruolor" nullable="true" remarks="" size="2147483647" type="json"/>
+      </table>
+      <table name="funzionigeo_e_ruoli_schedatore" remarks="Mette insieme le funzioni temporanee con i loro ruoli e le iniziali dello schedatore" schema="tmp_db" type="VIEW">
+         <column autoUpdated="false" digits="0" id="0" name="id_bene" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="denominazione" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="data_ante" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="tipodata" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="funzione" nullable="true" remarks="" size="254" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="5" name="id_bener" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="6" name="denominazioner" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="bibliografia" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="note" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="10" name="id_utente" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="11" name="timestamp_utc" nullable="true" remarks="" size="29" type="timestamp without time zone"/>
+         <column autoUpdated="false" digits="0" id="12" name="msg_validatore" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="13" name="status" nullable="true" remarks="" size="5" type="int2"/>
+         <column autoUpdated="false" digits="0" id="14" name="id_utente_bene" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="15" name="id_utente_bener" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="16" name="data_post" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="17" name="ruolo" nullable="true" remarks="" size="2147483647" type="json"/>
+         <column autoUpdated="false" digits="0" id="18" name="ruolor" nullable="true" remarks="" size="2147483647" type="json"/>
+         <column autoUpdated="false" digits="0" id="19" name="schedatori_iniziali" nullable="true" remarks="" size="20" type="varchar"/>
       </table>
       <table name="funzionigeo_ruoli" remarks="ruoli dei beni nelle funzioni. Un bene può avere più ruoli." schema="tmp_db" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="id_funzione" nullable="false" remarks="" size="10" type="int4">

@@ -39,6 +39,7 @@ mec=MacroEpocaCaratteristica</div><p>
 <table width='100%' border='0'>
 <tr valign='top'><td class='container' align='left' valign='top'>
 <form name='options' action=''>
+ <label for='implied'><input type=checkbox id='implied'>Implied relationships</label>
  <label for='showRelatedCols'><input type=checkbox id='showRelatedCols'>Related columns</label>
  <label for='showConstNames'><input type=checkbox id='showConstNames'>Constraints</label>
  <label for='showComments'><input type=checkbox id='showComments'>Comments</label>
@@ -114,6 +115,12 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
+   <tr class='impliedRelationship relative odd' valign='top'>
+    <td class='relatedTable detail' title="benigeo_e_schedatori.id's name implies that it's a child of benigeo.id, but it doesn't reference that column."><a href='benigeo_e_schedatori.html'>benigeo_e_schedatori</a><span class='relatedKey'>.id</span>
+    </td>
+    <td class='constraint detail'>Implied Constraint<span title='Restrict delete:
+ Parent cannot be deleted if children exist'>&nbsp;R</span></td>
+   </tr>
    <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="funzionigeo.id_bene refs benigeo.id via idbene_fk"><a href='funzionigeo.html'>funzionigeo</a><span class='relatedKey'>.id_bene</span>
     </td>
@@ -125,6 +132,12 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     </td>
     <td class='constraint detail'>idbener_fk<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
+   </tr>
+   <tr class='impliedRelationship relative odd' valign='top'>
+    <td class='relatedTable detail' title="funzionigeo_ruoli_schedatori.id's name implies that it's a child of benigeo.id, but it doesn't reference that column."><a href='funzionigeo_ruoli_schedatori.html'>funzionigeo_ruoli_schedatori</a><span class='relatedKey'>.id</span>
+    </td>
+    <td class='constraint detail'>Implied Constraint<span title='Restrict delete:
+ Parent cannot be deleted if children exist'>&nbsp;R</span></td>
    </tr>
    <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="manipola_bene.id_bene refs benigeo.id via manipola_beni_id_bene_fkey"><a href='manipola_bene.html'>manipola_bene</a><span class='relatedKey'>.id_bene</span>
@@ -275,7 +288,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='11 columns'>Analyzed at mer mar 18 18:21 CET 2020<p/>
+<p title='11 columns'>Analyzed at sab mar 21 10:04 CET 2020<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -307,26 +320,43 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from benigeo'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="benigeo.html" title="benigeo" alt="" coords="261,147,499,475">
-<area shape="rect" id="node2" href="../../vocabolari/tables/esistenza.html" title="vocabolari.esistenza" alt="" coords="30,369,193,476">
-<area shape="rect" id="node3" href="../../vocabolari/tables/macroEpocaCar.html" title="vocabolari.macroEpocaCar" alt="" coords="7,245,215,352">
-<area shape="rect" id="node4" href="../../vocabolari/tables/macroEpocaOrig.html" title="vocabolari.macroEpocaOrig" alt="" coords="5,121,217,228">
-<area shape="rect" id="node5" href="funzionigeo.html" title="funzionigeo" alt="" coords="543,5,677,352">
-<area shape="rect" id="node6" href="manipola_bene.html" title="manipola_bene" alt="" coords="545,369,675,500">
+<area shape="rect" id="node1" href="benigeo.html" title="benigeo" alt="" coords="261,123,499,451">
+<area shape="rect" id="node2" href="../../vocabolari/tables/esistenza.html" title="vocabolari.esistenza" alt="" coords="30,345,193,452">
+<area shape="rect" id="node3" href="../../vocabolari/tables/macroEpocaCar.html" title="vocabolari.macroEpocaCar" alt="" coords="7,221,215,328">
+<area shape="rect" id="node4" href="../../vocabolari/tables/macroEpocaOrig.html" title="vocabolari.macroEpocaOrig" alt="" coords="5,97,217,204">
+<area shape="rect" id="node5" href="funzionigeo.html" title="funzionigeo" alt="" coords="543,5,677,328">
+<area shape="rect" id="node6" href="manipola_bene.html" title="manipola_bene" alt="" coords="545,345,675,476">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/benigeo.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="impliedTwoDegreesRelationshipsDiagram" name="impliedTwoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="benigeo.html" title="benigeo" alt="" coords="261,343,499,671">
+<area shape="rect" id="node2" href="../../vocabolari/tables/esistenza.html" title="vocabolari.esistenza" alt="" coords="30,565,193,672">
+<area shape="rect" id="node3" href="../../vocabolari/tables/macroEpocaCar.html" title="vocabolari.macroEpocaCar" alt="" coords="7,441,215,548">
+<area shape="rect" id="node4" href="../../vocabolari/tables/macroEpocaOrig.html" title="vocabolari.macroEpocaOrig" alt="" coords="5,317,217,424">
+<area shape="rect" id="node5" href="benigeo_e_schedatori.html" title="benigeo_e_schedatori" alt="" coords="563,345,737,692">
+<area shape="rect" id="node6" href="funzionigeo.html" title="funzionigeo" alt="" coords="583,5,717,328">
+<area shape="rect" id="node7" href="../../vocabolari/tables/funzione.html" title="vocabolari.funzione" alt="" coords="303,140,457,223">
+<area shape="rect" id="node8" href="../../vocabolari/tables/tipoData.html" title="vocabolari.tipoData" alt="" coords="303,40,457,123">
+<area shape="rect" id="node9" href="funzionigeo_ruoli.html" title="funzionigeo_ruoli" alt="" coords="808,221,947,304">
+<area shape="rect" id="node10" href="funzionigeo_ruoli_schedatori.html" title="funzionigeo_ruoli_schedatori" alt="" coords="543,845,757,1264">
+<area shape="rect" id="node11" href="manipola_bene.html" title="manipola_bene" alt="" coords="813,732,942,863">
+<area shape="rect" id="node12" href="utenti.html" title="utenti" alt="" coords="607,709,693,792">
+<area shape="rect" id="node13" href="manipola_funzione.html" title="manipola_funzione" alt="" coords="801,467,953,549">
+</map>
+
+  <a name='diagram'><img id='impliedTwoDegreesImg' src='../diagrams/benigeo.implied2degrees.png' usemap='#impliedTwoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="benigeo.html" title="benigeo" alt="" coords="261,225,499,553">
-<area shape="rect" id="node2" href="../../vocabolari/tables/esistenza.html" title="vocabolari.esistenza" alt="" coords="30,448,193,555">
-<area shape="rect" id="node3" href="../../vocabolari/tables/macroEpocaCar.html" title="vocabolari.macroEpocaCar" alt="" coords="7,324,215,431">
-<area shape="rect" id="node4" href="../../vocabolari/tables/macroEpocaOrig.html" title="vocabolari.macroEpocaOrig" alt="" coords="5,200,217,307">
-<area shape="rect" id="node5" href="funzionigeo.html" title="funzionigeo" alt="" coords="543,5,677,352">
-<area shape="rect" id="node6" href="../../vocabolari/tables/funzione.html" title="vocabolari.funzione" alt="" coords="303,125,457,208">
-<area shape="rect" id="node7" href="../../vocabolari/tables/tipoData.html" title="vocabolari.tipoData" alt="" coords="303,25,457,108">
-<area shape="rect" id="node8" href="funzionigeo_ruoli.html" title="funzionigeo_ruoli" alt="" coords="728,213,867,296">
-<area shape="rect" id="node9" href="manipola_bene.html" title="manipola_bene" alt="" coords="733,413,862,544">
-<area shape="rect" id="node10" href="utenti.html" title="utenti" alt="" coords="567,369,653,452">
-<area shape="rect" id="node11" href="manipola_funzione.html" title="manipola_funzione" alt="" coords="721,313,873,396">
+<area shape="rect" id="node1" href="benigeo.html" title="benigeo" alt="" coords="261,205,499,533">
+<area shape="rect" id="node2" href="../../vocabolari/tables/esistenza.html" title="vocabolari.esistenza" alt="" coords="30,428,193,535">
+<area shape="rect" id="node3" href="../../vocabolari/tables/macroEpocaCar.html" title="vocabolari.macroEpocaCar" alt="" coords="7,304,215,411">
+<area shape="rect" id="node4" href="../../vocabolari/tables/macroEpocaOrig.html" title="vocabolari.macroEpocaOrig" alt="" coords="5,180,217,287">
+<area shape="rect" id="node5" href="funzionigeo.html" title="funzionigeo" alt="" coords="543,9,677,332">
+<area shape="rect" id="node6" href="../../vocabolari/tables/funzione.html" title="vocabolari.funzione" alt="" coords="303,105,457,188">
+<area shape="rect" id="node7" href="../../vocabolari/tables/tipoData.html" title="vocabolari.tipoData" alt="" coords="303,5,457,88">
+<area shape="rect" id="node8" href="funzionigeo_ruoli.html" title="funzionigeo_ruoli" alt="" coords="728,193,867,276">
+<area shape="rect" id="node9" href="manipola_bene.html" title="manipola_bene" alt="" coords="733,393,862,524">
+<area shape="rect" id="node10" href="utenti.html" title="utenti" alt="" coords="567,349,653,432">
+<area shape="rect" id="node11" href="manipola_funzione.html" title="manipola_funzione" alt="" coords="721,293,873,376">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='../diagrams/benigeo.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

@@ -39,6 +39,7 @@ id_bener= ID del Bene 2 di riferimento</div><p>
 <table width='100%' border='0'>
 <tr valign='top'><td class='container' align='left' valign='top'>
 <form name='options' action=''>
+ <label for='implied'><input type=checkbox id='implied'>Implied relationships</label>
  <label for='showRelatedCols'><input type=checkbox id='showRelatedCols'>Related columns</label>
  <label for='showConstNames'><input type=checkbox id='showConstNames'>Constraints</label>
  <label for='showComments'><input type=checkbox id='showComments'>Comments</label>
@@ -126,17 +127,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='odd'>
- <td class='detail'>lotto</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>null</td>
- <td class='detail'></td>
- <td class='detail'> </td>
- <td class='comment detail'></td>
-</tr>
-<tr class='even'>
  <td class='detail'>denominazione</td>
  <td class='detail'>text</td>
  <td class='detail' align='right'>2147483647</td>
@@ -147,7 +137,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>data_ante</td>
  <td class='detail'>text</td>
  <td class='detail' align='right'>2147483647</td>
@@ -158,7 +148,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>tipodata</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>254</td>
@@ -168,7 +158,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="funzionigeo.tipodata refs tipoData.nome in vocabolari via tipodata_fk"><a href='../../vocabolari/tables/tipoData.html'>tipoData</a><span class='relatedKey'>.nome</span>
     </td>
     <td class='constraint detail'>tipodata_fk<span title='Restrict delete:
@@ -178,7 +168,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>funzione</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>254</td>
@@ -188,7 +178,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative odd' valign='top'>
+   <tr class='relative even' valign='top'>
     <td class='relatedTable detail' title="funzionigeo.funzione refs funzione.nome in vocabolari via funzione_fk"><a href='../../vocabolari/tables/funzione.html'>funzione</a><span class='relatedKey'>.nome</span>
     </td>
     <td class='constraint detail'>funzione_fk<span title='Restrict delete:
@@ -198,7 +188,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>id_bener</td>
  <td class='detail'>int4</td>
  <td class='detail' align='right'>10</td>
@@ -208,7 +198,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="funzionigeo.id_bener refs benigeo.id via idbener_fk"><a href='benigeo.html'>benigeo</a><span class='relatedKey'>.id</span>
     </td>
     <td class='constraint detail'>idbener_fk<span title='Cascade on delete:
@@ -218,7 +208,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>denominazioner</td>
  <td class='detail'>text</td>
  <td class='detail' align='right'>2147483647</td>
@@ -229,7 +219,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>bibliografia</td>
  <td class='detail'>text</td>
  <td class='detail' align='right'>2147483647</td>
@@ -240,7 +230,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>note</td>
  <td class='detail'>text</td>
  <td class='detail' align='right'>2147483647</td>
@@ -251,7 +241,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='primaryKey' title='Primary Key'>id</td>
  <td class='detail'>serial</td>
  <td class='detail' align='right'>10</td>
@@ -260,13 +250,13 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail' align='right'>nextval('funzionigeo_id_seq'::regclass)</td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="funzionigeo_ruoli.id_funzione refs funzionigeo.id via funzionigeo_ruoli_id_funzione_fkey"><a href='funzionigeo_ruoli.html'>funzionigeo_ruoli</a><span class='relatedKey'>.id_funzione</span>
     </td>
     <td class='constraint detail'>funzionigeo_ruoli_id_funzione_fkey<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="manipola_funzione.id_funzione refs funzionigeo.id via manipola_funzioni_id_funzione_fkey"><a href='manipola_funzione.html'>manipola_funzione</a><span class='relatedKey'>.id_funzione</span>
     </td>
     <td class='constraint detail'>manipola_funzioni_id_funzione_fkey<span title='Cascade on delete:
@@ -277,7 +267,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>data_post</td>
  <td class='detail'>text</td>
  <td class='detail' align='right'>2147483647</td>
@@ -289,7 +279,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='12 columns'>Analyzed at mer mar 18 18:21 CET 2020<p/>
+<p title='11 columns'>Analyzed at sab mar 21 10:04 CET 2020<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -315,7 +305,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from funzionigeo'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="funzionigeo.html" title="funzionigeo" alt="" coords="204,57,464,409">
+<area shape="rect" id="node1" href="funzionigeo.html" title="funzionigeo" alt="" coords="204,81,464,409">
 <area shape="rect" id="node2" href="../../vocabolari/tables/funzione.html" title="vocabolari.funzione" alt="" coords="5,129,160,236">
 <area shape="rect" id="node3" href="benigeo.html" title="benigeo" alt="" coords="34,253,131,576">
 <area shape="rect" id="node4" href="../../vocabolari/tables/tipoData.html" title="vocabolari.tipoData" alt="" coords="5,5,160,112">
@@ -323,12 +313,30 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <area shape="rect" id="node6" href="manipola_funzione.html" title="manipola_funzione" alt="" coords="508,361,660,492">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/funzionigeo.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="impliedTwoDegreesRelationshipsDiagram" name="impliedTwoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="benigeo.html" title="benigeo" alt="" coords="290,475,387,797">
+<area shape="rect" id="node2" href="../../vocabolari/tables/esistenza.html" title="vocabolari.esistenza" alt="" coords="30,671,193,753">
+<area shape="rect" id="node3" href="../../vocabolari/tables/macroEpocaCar.html" title="vocabolari.macroEpocaCar" alt="" coords="7,571,215,653">
+<area shape="rect" id="node4" href="../../vocabolari/tables/macroEpocaOrig.html" title="vocabolari.macroEpocaOrig" alt="" coords="5,471,217,553">
+<area shape="rect" id="node5" href="benigeo_e_schedatori.html" title="benigeo_e_schedatori" alt="" coords="503,675,677,757">
+<area shape="rect" id="node6" href="funzionigeo.html" title="funzionigeo" alt="" coords="460,129,720,457">
+<area shape="rect" id="node7" href="../../vocabolari/tables/funzione.html" title="vocabolari.funzione" alt="" coords="261,279,416,385">
+<area shape="rect" id="node8" href="../../vocabolari/tables/tipoData.html" title="vocabolari.tipoData" alt="" coords="261,155,416,261">
+<area shape="rect" id="node9" href="funzionigeo_ruoli.html" title="funzionigeo_ruoli" alt="" coords="771,5,909,136">
+<area shape="rect" id="node10" href="../../vocabolari/tables/ruolo.html" title="vocabolari.ruolo" alt="" coords="524,29,656,112">
+<area shape="rect" id="node11" href="funzionigeo_ruoli_schedatori.html" title="funzionigeo_ruoli_schedatori" alt="" coords="483,475,697,557">
+<area shape="rect" id="node12" href="manipola_bene.html" title="manipola_bene" alt="" coords="775,653,905,736">
+<area shape="rect" id="node13" href="utenti.html" title="utenti" alt="" coords="547,575,633,657">
+<area shape="rect" id="node14" href="manipola_funzione.html" title="manipola_funzione" alt="" coords="764,496,916,627">
+</map>
+
+  <a name='diagram'><img id='impliedTwoDegreesImg' src='../diagrams/funzionigeo.implied2degrees.png' usemap='#impliedTwoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
 <area shape="rect" id="node1" href="benigeo.html" title="benigeo" alt="" coords="290,253,387,576">
 <area shape="rect" id="node2" href="../../vocabolari/tables/esistenza.html" title="vocabolari.esistenza" alt="" coords="30,449,193,532">
 <area shape="rect" id="node3" href="../../vocabolari/tables/macroEpocaCar.html" title="vocabolari.macroEpocaCar" alt="" coords="7,349,215,432">
 <area shape="rect" id="node4" href="../../vocabolari/tables/macroEpocaOrig.html" title="vocabolari.macroEpocaOrig" alt="" coords="5,249,217,332">
-<area shape="rect" id="node5" href="funzionigeo.html" title="funzionigeo" alt="" coords="460,7,720,359">
+<area shape="rect" id="node5" href="funzionigeo.html" title="funzionigeo" alt="" coords="460,31,720,359">
 <area shape="rect" id="node6" href="../../vocabolari/tables/funzione.html" title="vocabolari.funzione" alt="" coords="261,129,416,236">
 <area shape="rect" id="node7" href="../../vocabolari/tables/tipoData.html" title="vocabolari.tipoData" alt="" coords="261,5,416,112">
 <area shape="rect" id="node8" href="funzionigeo_ruoli.html" title="funzionigeo_ruoli" alt="" coords="771,249,909,380">

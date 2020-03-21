@@ -26,7 +26,6 @@ digraph "oneDegreeRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">public.funzionigeo</TD></TR>
       <TR><TD PORT="id_bene" COLSPAN="3" ALIGN="LEFT">id_bene</TD></TR>
-      <TR><TD PORT="lotto" COLSPAN="3" ALIGN="LEFT">lotto</TD></TR>
       <TR><TD PORT="denominazione" COLSPAN="3" ALIGN="LEFT">denominazione</TD></TR>
       <TR><TD PORT="data_ante" COLSPAN="3" ALIGN="LEFT">data_ante</TD></TR>
       <TR><TD PORT="tipodata" COLSPAN="3" ALIGN="LEFT">tipodata</TD></TR>
@@ -62,7 +61,6 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="status" COLSPAN="3" ALIGN="LEFT">status</TD></TR>
       <TR><TD PORT="id_utente_bene" COLSPAN="3" ALIGN="LEFT">id_utente_bene</TD></TR>
       <TR><TD PORT="id_utente_bener" COLSPAN="3" ALIGN="LEFT">id_utente_bener</TD></TR>
-      <TR><TD PORT="lotto" COLSPAN="3" ALIGN="LEFT">lotto</TD></TR>
       <TR><TD PORT="data_post" COLSPAN="3" ALIGN="LEFT">data_post</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>

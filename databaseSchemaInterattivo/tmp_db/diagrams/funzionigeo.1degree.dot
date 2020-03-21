@@ -58,7 +58,6 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="status" COLSPAN="2" ALIGN="LEFT">status</TD><TD PORT="status.type" ALIGN="LEFT">int2[5]</TD></TR>
       <TR><TD PORT="id_utente_bene" COLSPAN="2" ALIGN="LEFT">id_utente_bene</TD><TD PORT="id_utente_bene.type" ALIGN="LEFT">int4[10]</TD></TR>
       <TR><TD PORT="id_utente_bener" COLSPAN="2" ALIGN="LEFT">id_utente_bener</TD><TD PORT="id_utente_bener.type" ALIGN="LEFT">int4[10]</TD></TR>
-      <TR><TD PORT="lotto" COLSPAN="2" ALIGN="LEFT">lotto</TD><TD PORT="lotto.type" ALIGN="LEFT">int4[10]</TD></TR>
       <TR><TD PORT="data_post" COLSPAN="2" ALIGN="LEFT">data_post</TD><TD PORT="data_post.type" ALIGN="LEFT">text[2147483647]</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 5</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>

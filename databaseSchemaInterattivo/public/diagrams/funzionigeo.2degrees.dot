@@ -79,7 +79,6 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">funzionigeo</TD></TR>
       <TR><TD PORT="id_bene" COLSPAN="2" ALIGN="LEFT">id_bene</TD><TD PORT="id_bene.type" ALIGN="LEFT">int4[10]</TD></TR>
-      <TR><TD PORT="lotto" COLSPAN="2" ALIGN="LEFT">lotto</TD><TD PORT="lotto.type" ALIGN="LEFT">int4[10]</TD></TR>
       <TR><TD PORT="denominazione" COLSPAN="2" ALIGN="LEFT">denominazione</TD><TD PORT="denominazione.type" ALIGN="LEFT">text[2147483647]</TD></TR>
       <TR><TD PORT="data_ante" COLSPAN="2" ALIGN="LEFT">data_ante</TD><TD PORT="data_ante.type" ALIGN="LEFT">text[2147483647]</TD></TR>
       <TR><TD PORT="tipodata" COLSPAN="2" ALIGN="LEFT">tipodata</TD><TD PORT="tipodata.type" ALIGN="LEFT">varchar[254]</TD></TR>

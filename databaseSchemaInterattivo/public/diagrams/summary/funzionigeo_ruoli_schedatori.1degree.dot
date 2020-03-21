@@ -1,0 +1,44 @@
+// dot 2.38.0 on Windows 10 10.0
+// SchemaSpy rev 590
+digraph "funzionigeo_ruoli_schedatori" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "funzionigeo_ruoli_schedatori" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">funzionigeo_ruoli_schedatori</TD></TR>
+      <TR><TD PORT="id_bene" COLSPAN="3" ALIGN="LEFT">id_bene</TD></TR>
+      <TR><TD PORT="denominazione" COLSPAN="3" ALIGN="LEFT">denominazione</TD></TR>
+      <TR><TD PORT="data_ante" COLSPAN="3" ALIGN="LEFT">data_ante</TD></TR>
+      <TR><TD PORT="data_post" COLSPAN="3" ALIGN="LEFT">data_post</TD></TR>
+      <TR><TD PORT="tipodata" COLSPAN="3" ALIGN="LEFT">tipodata</TD></TR>
+      <TR><TD PORT="funzione" COLSPAN="3" ALIGN="LEFT">funzione</TD></TR>
+      <TR><TD PORT="id_bener" COLSPAN="3" ALIGN="LEFT">id_bener</TD></TR>
+      <TR><TD PORT="denominazioner" COLSPAN="3" ALIGN="LEFT">denominazioner</TD></TR>
+      <TR><TD PORT="bibliografia" COLSPAN="3" ALIGN="LEFT">bibliografia</TD></TR>
+      <TR><TD PORT="note" COLSPAN="3" ALIGN="LEFT">note</TD></TR>
+      <TR><TD PORT="id" COLSPAN="3" ALIGN="LEFT">id</TD></TR>
+      <TR><TD PORT="ruolo" COLSPAN="3" ALIGN="LEFT">ruolo</TD></TR>
+      <TR><TD PORT="ruolor" COLSPAN="3" ALIGN="LEFT">ruolor</TD></TR>
+      <TR><TD PORT="id_funzione" COLSPAN="3" ALIGN="LEFT">id_funzione</TD></TR>
+      <TR><TD PORT="schedatori_iniziali" COLSPAN="3" ALIGN="LEFT">schedatori_iniziali</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">view</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/funzionigeo_ruoli_schedatori.html"
+    tooltip="funzionigeo_ruoli_schedatori"
+  ];
+}
