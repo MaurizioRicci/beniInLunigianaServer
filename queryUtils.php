@@ -186,7 +186,9 @@ function insertIntoFunzioniGeoTmp($conn, $stmtID, $idbene, $idbener, $denom, $de
 
 function insertFunzioniGeoRuoli($conn, $stmtID, $id_funzione, $id_utente, $ruoloArr,
         $ruolorArr, $tmp_db) {
-    $lastQuery = null;
+    // il campo ok serve per controllare la validità dell'esecuzione della funzione
+    // in ogni caso infatti deve rendere un oggetto con il campo ok poichè è il risultato di runPreparedQuery(...)
+    $lastQuery = ['ok' => true];
     $maxLength = max(count($ruoloArr), count($ruolorArr));
     $tablename = 'funzionigeo_ruoli';
     if ($tmp_db) {
@@ -313,12 +315,12 @@ function upsertFunzioneTmpToFunzioniGeo($conn, $stmtID, $id, $id_utente) {
     $query = "WITH tmp_funzione AS (
                 SELECT * from tmp_db.funzionigeo WHERE id=$1 and id_utente=$2
             )
-            INSERT INTO public.funzionigeo(id_bene, lotto, denominazione, data_ante, data_post,
+            INSERT INTO public.funzionigeo(id_bene, denominazione, data_ante, data_post,
             tipodata, funzione, id_bener, denominazioner, bibliografia, note, id)
-            SELECT id_bene, lotto, denominazione, data_ante, data_post,
+            SELECT id_bene, denominazione, data_ante, data_post,
             tipodata, funzione, id_bener, denominazioner, bibliografia, note, id FROM tmp_funzione
             ON CONFLICT (id) DO UPDATE SET id_bene=(SELECT id_bene FROM tmp_funzione),
-            lotto=(SELECT lotto FROM tmp_funzione), denominazione=(SELECT denominazione FROM tmp_funzione),
+            denominazione=(SELECT denominazione FROM tmp_funzione),
             data_ante=(SELECT data_ante FROM tmp_funzione),
             data_post=(SELECT data_post FROM tmp_funzione), tipodata=(SELECT tipodata FROM tmp_funzione),
             funzione=(SELECT funzione FROM tmp_funzione), id_bener=(SELECT id_bener FROM tmp_funzione),

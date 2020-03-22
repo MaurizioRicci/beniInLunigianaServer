@@ -59,7 +59,7 @@ if (isset($My_POST['id']) && !$error) {
                 $queryID = runPreparedQuery($conn, $c++, $queryFunzioneTmp, $paramsFunzioneTmp);
             } else {
                 // se c'è solo id del bene allora si sta cercando un bene in archivio definitivo
-                $queryFunzione = 'SELECT id from benigeo where id=$1 FOR UPDATE';
+                $queryFunzione = 'SELECT id from funzionigeo where id=$1 FOR UPDATE';
                 $paramsFunzione = [$My_POST['id']];
                 $queryID = runPreparedQuery($conn, $c++, $queryFunzione, $paramsFunzione);
             }

@@ -82,7 +82,7 @@ $ruolor = trim(getOrDefault($query, 'ruolor', ''));
 $schedatori_iniziali = trim(getOrDefault($query, 'schedatori_iniziali', ''));
 
 // Ottengo tutti i beni inseriti
-$query_funzioni_aggiunte_tutte_select = "SELECT * FROM funzionigeo_ruoli_schedatori ";
+$query_funzioni_aggiunte_tutte_select = "SELECT *, count(*) over() as total_rows FROM funzionigeo_ruoli_schedatori ";
 $query_funzioni_aggiunte_tutte_where = "";
 
 // indice del parametro nella query preparata
@@ -218,7 +218,7 @@ if ($query['ok']) {
     $total_rows = pg_num_rows($query['data']);
     while ($row = pg_fetch_assoc($query['data'])) {
         array_push($res['data'], funzioniPostgres2JS($row));
-        $res['count'] = $total_rows;
+        $res['count'] = $row['total_rows'];
     }
 } else {
     http_response_code(500);
