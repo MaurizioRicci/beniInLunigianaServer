@@ -18,7 +18,7 @@ if (!isset($user) && !$error) {
     $error = true;
 }
 // Mi serve per loggare il suo ID
-$id_funzione;
+$id_funzione = "";
 if (!$error) {
     pg_query('BEGIN') or die('Cant start transaction');
     $resp1 = $resp2 = $resp3 = $queryID = null;
