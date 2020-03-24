@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <database name="postgis_db" schema="vocabolari" type="PostgreSQL - 11.5">
    <tables>
-      <table name="descrizione" remarks="" schema="vocabolari" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="nome" nullable="false" remarks="" size="254" type="varchar"/>
-         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_number" nullable="false" remarks="" size="10" type="int4"/>
-         <primaryKey column="nome" sequenceNumberInPK="1"/>
-         <index name="Descrizione_pkey" unique="true">
-            <column ascending="true" name="nome"/>
-         </index>
-      </table>
       <table name="esistenza" remarks="" schema="vocabolari" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="nome" nullable="false" remarks="" size="254" type="varchar">
             <child column="esist" foreignKey="fk_benigeo_esistenza" implied="false" onDeleteCascade="false" table="benigeo"/>
             <child column="esist" foreignKey="fk_benigeo_esistenza" implied="false" onDeleteCascade="false" table="benigeo"/>
          </column>
-         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_number" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_order" nullable="false" remarks="Usato per stabilire l'ordine di visualizzazione degli elementi (non devono essere in ordine alfabetico)" size="10" type="int4"/>
          <primaryKey column="nome" sequenceNumberInPK="1"/>
          <index name="esistenza_pkey" unique="true">
             <column ascending="true" name="nome"/>
@@ -25,7 +17,7 @@
             <child column="funzione" foreignKey="funzione_fk" implied="false" onDeleteCascade="false" table="funzionigeo"/>
             <child column="funzione" foreignKey="funzione_fk" implied="false" onDeleteCascade="false" table="funzionigeo"/>
          </column>
-         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_number" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_order" nullable="false" remarks="" size="10" type="int4"/>
          <primaryKey column="nome" sequenceNumberInPK="1"/>
          <index name="funzione_pkey" unique="true">
             <column ascending="true" name="nome"/>
@@ -36,7 +28,7 @@
             <child column="mec" foreignKey="fk_benigeo_macroEpocaCar" implied="false" onDeleteCascade="false" table="benigeo"/>
             <child column="mec" foreignKey="fk_benigeo_macroEpocaCar" implied="false" onDeleteCascade="false" table="benigeo"/>
          </column>
-         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_number" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_order" nullable="false" remarks="" size="10" type="int4"/>
          <primaryKey column="nome" sequenceNumberInPK="1"/>
          <index name="macroEpocaCar_pkey" unique="true">
             <column ascending="true" name="nome"/>
@@ -47,7 +39,7 @@
             <child column="meo" foreignKey="fk_benigeo_mEpocaOrig" implied="false" onDeleteCascade="false" table="benigeo"/>
             <child column="meo" foreignKey="fk_benigeo_mEpocaOrig" implied="false" onDeleteCascade="false" table="benigeo"/>
          </column>
-         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_number" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_order" nullable="false" remarks="" size="10" type="int4"/>
          <primaryKey column="nome" sequenceNumberInPK="1"/>
          <index name="MacroEpocaOrig_pkey" unique="true">
             <column ascending="true" name="nome"/>
@@ -60,7 +52,7 @@
             <child column="ruolo" foreignKey="funzionigeo_ruoli_ruolo_fkey" implied="false" onDeleteCascade="false" table="funzionigeo_ruoli"/>
             <child column="ruolor" foreignKey="funzionigeo_ruoli_ruolor_fkey" implied="false" onDeleteCascade="false" table="funzionigeo_ruoli"/>
          </column>
-         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_number" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_order" nullable="false" remarks="" size="10" type="int4"/>
          <primaryKey column="nome" sequenceNumberInPK="1"/>
          <index name="ruolo_pkey" unique="true">
             <column ascending="true" name="nome"/>
@@ -71,7 +63,7 @@
             <child column="tipodata" foreignKey="tipodata_fk" implied="false" onDeleteCascade="false" table="funzionigeo"/>
             <child column="tipodata" foreignKey="tipodata_fk" implied="false" onDeleteCascade="false" table="funzionigeo"/>
          </column>
-         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_number" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" defaultValue="1" digits="0" id="1" name="row_order" nullable="false" remarks="" size="10" type="int4"/>
          <primaryKey column="nome" sequenceNumberInPK="1"/>
          <index name="tipoData_pkey" unique="true">
             <column ascending="true" name="nome"/>

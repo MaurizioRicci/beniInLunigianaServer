@@ -59,7 +59,7 @@ digraph "oneDegreeRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">vocabolari.ruolo</TD></TR>
       <TR><TD PORT="nome" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">nome</TD></TR>
-      <TR><TD PORT="row_number" COLSPAN="3" ALIGN="LEFT">row_number</TD></TR>
+      <TR><TD PORT="row_order" COLSPAN="3" ALIGN="LEFT">row_order</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
     URL="../../vocabolari/tables/ruolo.html"

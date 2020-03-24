@@ -4,4 +4,3 @@ funzione
 macroEpocaCar
 macroEpocaOrig
 tipoData
-descrizione

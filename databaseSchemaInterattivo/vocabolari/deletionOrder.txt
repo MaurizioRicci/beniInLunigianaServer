@@ -1,4 +1,3 @@
-descrizione
 tipoData
 macroEpocaOrig
 macroEpocaCar
