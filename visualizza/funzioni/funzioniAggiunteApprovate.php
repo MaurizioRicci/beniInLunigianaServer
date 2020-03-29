@@ -167,8 +167,8 @@ if ($funzione !== '') {
     $paramIdx++;
     array_push($params, $funzione);
 }
-if ($ruolor !== '') {
-    $ruolor = '%' . $ruolor . '%';
+if ($ruolo !== '') {
+    $ruolo = '%' . $ruolo . '%';
     $query_funzioni_aggiunte_tutte_where .= "ruolo::text ilike $$paramIdx AND ";
     $paramIdx++;
     array_push($params, $ruolo);
