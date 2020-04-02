@@ -41,8 +41,8 @@ if (!$error) {
                 if ($utente['role'] == 'revisore') {
                     $params = [];
                     $query = "SELECT *,"
-                            . " exists (select NULL from benigeo as b1 where b1.id=id_bene) as bene_approvato,"
-                            . " exists (select NULL from benigeo as b2 where b2.id=id_bener) as bener_approvato"
+                            . " (id_bene IS NULL OR EXISTS (SELECT NULL FROM benigeo AS b1 where b1.id=id_bene)) AS bene_approvato,"
+                            . " (id_bener IS NULL OR EXISTS (SELECT NULL FROM benigeo AS b2 where b2.id=id_bener)) AS bener_approvato"
                             . " FROM tmp_db.funzionigeo_e_ruoli_schedatore"
                             . " WHERE status=0 OR status=1 ORDER BY id";
                 }
