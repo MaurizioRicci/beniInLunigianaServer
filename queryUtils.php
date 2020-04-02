@@ -324,8 +324,8 @@ function upsertFunzioneTmpToFunzioniGeo($conn, $stmtID, $id, $id_utente) {
             data_ante=(SELECT data_ante FROM tmp_funzione),
             data_post=(SELECT data_post FROM tmp_funzione), tipodata=(SELECT tipodata FROM tmp_funzione),
             funzione=(SELECT funzione FROM tmp_funzione), id_bener=(SELECT id_bener FROM tmp_funzione),
-            denominazioner=(SELECT id_bene FROM tmp_funzione), bibliografia=(SELECT id_bene FROM tmp_funzione),
-            note=(SELECT denominazioner FROM tmp_funzione), id=(SELECT id FROM tmp_funzione) RETURNING id";
+            denominazioner=(SELECT denominazioner FROM tmp_funzione), bibliografia=(SELECT bibliografia FROM tmp_funzione),
+            note=(SELECT note FROM tmp_funzione), id=(SELECT id FROM tmp_funzione) RETURNING id";
     return runPreparedQuery($conn, $stmtID, $query, [$id, $id_utente]);
 }
 
