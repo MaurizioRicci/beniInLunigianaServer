@@ -7,7 +7,7 @@ header('Content-type: application/json');
 $c = 0;
 http_response_code(500);
 $My_POST = postEmptyStr2NULL();
-$res = ["msg" => ''];
+$res = [];
 
 $user = risolviUtente($conn, $c++, $My_POST['username'], $My_POST['password']);
 if (!isset($user)) {
@@ -20,13 +20,21 @@ if (!isset($user)) {
                 FROM tmp_db.benigeo
                 WHERE id_utente=$1 AND status=0
             )
-            SELECT id as id_funzione, id_bene as id FROM tmp_db.funzionigeo as f WHERE id_utente=$1 AND status=2
-                AND NOT EXISTS (SELECT null from beni_tmp_utente_revisione WHERE id=f.id_bene)
+            SELECT id as id_funzione, id_bene as id_bene FROM tmp_db.funzionigeo as f 
+            WHERE id_utente=$1 AND status=2
+            AND ( -- e
+              ( -- o id_bene non esiste ne in arch def ne in arch. tmp dell'utente
+		-- prestare attenzione che non deve essere null id_bene
+                NOT EXISTS (SELECT null from beni_tmp_utente_revisione AS bur WHERE bur.id=f.id_bene)
                 AND NOT EXISTS (SELECT null from benigeo WHERE id=f.id_bene)
-            UNION
-            SELECT id as id_funzione, id_bener as id FROM tmp_db.funzionigeo as f WHERE id_utente=$1 AND status=2
-                AND NOT EXISTS (SELECT null from beni_tmp_utente_revisione WHERE id=f.id_bener)
+                AND f.id_bene IS NOT NULL )
+              OR ( 
+		-- o id_bener non esiste ne in arch def ne in arch. tmp dell'utente
+		-- prestare attenzione che non deve essere null id_bener
+                NOT EXISTS (SELECT null from beni_tmp_utente_revisione AS bur WHERE bur.id=f.id_bener)
                 AND NOT EXISTS (SELECT null from benigeo WHERE id=f.id_bener)
+                AND f.id_bener IS NOT NULL )
+            )
             ";
     $resp0 = runPreparedQuery($conn, $c++, $query, [$user['id']]);
     $id_mancanti = []; // salvo gli id dei beni referenziati che non sono ne in arch. definitivo ne in revisione
@@ -34,7 +42,7 @@ if (!isset($user)) {
     $txt = "";
     if ($resp0['ok']) {
         while ($row = pg_fetch_assoc($resp0['data'])) {
-            array_push($id_mancanti, $row['id']);
+            array_push($id_mancanti, $row['id_bene']);
             array_push($id_funzioni_non_inviare, $row['id_funzione']);
         }
         $txt = join(",", $id_mancanti);
