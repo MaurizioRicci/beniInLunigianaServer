@@ -45,13 +45,15 @@ if (isset($My_POST['usersList'])) {
 }
 
 // Mi accerto che nel range di id assegnato all'utente non siano compresi beni già approvati o beni temporanei di altri utenti
-function testID($conn, $stmtID, $idMin, $idMax) {
+function testID($conn, $stmtID, $idMin, $idMax, $id_utente) {
     // se id utente non c'è è perchè si aggiunge l'utente
-    // qualsiasi id utente è diverso da -1
-    $query = "SELECT id FROM benigeo WHERE id>=$1 AND id<=$2
+    // qualsiasi id utente è diverso da -1 => è auto increment parte da 1
+    // scarto gli id dello stesso utente, altrimenti non si potrebbe incrementare solo id_max di quel dato utente.
+    $query = "SELECT id FROM benigeo AS b JOIN manipola_bene AS m ON(b.id=m.id_bene)
+                WHERE b.id>=$1 AND b.id<=$2 AND m.id_utente <> $3
              UNION
-             SELECT id FROM tmp_db.benigeo WHERE id>=$1 AND id<=$2";
-    $resp_ID_OK = runPreparedQuery($conn, $stmtID, $query, [$idMin, $idMax]);
+             SELECT id FROM tmp_db.benigeo WHERE id>=$1 AND id<=$2 AND id_utente <> $3";
+    $resp_ID_OK = runPreparedQuery($conn, $stmtID, $query, [$idMin, $idMax, $id_utente]);
     return $resp_ID_OK['ok'] && pg_num_rows($resp_ID_OK['data']) <= 0;
 }
 
@@ -68,10 +70,9 @@ if (!$error) {
                 if (!isset($userIns['username']) && !isset($userIns['password']))
                     continue;
                 if (!$error) {
-                    if (!testID($conn, $c++, $userIns['id_min'], $userIns['id_max'])) {
+                    if (!testID($conn, $c++, $userIns['id_min'], $userIns['id_max'], -1)) {
                         $error = true;
-                        $res['msg'] = "Il range di id assegnato a ${userIns['username']} collide con quello di beni approvati o con quello di altri beni in revisione. "
-                                . "Potrebbe anche avere dei beni in sospeso.";
+                        $res['msg'] = "Il range di id assegnato a ${userIns['username']} collide con quello di beni approvati o con quello di altri beni in revisione.";
                     } else {
                         // agiungo utente corrente
                         $respIns = runPreparedQuery($conn, $c++,
@@ -95,10 +96,9 @@ if (!$error) {
                 if (!isset($userMod['username']) && !isset($userMod['password']))
                     continue;
                 if (!$error) {
-                    if (!testID($conn, $c++, $userIns['id_min'], $userIns['id_max'])) {
+                    if (!testID($conn, $c++, $userIns['id_min'], $userIns['id_max'], $userIns['uid'])) {
                         $error = true;
-                        $res['msg'] = "Il range di id assegnato a ${userMod['username']} collide con quello di beni approvati o con quello di altri beni in revisione. "
-                                . "Potrebbe anche avere dei beni in sospeso.";
+                        $res['msg'] = "Il range di id assegnato a ${userMod['username']} collide con quello di beni approvati o con quello di altri beni in revisione.";
                     } else {
                         // aggiorno utente corrente
                         $respMod = runPreparedQuery($conn, $c++,
