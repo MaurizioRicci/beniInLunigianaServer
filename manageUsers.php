@@ -96,7 +96,7 @@ if (!$error) {
                 if (!isset($userMod['username']) && !isset($userMod['password']))
                     continue;
                 if (!$error) {
-                    if (!testID($conn, $c++, $userIns['id_min'], $userIns['id_max'], $userIns['uid'])) {
+                    if (!testID($conn, $c++, $userMod['id_min'], $userMod['id_max'], $userMod['uid'])) {
                         $error = true;
                         $res['msg'] = "Il range di id assegnato a ${userMod['username']} collide con quello di beni approvati o con quello di altri beni in revisione.";
                     } else {
