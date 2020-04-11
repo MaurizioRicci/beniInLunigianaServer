@@ -1,5 +1,6 @@
 <?php
 
+// Gestisce le funzioni dell'utente: funzioni approvate dell'utente oppure funzioni temporanee dell'utente
 include('../../connection.php');
 include('../../utils.php');
 include('../../queryUtils.php');

@@ -1,5 +1,6 @@
 <?php
 
+// Gestisce i beni dell'utente: beni approvati dell'utente oppure beni temporanei dell'utente
 include('../../connection.php');
 include('../../utils.php');
 include('../../queryUtils.php');

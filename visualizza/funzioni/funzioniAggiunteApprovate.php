@@ -1,5 +1,6 @@
 <?php
 
+// Restituisce tutte le funzioni filtrate come richiesto dal client
 include('../../connection.php');
 include('../../utils.php');
 include('../../queryUtils.php');

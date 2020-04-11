@@ -1,5 +1,6 @@
 <?php
 
+// Restituisce tutti i beni approvati filtrati come richiesto dal client
 include('../../connection.php');
 include('../../utils.php');
 include('../../queryUtils.php');
