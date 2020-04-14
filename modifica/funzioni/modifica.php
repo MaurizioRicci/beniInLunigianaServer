@@ -123,9 +123,9 @@ if (isset($My_POST['id']) && !$error) {
                         $My_POST['tipodata'], $My_POST['funzione'], $My_POST['bibliografia'],
                         $My_POST['note'], $user['id'], $curr_id_utente_bene,
                         $curr_id_utente_bener, $status);
-                $resp2 = runPreparedQuery($conn, $c++,
-                        "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
-                        [$My_POST['id'], $user['id']]);
+                /* /$resp2 = runPreparedQuery($conn, $c++,
+                  "UPDATE tmp_db.funzionigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
+                  [$My_POST['id'], $user['id']]);/ */
                 // inserisco i ruoli dei vari beni associati alla funzione in archivio temporaneo
                 $resp3 = runPreparedQuery($conn, $c++,
                         'DELETE FROM tmp_db.funzionigeo_ruoli WHERE id_funzione=$1 AND id_utente=$2',

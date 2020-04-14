@@ -84,9 +84,9 @@ if (isset($My_POST['id']) && !$error) {
                     $My_POST['descr'], $My_POST['mec'], $My_POST['meo'], $My_POST['bibl'],
                     $My_POST['note'], $My_POST['topon'], $My_POST['comun'], $My_POST['geom'],
                     $user['id'], $status, $My_POST['esist']);
-            $resp2 = runPreparedQuery($conn, $c++,
-                    "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
-                    [$My_POST['id'], $My_POST['id_utente']]);
+            /* /$resp2 = runPreparedQuery($conn, $c++,
+              "UPDATE tmp_db.benigeo SET msg_validatore=NULL WHERE id=$1 AND id_utente=$2",
+              [$My_POST['id'], $My_POST['id_utente']]);/ */
         }
     }
     $queryArr = array($resp1, $queryID, $resp2, $resp3, $resp4);
