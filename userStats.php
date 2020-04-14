@@ -62,7 +62,7 @@ if (!isset($user)) {
       ),
       n_funzioni_da_correggere as (
               select count(*) as n_funzioni_da_correggere
-        from tmp_db.benigeo where id_utente=$1 and status=1
+        from tmp_db.funzionigeo where id_utente=$1 and status=1
       ),
       n_funzioni_da_revisionare as (
               select count(*) as n_funzioni_da_revisionare

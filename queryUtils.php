@@ -72,12 +72,16 @@ function latLngArrToGeomTxt($latLngArr) {
         return 'NULL';
     }
     $strArr = [];
-    $initialPairTxt = join(' ', $latLngArr[0]);
+    $firstPairTxt = join(' ', $latLngArr[0]);
+    $lastPairTxt = join(' ', $latLngArr[count($latLngArr) - 1]);
     foreach ($latLngArr as $latLngPair) {
         array_push($strArr, "$latLngPair[0] $latLngPair[1]");
     }
     // l'ultimo elemento deve essere uguale al primo per chiudere il poligono
-    array_push($strArr, $initialPairTxt);
+    // controllo che ci siano almeno due vertici e se il primo e ultimo non sono uguali aggiungo il primo vertice
+    if (count($latLngPair) > 1 && $firstPairTxt !== $lastPairTxt) {
+        array_push($strArr, $initialPairTxt);
+    }
     $txt = "MULTIPOLYGON(((" . join(',', $strArr) . ")))";
     $txtEsc = pg_escape_string($txt);
     $ST_GeomFromText = "ST_GeomFromText('$txtEsc', 4326)";
