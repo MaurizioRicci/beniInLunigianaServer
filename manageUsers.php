@@ -26,7 +26,12 @@ if (!isset($user) && !$error) {
 // Controllo se è richiesta la lista utenti
 if (isset($My_POST['usersList'])) {
     if ($user['role'] == 'revisore') {
-        $query = runPreparedQuery($conn, $c++, "SELECT * FROM utenti ORDER BY id_min", []);
+        $query = "SELECT U.*, COUNT(distinct B.id) as nbeni_tmp, COUNT(distinct F.id) as nfunzioni_tmp"
+                . " FROM utenti U LEFT JOIN tmp_db.benigeo B ON (B.id_utente=U.uid)"
+                . " LEFT JOIN tmp_db.funzionigeo F ON (F.id_utente=U.uid)"
+                . " GROUP BY U.uid"
+                . " ORDER BY U.id_min";
+        $query = runPreparedQuery($conn, $c++, $query, []);
         if ($query['ok']) {
             while ($row = pg_fetch_assoc($query['data'])) {
                 $newRow = array_map($null2EmptyStr, $row);
