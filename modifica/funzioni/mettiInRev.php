@@ -20,7 +20,7 @@ if (!isset($user)) {
                 FROM tmp_db.benigeo
                 WHERE id_utente=$1 AND status=0
             )
-            SELECT id as id_funzione, id_bene as id_bene FROM tmp_db.funzionigeo as f 
+            SELECT id as id_funzione, id_bene, id_bener FROM tmp_db.funzionigeo as f 
             WHERE id_utente=$1 AND status=2
             AND ( -- e
               ( -- o id_bene non esiste ne in arch def ne in arch. tmp dell'utente
@@ -43,6 +43,7 @@ if (!isset($user)) {
     if ($resp0['ok']) {
         while ($row = pg_fetch_assoc($resp0['data'])) {
             array_push($id_mancanti, $row['id_bene']);
+			array_push($id_mancanti, $row['id_bener']);
             array_push($id_funzioni_non_inviare, $row['id_funzione']);
         }
         $txt = join(",", $id_mancanti);
